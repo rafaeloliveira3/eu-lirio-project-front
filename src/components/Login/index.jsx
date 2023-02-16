@@ -1,22 +1,27 @@
 import { Link } from "react-router-dom"
 import logo from "../../assets/img/logo.svg"
-import { Advices, AdvicesContent, Container, IconsContainer, IconsOrganizer, Logo, UserArea, UserForms } from "./styles"
+import { Advices, AdvicesContent, Container, IconsContainer, IconsOrganizer, Logo, RegisterContainer, UserArea, UserForms } from "./styles"
 
 export const Login = () => {
+
+    const handleLogin = (e) => {
+        e.preventDefault()
+    }
+
     return (
         <Container>
             <UserArea>    
                 <Logo src={logo} alt="" />
                 <p>Faça o Login para poder comprar e baixar livros, avaliar, e muito mais!</p>
                 <UserForms>
-                    <input type="text"/>
-                    <input type="text"/>
-                    <button type="submit">Login</button>
+                    <input type="email" placeholder="Email"/>
+                    <input type="password" placeholder="Senha"/>
+                    <button type="submit" onClick={handleLogin}>Login</button>
                 </UserForms>
-                <span>
+                <RegisterContainer>
                     Não tem uma conta?
-                    <Link to="/register">Cadastre-se Agora</Link>
-                </span>
+                    <Link to="/register/step1">Cadastre-se Agora</Link>
+                </RegisterContainer>
             </UserArea>
             <Advices>
                 <AdvicesContent>

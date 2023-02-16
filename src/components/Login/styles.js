@@ -37,8 +37,51 @@ const UserArea = styled.div`
 `
 const UserForms = styled.form`
     display: flex;
+    font-family: 'Roboto', sans-serif;
     flex-direction: column;
     gap: 1rem;
+    width: 40%;
+    input {
+        width: 100%;
+        padding: 5px;
+        height: 2.5rem;
+        font-size: 1rem;
+        background-color: transparent;
+        font-weight: 400;
+    }
+    button {
+        background-color: var(--purple-medium);
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.5rem;
+        padding: 5px;
+        height: 2.4rem;
+        border: 0;
+        border-radius: 30px;
+        transition: all 190ms;
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0px 10px 13px 0px rgba(0, 0, 0, 0.15);
+        }
+        &:active {
+            transform: translate(0);
+            box-shadow: none;
+        }
+    }
+`
+
+const RegisterContainer = styled.span`
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    text-align: right;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    a {
+        text-decoration:none;
+        color: var(--purple-medium);
+    }
 `
 
 // Right Side - Advices
@@ -96,5 +139,6 @@ export {
     IconsContainer,
     IconsOrganizer,
     AdvicesContent,
-    UserForms
+    UserForms,
+    RegisterContainer
 }

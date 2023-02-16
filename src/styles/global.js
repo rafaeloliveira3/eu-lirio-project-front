@@ -6,6 +6,7 @@ export const GlobalStyle = createGlobalStyle`
         --button-background: #FFDE5A;
         --button-stroke: #F9C73E;
         --purple-dark: #381871;
+        --purple-medium: #7822BE;
     }
 
     * {
@@ -53,7 +54,5 @@ export const GlobalStyle = createGlobalStyle`
     input[type=text], input[type=password], input[type=email] {
         border: 2px solid var(--purple-dark);
         border-radius: 10px;
-        width: 11rem;
-        height: 2rem;
     }
 `
