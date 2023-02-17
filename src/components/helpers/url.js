@@ -1,0 +1,1 @@
+export const defaultUrl = 'http://10.107.144.7:3030/'

@@ -1,13 +1,11 @@
 import { useState } from "react"
 import { Card } from "../utils/card"
-import { Container, Header, NavBar } from "./styles"
-import { Link, useNavigate } from "react-router-dom"
+import { Container, Header, NavBar, OutletContainer } from "./styles"
+import { Link, redirect } from "react-router-dom"
 import { Outlet } from "react-router-dom";
 import logoNome from '../../assets/img/nome_eulirio.svg' 
 
 export const Register = () => {
-    const navigate = useNavigate()
-    navigate('/register/step1')
     return (
         <Container>
             <Card>
@@ -17,9 +15,9 @@ export const Register = () => {
                 <Header>
                     <img src={logoNome} alt="" />
                 </Header>
-                <div>
+                <OutletContainer>
                     <Outlet />
-                </div>
+                </OutletContainer>
             </Card>
         </Container>
     )

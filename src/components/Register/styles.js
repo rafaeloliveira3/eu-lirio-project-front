@@ -33,8 +33,13 @@ const Header = styled.header`
     padding: 1rem 0;
 `
 
+const OutletContainer = styled.div`
+    width: 100%;
+`
+
 export {
     Container,
     Header,
-    NavBar
+    NavBar,
+    OutletContainer
 }
