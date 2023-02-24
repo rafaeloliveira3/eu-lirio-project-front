@@ -48,6 +48,20 @@ const TosContainer = styled.div`
     
 `
 
+const BDate = styled.div`
+    font-family: 'League Spartan', sans-serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+    label {
+        color: var(--purple-dark);
+    }
+`
+
 export {
-    TosContainer
+    TosContainer,
+    BDate
 }

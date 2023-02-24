@@ -1,7 +1,6 @@
-import { useState } from "react"
 import { Card } from "../utils/card"
 import { Container, Header, NavBar, OutletContainer } from "./styles"
-import { Link, redirect } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { Outlet } from "react-router-dom";
 import logoNome from '../../assets/img/nome_eulirio.svg' 
 
