@@ -58,7 +58,7 @@ export const Login = () => {
                 <UserForms onSubmit={handleLogin}>
                     <input 
                         type="text" 
-                        placeholder="Email"
+                        placeholder="Usuário"
                         value={username}
                         onChange={(e) => {setUsername(e.currentTarget.value)}}
                         required
