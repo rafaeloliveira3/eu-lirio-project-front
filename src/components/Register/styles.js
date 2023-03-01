@@ -31,6 +31,11 @@ const Header = styled.header`
     display: flex;
     justify-content: center;
     padding: 1rem 0;
+    @media (max-width: 768px) {
+        img {
+            height: 3rem;
+        }
+    }
 `
 
 const OutletContainer = styled.div`

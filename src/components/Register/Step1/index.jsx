@@ -1,10 +1,15 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useNavigate, useOutletContext } from "react-router-dom"
 import { Form } from "../../utils/register"
 
 export const Step1 = () => {
-    const navigate = useNavigate()
+    const { setUrl } = useOutletContext()
 
+    useEffect(() => {
+        setUrl('/login')
+    })
+    
+    const navigate = useNavigate()
     const [userName, setUserName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")

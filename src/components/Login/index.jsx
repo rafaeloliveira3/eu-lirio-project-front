@@ -5,6 +5,7 @@ import { defaultUrl } from "../helpers/url"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { Advices, AdvicesContent, Container, IconsContainer, IconsOrganizer, Logo, RegisterContainer, UserArea, UserForms } from "./styles"
+import axios from "axios";
 
 export const Login = () => {
     
@@ -15,35 +16,32 @@ export const Login = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
-    const [data, setData] = useState({})
-
-
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault()
 
         const user = {
             user_name : username,
             senha : password
         }
-
-        fetch(`${defaultUrl}user/login`, {
-            method: "POST",
-            headers: {'Content-type': 'application/json'},
-            body : JSON.stringify(user)
+        
+        const res = await axios.post(`${defaultUrl}user/login`, user)
+        .catch((err) => { 
+            console.log(err)
+            if (err.request.status === 400) {
+                loginFailed()
+            }
+            else {
+                bdError()
+            }
         })
-        .then(response => response.json())
-        .then(data => setData(data))
-        .catch((e) => bdError())
 
-        if (data) {
+        if (res) {
+            const data = res.data
             if (data.token && data.id) {
                 localStorage.setItem('id', data.id)
                 localStorage.setItem('token', data.token)
                 navigate('/app')
                 console.log(data);
-            }
-            else {
-                loginFailed()
             }
         }
 
@@ -74,7 +72,7 @@ export const Login = () => {
                 </UserForms>
                 <RegisterContainer>
                     Não tem uma conta?
-                    <Link to="/register/step1">Cadastre-se Agora</Link>
+                    <Link to="/register/step1">Cadastre-se Agora!</Link>
                 </RegisterContainer>
             </UserArea>
             <Advices>

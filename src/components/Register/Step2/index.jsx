@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react"
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate, Navigate, useOutletContext } from "react-router-dom"
 import { defaultUrl } from "../../helpers/url"
 import { Form } from "../../utils/register"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { TosContainer, BDate } from "./styles"
+import axios from "axios";
 
 export const Step2 = () => {
+    const { setUrl } = useOutletContext()
+
+    useEffect(() => {
+        setUrl('/register/step1')
+    })
+
+
     const location = useLocation()
     const navigate = useNavigate()
 
-    const registerFailed = () => toast.error('Algo deu Errado - Tente Novamente Mais Tarde')
+    const registerFailed = (err) => toast.error(`${err.response.data} - Erro: ${err.response.status}`)
     const bdError = () => toast.warning('A Conexão com o Servidor Falhou. Tente Novamente Mais Tarde')
     const onlyAdults = () => toast.warning('Apenas maiores de idade podem se Cadastrar! Redirecionando...')
     const registerSuccess = () => toast.success('Usuário Cadastrado! - Faça login para entrar em sua conta!')
@@ -19,24 +27,22 @@ export const Step2 = () => {
     const [birth, setBirth] = useState('')
 
     const [accepted, setAccepted] = useState(false)
-    
-    const [data, setData] = useState({})
 
-
-
-    const step1Result = location.state.user
-    let username = step1Result.username
-    let email = step1Result.email
-    let password = step1Result.password
+    let step1Result
+    let username
+    let email
+    let password
 
     const canSubmit = () => {
-        if (accepted) document.querySelector('#submit').removeAttribute('disabled')
-        else document.querySelector('#submit').setAttribute('disabled', true)
+        if (location.state != null) {
+            if (accepted) document.querySelector('#submit').removeAttribute('disabled')
+            else document.querySelector('#submit').setAttribute('disabled', true)
+        }
     }
     
     useEffect(() => canSubmit())
     
-    const handleStep2 = (e) => {
+    const handleStep2 = async (e) => {
         e.preventDefault()
         const date = new Date().getFullYear()
         const birthYear = birth.split('-')[0]
@@ -53,16 +59,19 @@ export const Step2 = () => {
                 data_nascimento: birth
             }
     
-            fetch(`${defaultUrl}user`, {
-                method: "POST",
-                headers: {'Content-type': 'application/json'},
-                body : JSON.stringify(registered)
+            const res = await axios.post(`${defaultUrl}user`, registered)
+            .catch((err) => { 
+                console.log(err.response);
+                if (err.request.status === 400) {
+                    registerFailed(err)
+                }
+                else {
+                    bdError()
+                }
+                setTimeout(() => { navigate('/register/step1') }, 2500)
             })
-            .then(response => response.json())
-            .then(data => setData(data))
-            .catch((e) => { bdError(); setTimeout(() => { navigate('/register/step1') }, 2500)})
 
-            if (data) {
+            if (res.status === 201) {
                 registerSuccess()
                 setTimeout(() => { navigate('/login') }, 2500)
             }
@@ -72,7 +81,18 @@ export const Step2 = () => {
             }
         }
     }
-    
+
+
+    if (location.state != null) {
+        step1Result = location.state.user
+        username = step1Result.username
+        email = step1Result.email
+        password = step1Result.password
+    }
+    else {
+        return <Navigate to='/register/step1' />
+    }
+
 
     return (
         <>
@@ -98,7 +118,7 @@ export const Step2 = () => {
                 <p>Li e concordo com todos os <Link>Termos de Uso</Link></p>
                 <input type="checkbox" onClick={(e) => {setAccepted(e.currentTarget.checked)}}/>
             </TosContainer>
-            <button type="submit" id="submit">Avançar</button>
+            <button type="submit" id="submit">Salvar</button>
         </Form>
         <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={false} />
         </>

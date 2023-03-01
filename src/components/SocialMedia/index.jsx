@@ -1,3 +1,4 @@
+import axios from "axios"
 import { useEffect, useState } from "react"
 import { Navigate } from "react-router-dom"
 import { defaultUrl } from "../helpers/url"
@@ -5,20 +6,22 @@ import { Container, UserInfoContainer } from "./styles"
 
 const SocialMedia = () => {
     const userToken = localStorage.getItem('token')
-
     const userId = localStorage.getItem('id')
     const [user, setUser] = useState({})
     
     useEffect(() => {
-        fetch(`${defaultUrl}user/id/${userId}`)
-        .then(response => response.json())
-        .then(data => setUser(data.user[0]))
-        .catch((e) => { console.log(e) })
-    }, [])
+        const fetchData = async () => {
+            const data = await axios.get(`${defaultUrl}user/id/${userId}`)
+            .catch((err) => { console.log(err) })
+    
+            setUser(data.data.user[0])
+        }
+        fetchData()
+    }, [userId])
 
     console.log(user);
 
-    if (!userToken) {
+    if (userToken === null) {
         return <Navigate to="/login" />
     }
 

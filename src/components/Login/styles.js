@@ -1,3 +1,4 @@
+import { BrowserView } from "react-device-detect";
 import styled from "styled-components";
 import background from "../../assets/img/login_background.svg";
 
@@ -8,12 +9,19 @@ const Container = styled.div`
     background-size: cover;
     display: flex;
     justify-content: space-between;
+    @media (max-width: 768px) {
+        justify-content: center;
+        align-items: center;
+    }
 `
 
 // Left Side - User 
 
 const Logo = styled.img`
     height: 12rem;
+    @media (max-width: 768px) {
+        height: 8rem;
+    }
 `
 const UserArea = styled.div`
     width: 40%;
@@ -33,6 +41,17 @@ const UserArea = styled.div`
         font-size: 2rem;
         width: 70%;
         text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        width: 80%;
+        height: fit-content;
+        padding: 2rem;
+        border-radius: 39px;
+        gap: 1.8rem;
+        p {
+            font-size: 1.7rem;
+        }
     }
 `
 const UserForms = styled.form`
@@ -68,6 +87,9 @@ const UserForms = styled.form`
             box-shadow: none;
         }
     }
+    @media (max-width: 768px) {
+        width: 80%
+    }
 `
 
 const RegisterContainer = styled.span`
@@ -82,10 +104,14 @@ const RegisterContainer = styled.span`
         text-decoration:none;
         color: var(--purple-medium);
     }
+    @media (max-width: 768px) {
+        width: 60%;
+        text-align: center;
+    }
 `
 
 // Right Side - Advices
-const Advices = styled.div`
+const Advices = styled(BrowserView)`
     width: 60%;
     display: flex;
     align-items: center;
