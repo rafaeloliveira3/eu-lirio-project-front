@@ -7,6 +7,9 @@ export const GlobalStyle = createGlobalStyle`
         --button-stroke: #F9C73E;
         --purple-dark: #381871;
         --purple-medium: #7822BE;
+        --yellow-medium: #FBDB5A;
+
+        --font-color: #1E1E1E;
     }
 
     * {

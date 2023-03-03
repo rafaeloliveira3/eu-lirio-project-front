@@ -7,6 +7,7 @@ import { Step1 } from "./components/Register/Step1";
 import { Step2 } from "./components/Register/Step2";
 import { Step3 } from "./components/Register/Step3";
 import { SocialMedia } from "./components/SocialMedia"
+import { Me } from "./components/SocialMedia/Me";
 import { NotFound } from "./components/NotFound";
 import { GlobalStyle } from "./styles/global";
  
@@ -23,7 +24,8 @@ export function App() {
               <Route path="" element={<Redirect />}/>
             </Route>
             <Route path="/app/" element={<SocialMedia />}>
-              <Route path="feed" element={<h1>Feed :)</h1>} />
+              <Route path="me" element={<Me />}/>
+              <Route path="edit" element={<h1>Editar Dados</h1>} />
 
             </Route>
             <Route path="/*" element={<NotFound />}></Route>
