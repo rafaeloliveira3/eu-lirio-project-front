@@ -58,4 +58,26 @@ export const GlobalStyle = createGlobalStyle`
         border: 2px solid var(--purple-dark);
         border-radius: 10px;
     }
+
+    .delete-user-modal-overlay {
+        background-color: #00000055;
+
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .delete-user-modal-content {
+        background-color: #fff;
+        padding: 2rem;
+        height: 20rem;
+        width: 30rem;
+        border-radius: 10px;
+    }
+
 `

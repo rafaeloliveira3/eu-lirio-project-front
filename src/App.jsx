@@ -10,6 +10,8 @@ import { SocialMedia } from "./components/SocialMedia"
 import { Me } from "./components/SocialMedia/Me";
 import { NotFound } from "./components/NotFound";
 import { GlobalStyle } from "./styles/global";
+import { Teste } from "./components/Test";
+import { Edit } from "./components/SocialMedia/Edit";
  
 export function App() {
   return (
@@ -25,9 +27,9 @@ export function App() {
             </Route>
             <Route path="/app/" element={<SocialMedia />}>
               <Route path="me" element={<Me />}/>
-              <Route path="edit" element={<h1>Editar Dados</h1>} />
-
+              <Route path="edit" element={<Edit />} />
             </Route>
+            <Route path="/teste" element={<Teste />}/>
             <Route path="/*" element={<NotFound />}></Route>
           </Routes>
       </Router>

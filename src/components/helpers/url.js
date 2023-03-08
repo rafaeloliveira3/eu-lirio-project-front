@@ -1,1 +1,1 @@
-export const defaultUrl = 'http://10.107.144.7:3030/'
+export const defaultUrl = process.env.REACT_APP_BASE_URL

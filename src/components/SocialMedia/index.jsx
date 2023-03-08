@@ -20,7 +20,8 @@ const SocialMedia = () => {
         fetchData()
     }, [userId])
 
-    if (user.foto === 'undefined')
+    console.log(user.foto)
+    if (user.foto === 'undefined' || user.foto == null)
         image = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
     else 
         image = user.foto 
@@ -55,7 +56,7 @@ const SocialMedia = () => {
                         </li>
                         <li>
                             <Links>
-                                <i class="fa-solid fa-bookmark"></i>
+                                <i className="fa-solid fa-bookmark"></i>
                                 <span>FAVORITOS</span>
                             </Links>
                         </li>
@@ -87,7 +88,7 @@ const SocialMedia = () => {
                 </UserOpt>
                 <ExitContainer>
                     <Sair>
-                        <i class="fa-solid fa-sign-out"></i>
+                        <i className="fa-solid fa-sign-out"></i>
                         SAIR
                     </Sair>
                 </ExitContainer>
