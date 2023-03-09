@@ -4,11 +4,18 @@ import { Link } from "react-router-dom";
 const Container = styled.div`
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
     height: 100%;
     width: 100%;
-    gap: 1rem;
     background-color: var(--background);
+    header {
+        height: 5rem;
+    }
+    div {
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
 `
 
 const UserInfoContainer = styled.div`
@@ -18,9 +25,8 @@ const UserInfoContainer = styled.div`
     align-items: center;
     justify-content: space-evenly;
     height: 100%;
-    max-width: 28%;
+    max-width: 25%;
     flex-grow: 1;
-    border-radius: 0px 30px 30px 0px;
     padding: 0 5vw;
 `
 const FeedContainer = styled.div`
@@ -35,8 +41,7 @@ const PromotionContainer = styled.div`
     justify-content: center;
     height: 100%;
     flex-grow: 1;
-    max-width: 28%;
-    border-radius: 30px 0px 0px 30px;
+    max-width: 25%;
 `
 
 const User = styled.div`
@@ -67,7 +72,7 @@ const User = styled.div`
     }
 `
 
-const UserOpt = styled.div`
+const UserOpt = styled.div.attrs((props) => props)`
     height: 40%;
     width: 100%;
     background-color: rgba(241, 241, 241, 0.4);
@@ -86,11 +91,18 @@ const UserOpt = styled.div`
             cursor: pointer;
             font-family: 'Montserrat', sans-serif;
             display: flex;
-            width: fit-content;
+            padding: 1rem;
+            width: 100%;
+            border-radius: 25px;
+            &:hover {
+                background-color: #F9C73E55;
+            }
             i {
+                color: #0000;
                 font-size: 1.3rem;
                 height: 1.3rem;
                 width: 1.6rem;
+                -webkit-text-stroke: 2px var(--font-color);
             }
             span {
                 font-size: 1.3rem;
@@ -127,9 +139,6 @@ const Links = styled(Link)`
     gap: 2rem;
     text-decoration: none;
     color: var(--font-color);
-    &:hover {
-        color: var(--purple-dark);
-    }
 `
 
 export {

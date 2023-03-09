@@ -4,7 +4,7 @@ import { defaultUrl } from "../../helpers/url"
 import { Form } from "../../utils/register"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
-import { TosContainer, BDate } from "./styles"
+import { TosContainer, BDate, Label, CheckBox, CheckBoxContainer } from "./styles"
 import axios from "axios";
 
 export const Step2 = () => {
@@ -25,6 +25,11 @@ export const Step2 = () => {
 
     const [fullName, setFullName] = useState('')
     const [birth, setBirth] = useState('')
+    const [tagEscritor, setTagEscritor] = useState(false)
+    const [tagLeitor, setTagLeitor] = useState(false)
+
+    const [tags, setTags] = useState([])
+    const [fixedTags, setFixedTags] = useState([])
 
     const [accepted, setAccepted] = useState(false)
 
@@ -39,13 +44,34 @@ export const Step2 = () => {
             else document.querySelector('#submit').setAttribute('disabled', true)
         }
     }
-    
+    const fixTags = () => {
+        tags.map((item) => {
+            setFixedTags(fixedTags => [...fixedTags, {id_tag: item}])
+        })
+    }
+
     useEffect(() => canSubmit())
+    useEffect(() => fixTags(), [tags])
+
+    const handleCheckboxes = (id) => {
+        if (tags.indexOf(id) > -1) {
+            setTags(tags => tags.filter((tag) => {
+                return tag !== id
+            }))
+        }
+        else {
+            setTags(tags => [...tags, id])
+        }
+    }
     
     const handleStep2 = async (e) => {
         e.preventDefault()
+
         const date = new Date().getFullYear()
         const birthYear = birth.split('-')[0]
+
+        let fixed = [...new Map(fixedTags.map(item => [item['id_tag'], item])).values()]
+
         if (date - birthYear < 18) { 
             onlyAdults()
             setTimeout(() => { navigate('/') }, 2500)
@@ -56,9 +82,15 @@ export const Step2 = () => {
                 email: email,
                 senha: password,
                 nome: fullName,
-                data_nascimento: birth
+                data_nascimento: birth,
+                tags : fixed,
+                generos : [
+                    {
+                        id_genero: 1
+                    }
+                ]
             }
-    
+
             const res = await axios.post(`${defaultUrl}user`, registered)
             .catch((err) => { 
                 console.log(err.response);
@@ -114,6 +146,30 @@ export const Step2 = () => {
                     id="birth_date"
                 />
             </BDate>
+            <div>
+                <CheckBoxContainer>
+                    <div>
+                        <CheckBox 
+                            type="checkbox" 
+                            name="escritor" 
+                            id="1" 
+                            checked={tagEscritor}
+                            onChange={(e) => {setTagEscritor(!tagEscritor) ; handleCheckboxes(e.currentTarget.id)}}
+                        />
+                        <Label htmlFor="1">Escritor <div><i className="fa-solid fa-check"></i></div></Label>
+                    </div>
+                    <div>
+                        <CheckBox 
+                            type="checkbox" 
+                            name="leitor" 
+                            id="2" 
+                            checked={tagLeitor}
+                            onChange={(e) => {setTagLeitor(!tagLeitor) ; handleCheckboxes(e.currentTarget.id)}}
+                        />
+                        <Label htmlFor="2">Leitor <div><i className="fa-solid fa-check"></i></div></Label>
+                    </div>
+                </CheckBoxContainer>
+            </div>
             <TosContainer>
                 <p>Li e concordo com todos os <Link>Termos de Uso</Link></p>
                 <input type="checkbox" onClick={(e) => {setAccepted(e.currentTarget.checked)}}/>

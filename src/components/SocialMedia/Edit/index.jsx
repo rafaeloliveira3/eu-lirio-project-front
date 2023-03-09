@@ -5,8 +5,13 @@ import axios from "axios"
 import { defaultUrl } from "../../helpers/url"
 import { Checkbox } from "./utils/Checkbox"
 import { uploadImage } from "../../helpers/firebase"
+import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from "react-router-dom"
 
 export const Edit = () => {
+
+    const navigate = useNavigate()
+
     const [userName, setUserName] = useState("")
     const [userFullName, setUserFullName] = useState("")
     const [userBio, setUserBio] = useState("")
@@ -16,6 +21,8 @@ export const Edit = () => {
     const [previewUrl, setPreviewUrl] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
     const [tags, setTags] = useState([])
     const [genres, setGenres] = useState([])
+
+    const deleteSucces = () => toast.success('Usuário Deletado Com Sucesso!')
 
     const userId = localStorage.getItem('id')
     const [user, setUser] = useState({})
@@ -29,6 +36,12 @@ export const Edit = () => {
             .catch((err) => { console.log(err) })
     
             setUser(data.data.user[0])
+            setUserName(data.data.user[0].user_name)
+            setUserFullName(data.data.user[0].nome)
+            console.log(data.data.user[0])
+
+            if (data.data.user[0].foto !== null && data.data.user[0].foto !== undefined) setPreviewUrl(data.data.user[0].foto)
+            if (data.data.user[0].biografia !== null && data.data.user[0].biografia !== undefined) setUserBio(data.data.user[0].biografia)
         }
         fetchUser()
     }, [userId])
@@ -41,7 +54,7 @@ export const Edit = () => {
             setTags(data.data.tags)
         }
         fetchTags()
-    }, [1])
+    })
 
     //FETCHING BOOK GENRES
     useEffect(() => {
@@ -51,7 +64,7 @@ export const Edit = () => {
             setGenres(data.data.genres)
         }
         fetchGenres()
-    }, [1])
+    })
 
     const preview = (image) => {
         const fileReader = new FileReader()
@@ -69,6 +82,14 @@ export const Edit = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         const imageurl = await handleImage()
+    }
+
+    const handleDeleteAccount = async () => {
+        const res = await axios.delete(`${defaultUrl}user/id/${userId}`)
+        if(res.status === 200 ) {
+            deleteSucces()
+            setTimeout(() => { navigate('/login') }, 2500)
+        }
     }
 
     const handleOpenModal = () => {
@@ -103,10 +124,22 @@ export const Edit = () => {
                             value={userFullName}
                             onChange={(e) => {setUserFullName(e.currentTarget.value)}}
                         />
-                        <input type="text" placeholder="Username" />
+                        <input 
+                            type="text" 
+                            placeholder="Username" 
+                            value={userName}
+                            onChange={(e) => {setUserName(e.currentTarget.value)}}
+                        />
                     </span>
                 </div>
-                <textarea className="biography" style={null} placeholder="Biografia" maxLength={300}>
+                <textarea 
+                    className="biography" 
+                    style={null}  
+                    placeholder="Biografia" 
+                    maxLength={300}
+                    value={userBio}
+                    onChange={(e) => {setUserBio(e.currentTarget.value)}}
+                >
                 </textarea>
                 <div className="select-container">
                     <Tags>
@@ -141,10 +174,11 @@ export const Edit = () => {
                     <p>Essa ação é irreversível e resultará na exclusão completa de seus dados e publicações dentro da plataforma.</p>
                     <span>
                         <button className="cancelar" onClick={handleCloseModal}>Cancelar</button>
-                        <button className="apagar">Apagar</button>
+                        <button className="apagar" onClick={handleDeleteAccount}>Apagar</button>
                     </span>
                 </ModalContentContainer>
             </Modal>
+            <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={false}/>
         </Container>
     )
 }
