@@ -42,10 +42,10 @@ const SocialMedia = () => {
 
     return (
         <Container>
-            <header>
+            <header className="app-header">
                 <img src={logo} alt="" />
             </header>
-            <div>
+            <div className="user-area-container">
                 <UserInfoContainer>
                     <User>
                         <img src={image} alt="" />

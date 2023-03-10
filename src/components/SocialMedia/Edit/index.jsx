@@ -15,6 +15,8 @@ export const Edit = () => {
     const [userName, setUserName] = useState("")
     const [userFullName, setUserFullName] = useState("")
     const [userBio, setUserBio] = useState("")
+    const [userBirth, setUserBirth] = useState("")
+    const [userEmail, setUserEmail] = useState("")
 
     const [imageUpload, setImageUpload] = useState(null)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -38,6 +40,8 @@ export const Edit = () => {
             setUser(data.data.user[0])
             setUserName(data.data.user[0].user_name)
             setUserFullName(data.data.user[0].nome)
+            setUserBirth(data.data.user[0].data_nascimento)
+            setUserEmail(data.data.user[0].email)
             console.log(data.data.user[0])
 
             if (data.data.user[0].foto !== null && data.data.user[0].foto !== undefined) setPreviewUrl(data.data.user[0].foto)
@@ -51,20 +55,20 @@ export const Edit = () => {
         const fetchTags = async () => {
             const data = await axios.get(`${defaultUrl}tags`)
             .catch(err => {console.log(err)})  
-            setTags(data.data.tags)
+            setTags(data?.data.tags)
         }
         fetchTags()
-    })
+    }, [1])
 
     //FETCHING BOOK GENRES
     useEffect(() => {
         const fetchGenres = async () => {
             const data = await axios.get(`${defaultUrl}genres`)
             .catch(err => {console.log(err)})  
-            setGenres(data.data.genres)
+            setGenres(data?.data.genres)
         }
         fetchGenres()
-    })
+    }, [1])
 
     const preview = (image) => {
         const fileReader = new FileReader()
@@ -82,6 +86,15 @@ export const Edit = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         const imageurl = await handleImage()
+
+        const edited = {
+            user_name: userName,
+            nome: userFullName,
+            data_nascimento: userBirth,
+            foto: imageurl,
+            email: userEmail
+
+        }
     }
 
     const handleDeleteAccount = async () => {
@@ -145,13 +158,13 @@ export const Edit = () => {
                     <Tags>
                         <span>Você é...</span>
                         <TagsContainer>
-                            {tags.map(item => <Checkbox key={item.id} name={item.tag}/> )}
+                            {tags?.map(item => <Checkbox key={item.id} name={item.tag}/> )}
                         </TagsContainer>
                     </Tags>
                     <Tags>
                         <span><i className="fa-solid fa-tag"></i></span>
                         <TagsContainer>
-                            {genres.map(item => <Checkbox key={item.id} name={item.nome}/> )}
+                            {genres?.map(item => <Checkbox key={item.id} name={item.nome}/> )}
                         </TagsContainer>
                     </Tags>
                 </div>

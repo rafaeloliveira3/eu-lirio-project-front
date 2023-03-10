@@ -5,12 +5,14 @@ const Container = styled.div`
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
+    overflow-y: scroll;
     padding: 2.5rem;
     background-color: #FEFCF1;
     .button-delete {
         button {
             background: rgba(189, 0, 32, 0.04);
             border-width: 1px 0px;
+            height: 2.6rem;
             border-style: solid;
             border-color: #BD0020;
             box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.25);
@@ -38,6 +40,7 @@ const Form = styled.form.attrs((props) => props)`
     .user {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         width: 100%;
         input[type="file"] {
             display: none;

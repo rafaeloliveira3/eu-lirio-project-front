@@ -8,13 +8,18 @@ const Container = styled.div`
     height: 100%;
     width: 100%;
     background-color: var(--background);
-    header {
+    .app-header {
         height: 5rem;
+        width: 100%;
+        img {
+            height: 2rem;
+        }
     }
-    div {
+    .user-area-container {
         display: flex;
         width: 100%;
         height: 100%;
+        justify-content: space-between;
     }
 `
 
@@ -32,6 +37,7 @@ const UserInfoContainer = styled.div`
 const FeedContainer = styled.div`
     flex-grow: 1;
     height: 100%;
+    overflow-x: scroll;
 `
 const PromotionContainer = styled.div`
     background: linear-gradient(0deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.25)), var(--yellow-medium);
@@ -91,11 +97,14 @@ const UserOpt = styled.div.attrs((props) => props)`
             cursor: pointer;
             font-family: 'Montserrat', sans-serif;
             display: flex;
-            padding: 1rem;
             width: 100%;
-            border-radius: 25px;
-            &:hover {
-                background-color: #F9C73E55;
+            a {
+                padding: 1rem;
+                border-radius: 25px;
+                width: 100%;
+                &:hover {
+                    background-color: #F9C73E55;
+                }
             }
             i {
                 color: #0000;

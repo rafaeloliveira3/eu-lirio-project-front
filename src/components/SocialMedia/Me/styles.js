@@ -4,6 +4,7 @@ const ProfileHeader = styled.header`
     background-color: var(--yellow-medium);
     border-radius: 0px 0px 25px 25px;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     padding: 3vh 3vw;
     height: 23rem;
@@ -12,17 +13,38 @@ const ProfileHeader = styled.header`
 
     .user {
         display: flex;
-        flex-direction: column;
-        font-family: 'League Spartan', sans-serif;
+        justify-content: space-between;
+        align-items: center;
         gap: 1rem;
         img {
             height: 10rem;
             width: 10rem;
             border-radius: 360px;
         }
+        button {
+            background-color: transparent;
+            border: 2px solid var(--purple-dark);
+            color: var(--purple-dark);
+            padding: .5rem 4rem;
+            border-radius: 10px;
+            transition: all 250ms;
+            &:hover {
+                background-color: var(--purple-dark);
+                color: #fff;
+                transform: translateY(-5px)
+            }
+        }
+    }
+    .edit {
+        display: flex;
+        height: 100%;
+        align-items: center;
+        justify-content: space-between;
+        height: 10rem;
         span {
             display: flex;
             flex-direction: column;
+            font-family: 'League Spartan', sans-serif;
             gap: .6rem;
             h2 {
                 font-size: 1.5rem;
@@ -33,23 +55,7 @@ const ProfileHeader = styled.header`
                 font-weight: 300;
             }
         }
-    }
-    .edit {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 10rem;
-        button {
-            background-color: #F4F4F4;
-            border: 0;
-            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
-            padding: .5rem 4rem;
-            border-radius: 10px;
-            transition: all 250ms;
-            &:hover {
-                transform: translateY(-5px)
-            }
-        }
+    
     }
 `
 const UserMain = styled.main`
@@ -69,11 +75,6 @@ const UserMain = styled.main`
         }
     }
 `
-
-const TypeTag = () => {
-    
-}
-
 
 const InfoStyle = styled.div`
     display: flex;

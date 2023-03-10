@@ -17,6 +17,7 @@ export const Me = () => {
         const fetchUser = async () => {
             const data = await axios.get(`${defaultUrl}user/id/${userId}`)
             .catch((err) => { console.log(err) })
+            console.log(data);
     
             setUser(data.data.user[0])
         }
@@ -30,9 +31,9 @@ export const Me = () => {
         fetchTags()
     }, [userId])
 
-    console.log(user);
+    console.log(user.foto);
 
-    if (user.foto === 'undefined')
+    if (user.foto === undefined || user.foto === null)
         image = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
     else 
         image = user.foto
@@ -47,16 +48,16 @@ export const Me = () => {
             <ProfileHeader>
                 <div className="user">
                     <img src={image} alt="" />
+                    <Link to="/app/edit">
+                        <button>EDITAR  PERFIL</button>
+                    </Link>
+                </div>
+                <div className="edit">
                     <span>
                         <h2>{user.nome}</h2>
                         <h3>@{user.user_name}</h3>
                     </span>
                     <Info obras={182} seguindo={570} seguidores={41 + ' K'}/>
-                </div>
-                <div className="edit">
-                    <Link>
-                        <button>EDITAR  PERFIL</button>
-                    </Link>
                 </div>
             </ProfileHeader>
             <UserMain>
