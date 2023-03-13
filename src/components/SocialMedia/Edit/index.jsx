@@ -14,22 +14,23 @@ export const Edit = () => {
 
     const [userName, setUserName] = useState("")
     const [userFullName, setUserFullName] = useState("")
-    const [userBio, setUserBio] = useState("")
+    const [userBio, setUserBio] = useState("Nada Informado")
     const [userBirth, setUserBirth] = useState("")
     const [userEmail, setUserEmail] = useState("")
-
+    
     const [imageUpload, setImageUpload] = useState(null)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
     const [previewUrl, setPreviewUrl] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
     const [tags, setTags] = useState([])
     const [genres, setGenres] = useState([])
-
+    
+    const [tagsCheckboxes, setTagsCheckboxes] = useState([])
+    const [genresCheckboxes, setGenresCheckboxes] = useState([])
+    
     const deleteSucces = () => toast.success('Usuário Deletado Com Sucesso!')
 
     const userId = localStorage.getItem('id')
     const [user, setUser] = useState({})
-    let image
-    let biografia
     
     // FETCHING USER DATA
     useEffect(() => {
@@ -56,19 +57,23 @@ export const Edit = () => {
             const data = await axios.get(`${defaultUrl}tags`)
             .catch(err => {console.log(err)})  
             setTags(data?.data.tags)
+            setTagsCheckboxes(new Array(data?.data.tags.length).fill(false))
         }
         fetchTags()
     }, [1])
+
 
     //FETCHING BOOK GENRES
     useEffect(() => {
         const fetchGenres = async () => {
             const data = await axios.get(`${defaultUrl}genres`)
             .catch(err => {console.log(err)})  
-            setGenres(data?.data.genres)
+            setGenres(data?.data)
+            setGenresCheckboxes(new Array(data?.data.length).fill(false))
         }
         fetchGenres()
     }, [1])
+
 
     const preview = (image) => {
         const fileReader = new FileReader()
@@ -86,14 +91,31 @@ export const Edit = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         const imageurl = await handleImage()
+        console.log(imageurl.length)
+        const birthDate = userBirth.split("T")[0]
 
         const edited = {
             user_name: userName,
             nome: userFullName,
-            data_nascimento: userBirth,
+            data_nascimento: birthDate,
             foto: imageurl,
-            email: userEmail
-
+            biografia: userBio,
+            email: userEmail,
+            premium: 0,
+            id_tag_1: 1,
+            id_tag_2: null,
+            id_genero_1: 1,
+            id_genero_2: 2,
+            id_genero_3: 4
+        }
+        console.log(edited);
+        const res = await axios.put(`${defaultUrl}user/id/${userId}`, edited)
+        .catch((err) => {
+            console.log(err);
+        })
+        console.log(res);
+        if (res.status === 200) {
+            window.location.reload()
         }
     }
 
@@ -103,6 +125,19 @@ export const Edit = () => {
             deleteSucces()
             setTimeout(() => { navigate('/login') }, 2500)
         }
+    }
+
+    const handleTags = (e) => {
+        const id = +e.currentTarget.id.split('-')[1]
+        console.log(id - 1);
+        const updatedTagsArr = tagsCheckboxes.map((item, index) =>
+            index === id - 1 ? !item : item
+        ) 
+        console.log(updatedTagsArr);
+    }
+
+    const handleGenres = (e) => {
+        console.log(e.currentTarget.id);
     }
 
     const handleOpenModal = () => {
@@ -158,13 +193,13 @@ export const Edit = () => {
                     <Tags>
                         <span>Você é...</span>
                         <TagsContainer>
-                            {tags?.map(item => <Checkbox key={item.id} name={item.tag}/> )}
+                            {tags?.map(item => <Checkbox type="tags" id={item.id} onChange={handleTags} key={item.id} name={item.tag}/> )}
                         </TagsContainer>
                     </Tags>
                     <Tags>
                         <span><i className="fa-solid fa-tag"></i></span>
                         <TagsContainer>
-                            {genres?.map(item => <Checkbox key={item.id} name={item.nome}/> )}
+                            {genres?.map(item => <Checkbox type="genres" id={item.id} onChange={handleGenres} key={item.id} name={item.nome}/> )}
                         </TagsContainer>
                     </Tags>
                 </div>

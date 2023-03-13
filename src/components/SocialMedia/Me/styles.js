@@ -19,6 +19,8 @@ const ProfileHeader = styled.header`
         img {
             height: 10rem;
             width: 10rem;
+            object-fit: cover;
+            object-position: center;
             border-radius: 360px;
         }
         button {

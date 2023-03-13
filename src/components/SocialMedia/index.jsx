@@ -5,17 +5,39 @@ import { defaultUrl } from "../helpers/url"
 import { Container, ExitContainer, FeedContainer, Links, PromotionContainer, Sair, User, UserInfoContainer, UserOpt } from "./styles"
 import logo from "../../assets/img/logo.svg"
 
+let linkTheme = {
+    font: "var(--font-color)",
+    icon: "2px var(--font-color)",
+    icon_color: "#0000",
+    weight: "500"
+}
+let linkThemeActive = {
+    font: "var(--purple-dark)",
+    icon: "none",
+    icon_color: "var(--purple-dark)",
+    weight: "700"
+}
+
+
 const SocialMedia = () => {
     const userToken = localStorage.getItem('token')
     const userId = localStorage.getItem('id')
 
-    const [navBarStyleSetter, setNavBarStyleSetter] = useState("")
-    
+    const StyleBackup = new Array(7).fill(false)
+    const [navBarStyleSetter, setNavBarStyleSetter] = useState(StyleBackup)
 
 
     const handleLinkChange = (e) => {
         const id = +e.currentTarget.id
-        setNavBarStyleSetter(id.toString())
+        const newArr = StyleBackup.map((item, index) => {
+            if (index === id) {
+                return true
+            }
+            else {
+                return false
+            }
+        })
+        setNavBarStyleSetter(newArr)
     }
 
     const [user, setUser] = useState({})
@@ -40,6 +62,7 @@ const SocialMedia = () => {
         return <Navigate to="/login" />
     }
 
+
     return (
         <Container>
             <header className="app-header">
@@ -55,45 +78,45 @@ const SocialMedia = () => {
                         </div>
                     </User>
                     <UserOpt selected={navBarStyleSetter}>
-                        <ul>
+                        <ul id="items-container">
                             <li>
-                                <Links onClick={handleLinkChange} id="0">
+                                <Links onClick={handleLinkChange} theme={navBarStyleSetter[0] ? linkThemeActive : linkTheme} id="0">
                                     <i className="fa-solid fa-spa"></i>
                                     <span>HOME</span>
                                 </Links>
                             </li>
                             <li>
-                                <Links to="/app/me" onClick={handleLinkChange} id="1">
+                                <Links to="/app/me" onClick={handleLinkChange} theme={navBarStyleSetter[1] ? linkThemeActive : linkTheme} id="1">
                                     <i className="fa-solid fa-user"></i>
                                     <span>MEU PERFIL</span>
                                 </Links>
                             </li>
                             <li>
-                                <Links onClick={handleLinkChange} id="2">
+                                <Links onClick={handleLinkChange} theme={navBarStyleSetter[2] ? linkThemeActive : linkTheme} id="2">
                                     <i className="fa-solid fa-bookmark"></i>
                                     <span>FAVORITOS</span>
                                 </Links>
                             </li>
                             <li>
-                                <Links onClick={handleLinkChange} id="3">
+                                <Links onClick={handleLinkChange} theme={navBarStyleSetter[3] ? linkThemeActive : linkTheme} id="3">
                                     <i className="fa-solid fa-check-circle"></i>
                                     <span>LIDOS</span>
                                 </Links>
                             </li>
                             <li>   
-                                <Links onClick={handleLinkChange} id="4">
+                                <Links onClick={handleLinkChange} theme={navBarStyleSetter[4] ? linkThemeActive : linkTheme} id="4">
                                     <i className="fa-solid fa-shopping-bag"></i>
                                     <span>MEUS E-BOOKS</span>
                                 </Links>
                             </li>
                             <li>
-                                <Links onClick={handleLinkChange} id="5">
+                                <Links onClick={handleLinkChange} theme={navBarStyleSetter[5] ? linkThemeActive : linkTheme} id="5">
                                     <i className="fa-solid fa-crown"></i>
                                     <span>LÍRIO PLUS</span>
                                 </Links>
                             </li>
                             <li>
-                                <Links to="/app/edit" onClick={handleLinkChange} id="6">
+                                <Links to="/app/edit" onClick={handleLinkChange} theme={navBarStyleSetter[6] ? linkThemeActive : linkTheme} id="6">
                                     <i className="fa-solid fa-user-edit"></i>
                                     <span>EDITAR PERFIL</span>
                                 </Links>

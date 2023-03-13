@@ -93,7 +93,6 @@ export const Step2 = () => {
 
             const res = await axios.post(`${defaultUrl}user`, registered)
             .catch((err) => { 
-                console.log(err.response);
                 if (err.request.status === 400) {
                     registerFailed(err)
                 }

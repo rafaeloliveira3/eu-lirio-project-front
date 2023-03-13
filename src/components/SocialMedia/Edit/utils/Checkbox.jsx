@@ -1,10 +1,10 @@
 import { CheckboxStyled, LiStyled } from "./styles"
 
-export const Checkbox = (props, index) => {
+export const Checkbox = (props) => {
     return (
         <LiStyled>
-            <CheckboxStyled type="checkbox" name="tags" id={props.name}/>
-            <label htmlFor={props.name}>{props.name.toUpperCase()}</label>
+            <CheckboxStyled onChange={props.onChange} type="checkbox" name="tags" id={`${props.type}-${props.id}`}/>
+            <label htmlFor={`${props.type}-${props.id}`}>{props.name.toUpperCase()}</label>
         </LiStyled>
     )
 } 

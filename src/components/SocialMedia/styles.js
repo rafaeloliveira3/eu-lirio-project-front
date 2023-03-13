@@ -57,6 +57,8 @@ const User = styled.div`
     color: var(--font-color);
     img {
         height: 7rem;
+        width: 7rem;
+        object-fit: cover;
         border-radius: 360px;
         border: 2px solid var(--background);
     }
@@ -78,8 +80,8 @@ const User = styled.div`
     }
 `
 
-const UserOpt = styled.div.attrs((props) => props)`
-    height: 40%;
+const UserOpt = styled.div`
+    height: min-content;
     width: 100%;
     background-color: rgba(241, 241, 241, 0.4);
     display: flex;
@@ -92,6 +94,7 @@ const UserOpt = styled.div.attrs((props) => props)`
         height: 100%;
         flex-direction: column;
         justify-content: space-evenly;
+        width: 100%;
         
         li {
             cursor: pointer;
@@ -99,24 +102,21 @@ const UserOpt = styled.div.attrs((props) => props)`
             display: flex;
             width: 100%;
             a {
-                padding: 1rem;
+                padding: 1.2rem;
                 border-radius: 25px;
                 width: 100%;
                 &:hover {
-                    background-color: #F9C73E55;
+                    background-color: #F9C73E33;
                 }
             }
             i {
-                color: #0000;
                 font-size: 1.3rem;
                 height: 1.3rem;
                 width: 1.6rem;
-                -webkit-text-stroke: 2px var(--font-color);
             }
             span {
                 font-size: 1.3rem;
                 letter-spacing: 0.03rem;
-                font-weight: 500;
             }
         }
     }
@@ -147,7 +147,12 @@ const Links = styled(Link)`
     display: flex;
     gap: 2rem;
     text-decoration: none;
-    color: var(--font-color);
+    color: ${(props) => props.theme.font};
+    font-weight: ${(props) => props.theme.weight};
+    i {
+        -webkit-text-stroke: ${(props) => props.theme.icon};
+        color:  ${(props) => props.theme.icon_color};
+    }
 `
 
 export {
