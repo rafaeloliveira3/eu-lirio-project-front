@@ -12,6 +12,9 @@ import { NotFound } from "./components/NotFound";
 import { GlobalStyle } from "./styles/global";
 import { Teste } from "./components/Test";
 import { Edit } from "./components/SocialMedia/Edit";
+import { Users } from "./components/SocialMedia/Users";
+import { NewPost } from "./components/SocialMedia/NewPost";
+import { AppRedirect } from "./components/SocialMedia/Redirect";
  
 export function App() {
   return (
@@ -26,8 +29,12 @@ export function App() {
               <Route path="" element={<Redirect />}/>
             </Route>
             <Route path="/app/" element={<SocialMedia />}>
+              <Route path="feed" element={<h1>Feed</h1>}/>
               <Route path="me" element={<Me />}/>
               <Route path="edit" element={<Edit />} />
+              <Route path="profile/:id" element={<Users />} />
+              <Route path="new" element={<NewPost />} />
+              <Route path="" element={<AppRedirect />}/>
             </Route>
             <Route path="/teste" element={<Teste />}/>
             <Route path="/*" element={<NotFound />}></Route>

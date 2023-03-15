@@ -20,13 +20,12 @@ export const Login = () => {
         e.preventDefault()
 
         const user = {
-            user_name : username,
+            login : username,
             senha : password
         }
         
         const res = await axios.post(`${defaultUrl}user/login`, user)
         .catch((err) => { 
-            console.log(err)
             if (err.request.status === 400 || err.request.status === 404) {
                 loginFailed()
             }
@@ -40,8 +39,7 @@ export const Login = () => {
             if (data.token && data.id) {
                 localStorage.setItem('id', data.id)
                 localStorage.setItem('token', data.token)
-                navigate('/app')
-                console.log(data);
+                navigate('/app/feed')
             }
         }
 
@@ -56,7 +54,7 @@ export const Login = () => {
                 <UserForms onSubmit={handleLogin}>
                     <input 
                         type="text" 
-                        placeholder="Usuário"
+                        placeholder="Email ou Nome de Usuário"
                         value={username}
                         onChange={(e) => {setUsername(e.currentTarget.value)}}
                         required

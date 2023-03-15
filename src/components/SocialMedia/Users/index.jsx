@@ -1,12 +1,13 @@
 import { defaultUrl } from "../../helpers/url"
 import { useState, useEffect } from "react"
-import { Link, useOutletContext } from "react-router-dom"
 import axios from "axios"
 import { Containers } from "../../utils/socialmedia"
 import { ProfileHeader, UserMain } from "./styles"
 import { Info } from "./Info"
+import { useParams, useOutletContext } from "react-router-dom"
+import { Error } from "./Error"
 
-export const Me = () => {
+export const Users = () => {
 
     const { setAdsDisplay } = useOutletContext()
 
@@ -14,7 +15,7 @@ export const Me = () => {
         setAdsDisplay(false)
     })
 
-    const userId = localStorage.getItem('id')
+    const { id } = useParams()
     const [user, setUser] = useState({})
     const [userTags, setUserTags] = useState({})
     let image
@@ -22,21 +23,34 @@ export const Me = () => {
     
     useEffect(() => {
         const fetchUser = async () => {
-            const data = await axios.get(`${defaultUrl}user/id/${userId}`)
-            .catch((err) => { console.log(err) })
-            console.log(data);
+            const data = await axios.get(`${defaultUrl}user/id/${id}`)
+            .catch((err) => { return err })
+
+            if (data?.response?.status === 404) {
+                setUser( {
+                    error : true
+                })
+                return 
+            }
     
             setUser(data.data.user[0])
         }
         const fetchTags = async () => {
-            const data = await axios.get(`${defaultUrl}tags/id/${userId}`)
-            .catch((err) => { console.log(err) })
+            const data = await axios.get(`${defaultUrl}tags/id/${id}`)
+            .catch((err) => { return err })
+
+            if (data?.response?.status === 404) {
+                setUserTags( {
+                    error : true
+                })
+                return 
+            }
 
             setUserTags(data.data.tags)
         }
         fetchUser()
         fetchTags()
-    }, [userId])
+    }, [id])
 
     console.log(user.foto);
 
@@ -55,9 +69,7 @@ export const Me = () => {
             <ProfileHeader>
                 <div className="user">
                     <img src={image} alt="" />
-                    <Link to="/app/edit">
-                        <button>EDITAR  PERFIL</button>
-                    </Link>
+                    <button>SEGUIR</button>
                 </div>
                 <div className="edit">
                     <span>
@@ -88,6 +100,7 @@ export const Me = () => {
 
                 </div>
             </UserMain>
+            <Error error={user?.error}/>
         </Containers>
     )
 }

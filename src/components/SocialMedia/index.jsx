@@ -1,13 +1,15 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { Navigate, Outlet } from "react-router-dom"
+import { Navigate, Outlet, useNavigate } from "react-router-dom"
 import { defaultUrl } from "../helpers/url"
-import { Container, ExitContainer, FeedContainer, Links, PromotionContainer, Sair, User, UserInfoContainer, UserOpt } from "./styles"
+import { Container, ExitContainer, FeedContainer, Links, NewPost, OptContainer, PromotionContainer, Sair, User, UserInfoContainer, UserOpt } from "./styles"
 import logo from "../../assets/img/logo.svg"
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 let linkTheme = {
     font: "var(--font-color)",
-    icon: "2px var(--font-color)",
+    icon: "1.5px var(--font-color)",
     icon_color: "#0000",
     weight: "500"
 }
@@ -18,13 +20,26 @@ let linkThemeActive = {
     weight: "700"
 }
 
+let visibleDisplay = {
+    display: "flex"
+}
+let invisibleDisplay = {
+    display: "none"
+}
+
 
 const SocialMedia = () => {
     const userToken = localStorage.getItem('token')
     const userId = localStorage.getItem('id')
 
+    const navigator = useNavigate()
+    const exitSuccess = () => toast.success('Usuário deslogado com Sucesso!')
+
     const StyleBackup = new Array(7).fill(false)
+    StyleBackup[0] = true
     const [navBarStyleSetter, setNavBarStyleSetter] = useState(StyleBackup)
+
+    const [adsDisplay, setAdsDisplay] = useState(false)
 
 
     const handleLinkChange = (e) => {
@@ -38,6 +53,14 @@ const SocialMedia = () => {
             }
         })
         setNavBarStyleSetter(newArr)
+    }
+    const navBarReseter = () => {
+        setNavBarStyleSetter(StyleBackup.map((item, index) => {
+            if (index === 0) {
+                return false
+            }
+            else return item
+        }))
     }
 
     const [user, setUser] = useState({})
@@ -62,11 +85,29 @@ const SocialMedia = () => {
         return <Navigate to="/login" />
     }
 
+    const exitApp = () => {
+        exitSuccess()
+        setTimeout(() => { 
+            localStorage.removeItem('id')
+            localStorage.removeItem('token')
+            navigator('/login') 
+        }, 2500) 
+    }
+
 
     return (
         <Container>
             <header className="app-header">
-                <img src={logo} alt="" />
+                <div>
+                    <img src={logo} alt="" />
+                </div>
+                <div className="search">
+                    <input type="text" placeholder="Pesquisar" name="" id="" />
+                    <i className="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <div className="fixer">
+
+                </div>
             </header>
             <div className="user-area-container">
                 <UserInfoContainer>
@@ -77,66 +118,74 @@ const SocialMedia = () => {
                             <span className="userName">@{user.user_name}</span>
                         </div>
                     </User>
-                    <UserOpt selected={navBarStyleSetter}>
-                        <ul id="items-container">
-                            <li>
-                                <Links onClick={handleLinkChange} theme={navBarStyleSetter[0] ? linkThemeActive : linkTheme} id="0">
-                                    <i className="fa-solid fa-spa"></i>
-                                    <span>HOME</span>
-                                </Links>
-                            </li>
-                            <li>
-                                <Links to="/app/me" onClick={handleLinkChange} theme={navBarStyleSetter[1] ? linkThemeActive : linkTheme} id="1">
-                                    <i className="fa-solid fa-user"></i>
-                                    <span>MEU PERFIL</span>
-                                </Links>
-                            </li>
-                            <li>
-                                <Links onClick={handleLinkChange} theme={navBarStyleSetter[2] ? linkThemeActive : linkTheme} id="2">
-                                    <i className="fa-solid fa-bookmark"></i>
-                                    <span>FAVORITOS</span>
-                                </Links>
-                            </li>
-                            <li>
-                                <Links onClick={handleLinkChange} theme={navBarStyleSetter[3] ? linkThemeActive : linkTheme} id="3">
-                                    <i className="fa-solid fa-check-circle"></i>
-                                    <span>LIDOS</span>
-                                </Links>
-                            </li>
-                            <li>   
-                                <Links onClick={handleLinkChange} theme={navBarStyleSetter[4] ? linkThemeActive : linkTheme} id="4">
-                                    <i className="fa-solid fa-shopping-bag"></i>
-                                    <span>MEUS E-BOOKS</span>
-                                </Links>
-                            </li>
-                            <li>
-                                <Links onClick={handleLinkChange} theme={navBarStyleSetter[5] ? linkThemeActive : linkTheme} id="5">
-                                    <i className="fa-solid fa-crown"></i>
-                                    <span>LÍRIO PLUS</span>
-                                </Links>
-                            </li>
-                            <li>
-                                <Links to="/app/edit" onClick={handleLinkChange} theme={navBarStyleSetter[6] ? linkThemeActive : linkTheme} id="6">
-                                    <i className="fa-solid fa-user-edit"></i>
-                                    <span>EDITAR PERFIL</span>
-                                </Links>
-                            </li>
-                        </ul>
-                    </UserOpt>
+                    <OptContainer>
+                        <UserOpt selected={navBarStyleSetter}>
+                            <ul id="items-container">
+                                <li>
+                                    <Links to="/app/feed" onClick={handleLinkChange} theme={navBarStyleSetter[0] ? linkThemeActive : linkTheme} id="0">
+                                        <i className="fa-solid fa-spa"></i>
+                                        <span>HOME</span>
+                                    </Links>
+                                </li>
+                                <li>
+                                    <Links to="/app/me" onClick={handleLinkChange} theme={navBarStyleSetter[1] ? linkThemeActive : linkTheme} id="1">
+                                        <i className="fa-solid fa-user"></i>
+                                        <span>MEU PERFIL</span>
+                                    </Links>
+                                </li>
+                                <li>
+                                    <Links onClick={handleLinkChange} theme={navBarStyleSetter[2] ? linkThemeActive : linkTheme} id="2">
+                                        <i className="fa-solid fa-bookmark"></i>
+                                        <span>FAVORITOS</span>
+                                    </Links>
+                                </li>
+                                <li>
+                                    <Links onClick={handleLinkChange} theme={navBarStyleSetter[3] ? linkThemeActive : linkTheme} id="3">
+                                        <i className="fa-solid fa-check-circle"></i>
+                                        <span>LIDOS</span>
+                                    </Links>
+                                </li>
+                                <li>   
+                                    <Links onClick={handleLinkChange} theme={navBarStyleSetter[4] ? linkThemeActive : linkTheme} id="4">
+                                        <i className="fa-solid fa-shopping-bag"></i>
+                                        <span>MEUS E-BOOKS</span>
+                                    </Links>
+                                </li>
+                                <li>
+                                    <Links onClick={handleLinkChange} theme={navBarStyleSetter[6] ? linkThemeActive : linkTheme} id="6">
+                                        <i className="fa-solid fa-shopping-cart"></i>
+                                        <span>CARRINHO</span>
+                                    </Links>
+                                </li>
+                                <li>
+                                    <Links onClick={handleLinkChange} theme={navBarStyleSetter[5] ? linkThemeActive : linkTheme} id="5">
+                                        <i className="fa-solid fa-crown"></i>
+                                        <span>LÍRIO PLUS</span>
+                                    </Links>
+                                </li>
+                            </ul>
+                        </UserOpt>
+                        <NewPost to="/app/new">
+                            <button onClick={navBarReseter}>
+                                NOVA PUBLICAÇÃO
+                            </button>
+                        </NewPost>
+                    </OptContainer>
                     <ExitContainer>
-                        <Sair>
+                        <Sair onClick={exitApp}>
                             <i className="fa-solid fa-sign-out"></i>
                             SAIR
                         </Sair>
                     </ExitContainer>
                 </UserInfoContainer>
                 <FeedContainer>
-                    <Outlet />
+                    <Outlet context={ {setAdsDisplay} }/>
                 </FeedContainer>
-                <PromotionContainer>
+                <PromotionContainer theme={adsDisplay ? invisibleDisplay : visibleDisplay}>
 
                 </PromotionContainer>
             </div>
+            <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={false} />
         </Container>
     )
 }

@@ -9,10 +9,37 @@ const Container = styled.div`
     width: 100%;
     background-color: var(--background);
     .app-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         height: 5rem;
         width: 100%;
+        padding: 0 5rem;
+        background-color: var(--yellow-medium);
         img {
-            height: 2rem;
+            height: 5rem;
+        }
+        input {
+            width: 15vw;
+            height: 3vh;
+            padding: 1rem;
+            border: 0;
+        }
+        .search {
+            display: flex;
+            background-color: #fff;
+            border-radius: 10px;
+            align-items: center;
+            gap: .5rem;
+            padding-right: .5rem;
+            i {
+                font-size: 1.2rem;
+                color: var(--purple-dark);
+            }
+        }
+        .fixer {
+            width: 6%;
+            height: 1rem;
         }
     }
     .user-area-container {
@@ -41,7 +68,7 @@ const FeedContainer = styled.div`
 `
 const PromotionContainer = styled.div`
     background: linear-gradient(0deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.25)), var(--yellow-medium);
-    display: flex;
+    display: ${(props) => props.theme.display};
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -56,8 +83,8 @@ const User = styled.div`
     gap: 1rem;
     color: var(--font-color);
     img {
-        height: 7rem;
-        width: 7rem;
+        height: 5vw;
+        width: 5vw;
         object-fit: cover;
         border-radius: 360px;
         border: 2px solid var(--background);
@@ -78,6 +105,13 @@ const User = styled.div`
             font-weight: 300;
         }
     }
+`
+
+const OptContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
 `
 
 const UserOpt = styled.div`
@@ -102,7 +136,10 @@ const UserOpt = styled.div`
             display: flex;
             width: 100%;
             a {
-                padding: 1.2rem;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 1.4vh;
                 border-radius: 25px;
                 width: 100%;
                 &:hover {
@@ -110,12 +147,12 @@ const UserOpt = styled.div`
                 }
             }
             i {
-                font-size: 1.3rem;
-                height: 1.3rem;
-                width: 1.6rem;
+                font-size: clamp(1rem, 1vw, 1.3rem);
+                height: 1.7rem;
+                width: 1.7rem;
             }
             span {
-                font-size: 1.3rem;
+                font-size: clamp(1rem, 1vw, 1.3rem);
                 letter-spacing: 0.03rem;
             }
         }
@@ -131,13 +168,13 @@ const ExitContainer = styled.div`
 const Sair = styled(Link)`
     display: flex;
     gap: .5rem;
-    font-size: 1.1rem;
+    font-size: clamp(.5rem, 1vw, 1.1rem);
     text-decoration: none;
     color: var(--font-color);
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
     i {
-        font-size: 1.3rem;
+        font-size: clamp(1rem, 1vw, 1.3rem);
     }
     &:hover {
         color: var(--purple-dark)
@@ -154,6 +191,20 @@ const Links = styled(Link)`
         color:  ${(props) => props.theme.icon_color};
     }
 `
+const NewPost = styled(Link)`
+    width: 100%;
+    button {
+        background-color: var(--purple-dark);
+        width: 100%;
+        color: #fff;
+        border-radius: 10px;
+        padding: .5rem 0;
+        border: 0;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+`
 
 export {
     Container,
@@ -164,5 +215,7 @@ export {
     UserOpt,
     ExitContainer,
     Sair,
-    Links
+    Links,
+    OptContainer,
+    NewPost
 }

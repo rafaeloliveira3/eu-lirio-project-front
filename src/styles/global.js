@@ -19,11 +19,11 @@ export const GlobalStyle = createGlobalStyle`
     }
     
     html {
-        @media(max-width: 1080px) {
-            font-size: 93.75%;
-        }
         @media(max-width: 720px) {
             font-size: 87.5%;
+        }
+        @media(max-width: 1080px) {
+            font-size: 93.75%;
         }
     }
 
@@ -34,6 +34,7 @@ export const GlobalStyle = createGlobalStyle`
     body, html {
         height: 100%;
         width: 100%;
+        overflow-y: scroll;
     }
 
     body, input, textarea, button {

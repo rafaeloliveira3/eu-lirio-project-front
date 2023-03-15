@@ -6,9 +6,14 @@ import { defaultUrl } from "../../helpers/url"
 import { Checkbox } from "./utils/Checkbox"
 import { uploadImage } from "../../helpers/firebase"
 import { toast, ToastContainer } from 'react-toastify';
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useOutletContext } from "react-router-dom"
 
 export const Edit = () => {
+    const { setAdsDisplay } = useOutletContext()
+
+    useEffect(() => {
+        setAdsDisplay(false)
+    })
 
     const navigate = useNavigate()
 
@@ -91,7 +96,6 @@ export const Edit = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         const imageurl = await handleImage()
-        console.log(imageurl.length)
         const birthDate = userBirth.split("T")[0]
 
         const edited = {
@@ -104,11 +108,12 @@ export const Edit = () => {
             premium: 0,
             id_tag_1: 1,
             id_tag_2: null,
-            id_genero_1: 1,
-            id_genero_2: 2,
-            id_genero_3: 4
+            generos: [
+                {
+                    id_genero : 1
+                }
+            ]
         }
-        console.log(edited);
         const res = await axios.put(`${defaultUrl}user/id/${userId}`, edited)
         .catch((err) => {
             console.log(err);
