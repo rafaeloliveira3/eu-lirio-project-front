@@ -25,18 +25,6 @@ const Container = styled.div`
             padding: 1rem;
             border: 0;
         }
-        .search {
-            display: flex;
-            background-color: #fff;
-            border-radius: 10px;
-            align-items: center;
-            gap: .5rem;
-            padding-right: .5rem;
-            i {
-                font-size: 1.2rem;
-                color: var(--purple-dark);
-            }
-        }
         .fixer {
             width: 6%;
             height: 1rem;
@@ -206,6 +194,19 @@ const NewPost = styled(Link)`
     }
 `
 
+const SearchContainer = styled.div`
+    display: ${(props) => props.theme.display};
+    background-color: #fff;
+    border-radius: 10px;
+    align-items: center;
+    gap: .5rem;
+    padding-right: .5rem;
+    i {
+        font-size: 1.2rem;
+        color: var(--purple-dark);
+    }
+`
+
 export {
     Container,
     UserInfoContainer,
@@ -217,5 +218,6 @@ export {
     Sair,
     Links,
     OptContainer,
-    NewPost
+    NewPost,
+    SearchContainer
 }

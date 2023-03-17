@@ -9,10 +9,11 @@ import { Error } from "./Error"
 
 export const Users = () => {
 
-    const { setAdsDisplay } = useOutletContext()
+    const { setAdsDisplay, setSearchbarDisplay } = useOutletContext()
 
     useEffect(() => {
         setAdsDisplay(false)
+        setSearchbarDisplay(false)
     })
 
     const { id } = useParams()

@@ -9,10 +9,11 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate, useOutletContext } from "react-router-dom"
 
 export const Edit = () => {
-    const { setAdsDisplay } = useOutletContext()
+    const { setAdsDisplay, setSearchbarDisplay } = useOutletContext()
 
     useEffect(() => {
         setAdsDisplay(false)
+        setSearchbarDisplay(false)
     })
 
     const navigate = useNavigate()

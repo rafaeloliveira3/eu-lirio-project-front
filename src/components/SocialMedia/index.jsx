@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { Navigate, Outlet, useNavigate } from "react-router-dom"
 import { defaultUrl } from "../helpers/url"
-import { Container, ExitContainer, FeedContainer, Links, NewPost, OptContainer, PromotionContainer, Sair, User, UserInfoContainer, UserOpt } from "./styles"
+import { Container, ExitContainer, FeedContainer, Links, NewPost, OptContainer, PromotionContainer, Sair, SearchContainer, User, UserInfoContainer, UserOpt } from "./styles"
 import logo from "../../assets/img/logo.svg"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
@@ -40,6 +40,7 @@ const SocialMedia = () => {
     const [navBarStyleSetter, setNavBarStyleSetter] = useState(StyleBackup)
 
     const [adsDisplay, setAdsDisplay] = useState(false)
+    const [searchbarDisplay, setSearchbarDisplay] = useState(false)
 
 
     const handleLinkChange = (e) => {
@@ -101,10 +102,10 @@ const SocialMedia = () => {
                 <div>
                     <img src={logo} alt="" />
                 </div>
-                <div className="search">
+                <SearchContainer className="search" theme={searchbarDisplay ? invisibleDisplay : visibleDisplay}>
                     <input type="text" placeholder="Pesquisar" name="" id="" />
                     <i className="fa-solid fa-magnifying-glass"></i>
-                </div>
+                </SearchContainer>
                 <div className="fixer">
 
                 </div>
@@ -165,7 +166,7 @@ const SocialMedia = () => {
                                 </li>
                             </ul>
                         </UserOpt>
-                        <NewPost to="/app/new">
+                        <NewPost to="/app/new/choose">
                             <button onClick={navBarReseter}>
                                 NOVA PUBLICAÇÃO
                             </button>
@@ -179,7 +180,7 @@ const SocialMedia = () => {
                     </ExitContainer>
                 </UserInfoContainer>
                 <FeedContainer>
-                    <Outlet context={ {setAdsDisplay} }/>
+                    <Outlet context={ {setAdsDisplay, setSearchbarDisplay} }/>
                 </FeedContainer>
                 <PromotionContainer theme={adsDisplay ? invisibleDisplay : visibleDisplay}>
 

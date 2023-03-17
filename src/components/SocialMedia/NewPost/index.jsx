@@ -1,14 +1,18 @@
-import { useOutletContext } from "react-router-dom"
+import { Outlet, useOutletContext } from "react-router-dom"
 import { useEffect } from "react"
+import { Container } from "./styles"
 
 export const NewPost = () => {
-    const { setAdsDisplay } = useOutletContext()
+    const { setAdsDisplay, setSearchbarDisplay } = useOutletContext()
 
     useEffect(() => {
         setAdsDisplay(true)
+        setSearchbarDisplay(true)
     })
 
     return (
-        <h1>Hello World</h1>
+        <Container>
+            <Outlet />
+        </Container>
     )
 }

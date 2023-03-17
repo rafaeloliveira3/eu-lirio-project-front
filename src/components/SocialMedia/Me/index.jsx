@@ -8,10 +8,11 @@ import { Info } from "./Info"
 
 export const Me = () => {
 
-    const { setAdsDisplay } = useOutletContext()
+    const { setAdsDisplay, setSearchbarDisplay } = useOutletContext()
 
     useEffect(() => {
         setAdsDisplay(false)
+        setSearchbarDisplay(false)
     })
 
     const userId = localStorage.getItem('id')
