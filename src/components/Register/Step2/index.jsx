@@ -6,6 +6,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { TosContainer, BDate, Label, CheckBox, CheckBoxContainer } from "./styles"
 import axios from "axios";
+import { currentUser, userDelete } from "../../helpers/firebase";
 
 export const Step2 = () => {
     const { setUrl } = useOutletContext()
@@ -22,6 +23,7 @@ export const Step2 = () => {
     const bdError = () => toast.warning('A Conexão com o Servidor Falhou. Tente Novamente Mais Tarde')
     const onlyAdults = () => toast.warning('Apenas maiores de idade podem se Cadastrar! Redirecionando...')
     const registerSuccess = () => toast.success('Usuário Cadastrado! - Faça login para entrar em sua conta!')
+    const tagsRequired = () => toast.warning('É obrigatório selecionar uma tag!')
 
     const [fullName, setFullName] = useState('')
     const [birth, setBirth] = useState('')
@@ -45,13 +47,13 @@ export const Step2 = () => {
         }
     }
     const fixTags = () => {
-        tags.map((item) => {
+        tags.forEach((item) => {
             setFixedTags(fixedTags => [...fixedTags, {id_tag: item}])
         })
     }
 
     useEffect(() => canSubmit())
-    useEffect(() => fixTags(), [tags])
+    useEffect(() => fixTags())
 
     const handleCheckboxes = (id) => {
         if (tags.indexOf(id) > -1) {
@@ -69,10 +71,16 @@ export const Step2 = () => {
 
         const date = new Date().getFullYear()
         const birthYear = birth.split('-')[0]
+        const user = await currentUser()
 
         let fixed = [...new Map(fixedTags.map(item => [item['id_tag'], item])).values()]
+        if (fixed.length === 0) {
+            tagsRequired()
+            return
+        }
 
         if (date - birthYear < 18) { 
+            await userDelete()
             onlyAdults()
             setTimeout(() => { navigate('/') }, 2500)
         }
@@ -80,7 +88,7 @@ export const Step2 = () => {
             const registered = {
                 user_name: username,
                 email: email,
-                senha: password,
+                uid: user.uid,
                 nome: fullName,
                 data_nascimento: birth,
                 tags : fixed,
@@ -93,6 +101,7 @@ export const Step2 = () => {
 
             const res = await axios.post(`${defaultUrl}user`, registered)
             .catch((err) => { 
+                console.log(err);
                 if (err.request.status === 400) {
                     registerFailed(err)
                 }
@@ -118,7 +127,6 @@ export const Step2 = () => {
         step1Result = location.state.user
         username = step1Result.username
         email = step1Result.email
-        password = step1Result.password
     }
     else {
         return <Navigate to='/register/step1' />
@@ -150,7 +158,7 @@ export const Step2 = () => {
                     <div>
                         <CheckBox 
                             type="checkbox" 
-                            name="escritor" 
+                            name="tag-checkbox" 
                             id="1" 
                             checked={tagEscritor}
                             onChange={(e) => {setTagEscritor(!tagEscritor) ; handleCheckboxes(e.currentTarget.id)}}
@@ -160,7 +168,7 @@ export const Step2 = () => {
                     <div>
                         <CheckBox 
                             type="checkbox" 
-                            name="leitor" 
+                            name="tag-checkbox" 
                             id="2" 
                             checked={tagLeitor}
                             onChange={(e) => {setTagLeitor(!tagLeitor) ; handleCheckboxes(e.currentTarget.id)}}

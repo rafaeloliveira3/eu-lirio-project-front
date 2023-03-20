@@ -16,6 +16,7 @@ import { NewPost } from "./components/SocialMedia/NewPost";
 import { AppRedirect } from "./components/SocialMedia/Redirect";
 import { Choose } from "./components/SocialMedia/NewPost/Choose";
 import { Books } from "./components/SocialMedia/NewPost/Book";
+import { Short } from "./components/SocialMedia/NewPost/Short";
  
 export function App() {
   return (
@@ -36,7 +37,7 @@ export function App() {
               <Route path="profile/:id" element={<Users />} />
               <Route path="new/" element={<NewPost />}> 
                 <Route path="choose" element={<Choose />}/>
-                <Route path="short" element={<h1>Historias Curtas</h1>}/>
+                <Route path="short" element={<Short />}/>
                 <Route path="book" element={<Books />}/>
                 <Route path="" element={<Navigate to="/app/new/choose" />}/>
               </Route>

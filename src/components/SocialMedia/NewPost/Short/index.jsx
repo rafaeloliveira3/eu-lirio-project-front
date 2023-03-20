@@ -1,28 +1,11 @@
-import { Container, CoverInputContainer, FormInputContainer, MainForm, TypeHeader, GeneralDiv, OptInputsContainer, Tags } from "./styles"
-import { useState, useEffect } from "react"
-import axios from "axios"
-import { Files } from "./Files"
+import { Container, CoverInputContainer, FormInputContainer, MainForm, TypeHeader, GeneralDiv, OptInputsContainer } from "./styles"
+import { useState } from "react"
 import { ButtonCancel, ButtonSave, ButtonsContainer } from "../styles"
-import { defaultUrl } from "../../../helpers/url"
-import { TagsContainer } from "./styles"
-import { Checkbox } from "../utils/Checkbox"
 
-export const Books = () => {
+export const Short = () => {
 
     const [imageUpload, setImageUpload] = useState(null)
     const [previewUrl, setPreviewUrl] = useState("none")
-    const [genres, setGenres] = useState([])
-    const [genresCheckboxes, setGenresCheckboxes] = useState([])
-
-    useEffect(() => {
-        const fetchGenres = async () => {
-            const data = await axios.get(`${defaultUrl}genres`)
-            .catch(err => {console.log(err)})  
-            setGenres(data?.data)
-            setGenresCheckboxes(new Array(data?.data.length).fill(false))
-        }
-        fetchGenres()
-    }, [1])
 
     const preview = (image) => {
         const fileReader = new FileReader()
@@ -33,16 +16,12 @@ export const Books = () => {
         }
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-    }
-
     return(
         <Container>
             <TypeHeader>
-                E-BOOK
+                HISTÓRIA PEQUENA
             </TypeHeader>
-            <MainForm onSubmit={handleSubmit}>
+            <MainForm>
                 <CoverInputContainer image={previewUrl}>
                     <input 
                         type="file" 
@@ -74,39 +53,23 @@ export const Books = () => {
                     </GeneralDiv>
                     <GeneralDiv>
                         <span>Sinopse <i className="fa-solid fa-circle-exclamation"></i></span>
-                        <textarea name="" id=""></textarea>
+                        <textarea name="" id="" cols="30" rows="10"></textarea>
                     </GeneralDiv>
                     <OptInputsContainer>
-                        <GeneralDiv>
-                            <span>Preço <i className="fa-solid fa-circle-exclamation"></i></span>
-                            <input type="text" />
-                        </GeneralDiv>
                         <GeneralDiv>
                             <span>Classificação Indicativa <i className="fa-solid fa-circle-exclamation"></i></span>
                             <select name="" id="">
                                 <option value="" selected disabled hidden>Selecione a faixa etária</option>
                             </select>
                         </GeneralDiv>
-                        <GeneralDiv>
-                            <span>Volume</span>
-                            <input type="text" />
-                        </GeneralDiv>
-                        <GeneralDiv>
-                            <span>Páginas <i className="fa-solid fa-circle-exclamation"></i></span>
-                            <input type="number" name="" id="" inputMode="numeric"/>
-                        </GeneralDiv>
                     </OptInputsContainer>
                         <GeneralDiv>
                             <span>Gêneros da História <i className="fa-solid fa-circle-exclamation"></i></span>
-                            <TagsContainer>
-                                <Tags>
-                                    {genres?.map(item => <Checkbox type="genres" id={item.id} key={item.id} name={item.nome}/> )}
-                                </Tags>
-                            </TagsContainer>
+                            <div></div>
                         </GeneralDiv>
                         <GeneralDiv>
-                            <span>E-book</span>
-                            <Files />
+                            <span>História <i className="fa-solid fa-circle-exclamation"></i></span>
+                            <textarea placeholder="Escreva a sua História" name="" id="" cols="30" rows="10"></textarea>
                         </GeneralDiv>
                         <ButtonsContainer>
                             <ButtonCancel>Cancelar</ButtonCancel>

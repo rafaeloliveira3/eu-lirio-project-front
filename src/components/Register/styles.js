@@ -9,6 +9,10 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    input[type=text], input[type=password], input[type=email] {
+        border: 2px solid var(--purple-dark);
+        border-radius: 10px;
+    }
 `
 
 const NavBar = styled.nav`

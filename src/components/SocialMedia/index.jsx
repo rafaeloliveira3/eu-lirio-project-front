@@ -82,9 +82,9 @@ const SocialMedia = () => {
     else 
         image = user.foto 
 
-    if (userToken === null) {
-        return <Navigate to="/login" />
-    }
+    //if (userToken === null) {
+    //    return <Navigate to="/login" />
+    //}
 
     const exitApp = () => {
         exitSuccess()

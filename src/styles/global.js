@@ -55,10 +55,6 @@ export const GlobalStyle = createGlobalStyle`
         opacity: 0.6;
         cursor: not-allowed;
     }
-    input[type=text], input[type=password], input[type=email] {
-        border: 2px solid var(--purple-dark);
-        border-radius: 10px;
-    }
 
     .delete-user-modal-overlay {
         background-color: #00000055;

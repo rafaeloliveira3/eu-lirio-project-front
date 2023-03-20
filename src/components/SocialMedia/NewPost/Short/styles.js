@@ -50,8 +50,6 @@ const CoverInputContainer = styled.div.attrs((props) => props)`
         border-top: 2px solid var(--purple-dark);
         cursor: pointer;
         background-image: url(${(props) => props.image});
-        background-color: #00000015;
-        background-blend-mode: darken;
         background-position: center;
         background-size: cover;
 
@@ -115,7 +113,7 @@ const GeneralDiv = styled.div`
     flex-direction: column;
     width: 100%;
     gap: .3rem;
-    input[type="text"], input[type="number"], select {
+    input, select {
         border: 0;
         width: 100%;
         height: 2rem;
@@ -147,25 +145,6 @@ const GeneralDiv = styled.div`
         }
     }
 `
-const TagsContainer = styled.div`
-    font-family: 'League Spartan', sans-serif;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    width: 100%;
-    background-color: #3818710d;
-    border-bottom: 2px solid var(--purple-dark);
-    border-top: 2px solid var(--purple-dark);
-    border-radius: 12px;
-    padding: .7rem 2rem;
-    span {
-        font-weight: 600;
-    }
-`
-const Tags = styled.ul`
-    display: flex;
-    gap: 1rem;
-`
 
 export {
     Container,
@@ -174,7 +153,5 @@ export {
     CoverInputContainer,
     FormInputContainer, 
     OptInputsContainer,
-    GeneralDiv,
-    TagsContainer,
-    Tags
+    GeneralDiv
 }

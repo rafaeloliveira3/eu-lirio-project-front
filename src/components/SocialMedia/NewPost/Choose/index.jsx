@@ -14,7 +14,7 @@ export const Choose = () => {
                         <p>Publique e-books dos seus livros e, assim, os deixem disponíveis na plataforma para que outras pessoas comprem.</p>
                     </span>
                 </Links>
-                <Links>
+                <Links to="/app/new/short">
                     <IconContainer>
                         <i className="fa-solid fa-align-center"></i>
                     </IconContainer>

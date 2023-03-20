@@ -6,6 +6,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { Advices, AdvicesContent, Container, IconsContainer, IconsOrganizer, Logo, RegisterContainer, UserArea, UserForms } from "./styles"
 import axios from "axios";
+import { userLogin } from "../helpers/firebase";
 
 export const Login = () => {
     
@@ -13,37 +14,41 @@ export const Login = () => {
     const loginFailed = () => toast.error('Usuário e/ou Senha Incorretos!')
     const bdError = () => toast.warning('A Conexão com o Servidor Falhou. Tente Novamente Mais Tarde')
         
-    const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
     const handleLogin = async (e) => {
         e.preventDefault()
 
-        const user = {
-            login : username,
-            senha : password
+        const user = await userLogin(email, password)
+        if (user.error === undefined) {
+            const login = {
+                uid : user.user.uid
+            }
+            
+            const res = await axios.post(`${defaultUrl}user/login`, login)
+            .catch((err) => { 
+                console.log(err);
+                if (err.request.status === 400 || err.request.status === 404) {
+                    loginFailed()
+                }
+                else {
+                    bdError()
+                }
+            })
+    
+            if (res) {
+                const data = res.data
+                if (data.token && data.id) {
+                    localStorage.setItem('id', data.id)
+                    localStorage.setItem('token', data.token)
+                    navigate('/app/feed')
+                }
+            }
         }
-        
-        const res = await axios.post(`${defaultUrl}user/login`, user)
-        .catch((err) => { 
-            if (err.request.status === 400 || err.request.status === 404) {
-                loginFailed()
-            }
-            else {
-                bdError()
-            }
-        })
-
-        if (res) {
-            const data = res.data
-            if (data.token && data.id) {
-                localStorage.setItem('id', data.id)
-                localStorage.setItem('token', data.token)
-                navigate('/app/feed')
-            }
+        else {
+            loginFailed()
         }
-
-
     }
 
     return (
@@ -54,9 +59,9 @@ export const Login = () => {
                 <UserForms onSubmit={handleLogin}>
                     <input 
                         type="text" 
-                        placeholder="Email ou Nome de Usuário"
-                        value={username}
-                        onChange={(e) => {setUsername(e.currentTarget.value)}}
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => {setEmail(e.currentTarget.value)}}
                         required
                     />
                     <input 
