@@ -1,11 +1,25 @@
 import { Container, CoverInputContainer, FormInputContainer, MainForm, TypeHeader, GeneralDiv, OptInputsContainer } from "./styles"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { defaultUrl } from "../../../helpers/url"
+import { Checkbox } from "../utils/Checkbox"
 import { ButtonCancel, ButtonSave, ButtonsContainer } from "../styles"
+import { TagsContainer, Tags } from "../Book/styles"
+import axios from "axios"
 
 export const Short = () => {
 
     const [imageUpload, setImageUpload] = useState(null)
     const [previewUrl, setPreviewUrl] = useState("none")
+    const [genres, setGenres] = useState([])
+
+    useEffect(() => {
+        const fetchGenres = async () => {
+            const data = await axios.get(`${defaultUrl}genres`)
+            .catch(err => {console.log(err)})  
+            setGenres(data?.data)
+        }
+        fetchGenres()
+    }, [1])
 
     const preview = (image) => {
         const fileReader = new FileReader()
@@ -58,14 +72,18 @@ export const Short = () => {
                     <OptInputsContainer>
                         <GeneralDiv>
                             <span>Classificação Indicativa <i className="fa-solid fa-circle-exclamation"></i></span>
-                            <select name="" id="">
-                                <option value="" selected disabled hidden>Selecione a faixa etária</option>
+                            <select defaultValue="" name="" id="">
+                                <option value="" disabled hidden>Selecione a faixa etária</option>
                             </select>
                         </GeneralDiv>
                     </OptInputsContainer>
                         <GeneralDiv>
                             <span>Gêneros da História <i className="fa-solid fa-circle-exclamation"></i></span>
-                            <div></div>
+                            <TagsContainer>
+                                <Tags>
+                                    {genres?.map(item => <Checkbox type="genres" id={item.id} key={item.id} name={item.nome}/> )}
+                                </Tags>
+                            </TagsContainer>
                         </GeneralDiv>
                         <GeneralDiv>
                             <span>História <i className="fa-solid fa-circle-exclamation"></i></span>

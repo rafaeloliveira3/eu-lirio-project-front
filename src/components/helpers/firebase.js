@@ -18,16 +18,38 @@ const app = initializeApp(firebaseConfig)
 const firebaseAuthErrors = {
   'auth/email-already-in-use': 'O email informado já está cadastrado!',
   'auth/internal-error' : 'Erro no servidor de autenticação',
-  'auth/user-not-found' : 'Email e/ou senha incorretos'
+  'auth/user-not-found' : 'Email e/ou senha incorretos',
+  'auth/invalid-email' : 'Email Inválido!'
 }
 
-export const uploadImage =  async (image, name) => {
+
+/* FIREBASE STORAGE */
+
+export const uploadImage = async (image, name) => {
   const storage = getStorage(app)
   const imageRef = ref(storage, `profile/${name + v4()}`)
     
   await uploadBytes(imageRef, image)
   return await getDownloadURL(imageRef)
 }
+export const uploadFile = async (file, name) => {
+  const storage = getStorage(app)
+  const documentRef = ref(storage, `file/${name + v4()}`)
+
+  await uploadBytes(documentRef, file)
+  return await getDownloadURL(documentRef)
+}
+export const uploadCover = async (image, name) => {
+  const storage = getStorage(app)
+  const imageRef = ref(storage, `cover/${name + v4()}`)
+    
+  await uploadBytes(imageRef, image)
+  return await getDownloadURL(imageRef)
+}
+
+
+/* FIREBASE AUTH */
+
 export const registerUser =  async (email, password) => {
   const auth = getAuth(app)
   const user = await createUserWithEmailAndPassword(auth, email, password)
@@ -48,9 +70,10 @@ export const userDelete = async () => {
 export const userLogin = async (email, password) => {
   const auth = getAuth(app)
   const user = await signInWithEmailAndPassword(auth, email, password)
-  .catch(err => { return {
-    error: firebaseAuthErrors[err.code],
-    code: err.code
+  .catch(err => { 
+    return {
+      error: firebaseAuthErrors[err.code],
+      code: err.code
   } })
 
   return user

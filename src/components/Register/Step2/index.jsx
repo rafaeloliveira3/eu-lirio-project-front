@@ -38,7 +38,6 @@ export const Step2 = () => {
     let step1Result
     let username
     let email
-    let password
 
     const canSubmit = () => {
         if (location.state != null) {

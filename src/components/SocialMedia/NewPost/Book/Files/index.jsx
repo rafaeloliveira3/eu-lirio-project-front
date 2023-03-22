@@ -1,7 +1,40 @@
+import { useState } from "react"
 import { Container } from "./styles"
 import { FilesInputContainer } from "./styles"
 
-export const Files = () => {
+export const Files = (props) => {
+    const [fileNamePdf, setFileNamePdf] = useState("Arquivo em PDF")
+    const [fileNameEpub, setFileNameEpub] = useState("Arquivo em EPUB")
+    const [fileNameMobi, setFileNameMobi] = useState("Arquivo em MOBI")
+
+    const handleFileChange = (e) => {
+        const id = e.currentTarget.id
+        const fileIndex = {
+            'file-pdf' : 0,
+            'file-epub' : 1,
+            'file-mobi' : 2
+        }
+        let filesArray = [...props.file]
+        const newFilesArray = filesArray.map((item, index) => {
+            if (index === fileIndex[id]) {
+                switch(index) {
+                    case 0 : 
+                        setFileNamePdf(e.target.files[0].name)
+                        break
+                    case 1 : 
+                        setFileNameEpub(e.target.files[0].name)
+                        break
+                    case 2 : 
+                        setFileNameMobi(e.target.files[0].name)
+                        break
+                }
+                return e.target.files[0]
+            }
+            return item
+        })
+        props.setFile(newFilesArray)
+    }
+
     return (
         <Container>
             <FilesInputContainer>
@@ -10,13 +43,15 @@ export const Files = () => {
                     name="file-pdf" 
                     id="file-pdf" 
                     accept=".pdf"
+                    onChange={handleFileChange} 
+                    required
                 />
                 <label htmlFor="file-pdf">
                     <div className="label-content-container">
                         <div></div>
                         <div className="text-container">
-                            <i class="fa-solid fa-upload"></i>
-                            <span>Arquivo em PDF</span>
+                            <i className="fa-solid fa-upload"></i>
+                            <span>{fileNamePdf}</span>
                         </div>
                         <div className="icon-container">
                             <i className="fa-solid fa-circle-exclamation"></i>  
@@ -30,13 +65,15 @@ export const Files = () => {
                     name="file-epub" 
                     id="file-epub" 
                     accept=".epub"
+                    onChange={handleFileChange} 
+                    required
                 />
                 <label htmlFor="file-epub">
                     <div className="label-content-container">
                         <div></div>
                         <div className="text-container">
-                            <i class="fa-solid fa-upload"></i>
-                            <span>Arquivo em EPUB</span>
+                            <i className="fa-solid fa-upload"></i>
+                            <span>{fileNameEpub}</span>
                         </div>
                         <div className="icon-container">
                             <i className="fa-solid fa-circle-exclamation"></i>  
@@ -50,16 +87,17 @@ export const Files = () => {
                     name="file-mobi" 
                     id="file-mobi" 
                     accept=".mobi"
+                    onChange={handleFileChange}
                 />
                 <label htmlFor="file-mobi">
                     <div className="label-content-container">
                         <div></div>
                         <div className="text-container">
-                            <i class="fa-solid fa-upload"></i>
-                            <span>Arquivo em MOBI</span>
+                            <i className="fa-solid fa-upload"></i>
+                            <span>{fileNameMobi}</span>
                         </div>
                         <div className="icon-container">
-                            <i className="fa-solid fa-circle-exclamation"></i>  
+                            <i className="fa-solid fa-circle-exclamation transparent"></i>  
                         </div>
                     </div>
                 </label>
