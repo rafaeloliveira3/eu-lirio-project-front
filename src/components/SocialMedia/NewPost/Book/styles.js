@@ -34,24 +34,28 @@ const MainForm = styled.form`
 `
 
 const CoverInputContainer = styled.div.attrs((props) => props)`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     input[type="file"]{ 
-        display: none;
+        z-index: -1;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
     }
     label {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 20vh;
-        width: 7vw;
+        height: 17rem;
+        width: 11rem;
         background: #3818710d;
         border-radius: 20px;
         border-bottom: 2px solid var(--purple-dark);
         border-top: 2px solid var(--purple-dark);
         cursor: pointer;
         background-image: url(${(props) => props.image});
-        background-color: #00000015;
-        background-blend-mode: darken;
         background-position: center;
         background-size: cover;
 
@@ -80,6 +84,7 @@ const CoverInputContainer = styled.div.attrs((props) => props)`
                     font-family: 'League Spartan', sans-serif;
                     font-weight: 400;
                     color: #1e1e1e66;
+                    display: ${(props) => props.span};
                 }
             }
             .icon-container {
@@ -135,6 +140,7 @@ const GeneralDiv = styled.div`
         border-radius: 12px 12px 0px 0px;
         background-color: #3818710d;
         font-family: 'League Spartan', sans-serif;
+        font-size: 1rem;
     }
     span {
         font-family: 'League Spartan', sans-serif;

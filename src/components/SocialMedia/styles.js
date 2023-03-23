@@ -201,6 +201,9 @@ const SearchContainer = styled.div`
     align-items: center;
     gap: .5rem;
     padding-right: .5rem;
+    input {
+        border-radius: 10px;
+    }
     i {
         font-size: 1.2rem;
         color: var(--purple-dark);

@@ -8,9 +8,15 @@ const Container = styled.div`
 ` 
 
 const FilesInputContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     input[type="file"]{ 
-        display: none;
+        z-index: -1;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
     }
     label {
         display: flex;

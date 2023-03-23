@@ -34,16 +34,22 @@ const MainForm = styled.form`
 `
 
 const CoverInputContainer = styled.div.attrs((props) => props)`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     input[type="file"]{ 
-        display: none;
+        z-index: -1;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
     }
     label {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 20vh;
-        width: 7vw;
+        height: 17rem;
+        width: 11rem;
         background: #3818710d;
         border-radius: 20px;
         border-bottom: 2px solid var(--purple-dark);
@@ -78,6 +84,7 @@ const CoverInputContainer = styled.div.attrs((props) => props)`
                     font-family: 'League Spartan', sans-serif;
                     font-weight: 400;
                     color: #1e1e1e66;
+                    display: ${(props) => props.span};
                 }
             }
             .icon-container {
@@ -113,7 +120,7 @@ const GeneralDiv = styled.div`
     flex-direction: column;
     width: 100%;
     gap: .3rem;
-    input, select {
+    input[type="text"], input[type="number"], select {
         border: 0;
         width: 100%;
         height: 2rem;
@@ -133,6 +140,10 @@ const GeneralDiv = styled.div`
         border-radius: 12px 12px 0px 0px;
         background-color: #3818710d;
         font-family: 'League Spartan', sans-serif;
+        font-size: 1rem;
+    }
+    #history {
+        height: 15rem;
     }
     span {
         font-family: 'League Spartan', sans-serif;
@@ -146,6 +157,26 @@ const GeneralDiv = styled.div`
     }
 `
 
+const TagsContainer = styled.div`
+    font-family: 'League Spartan', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    background-color: #3818710d;
+    border-bottom: 2px solid var(--purple-dark);
+    border-top: 2px solid var(--purple-dark);
+    border-radius: 12px;
+    padding: .7rem 2rem;
+    span {
+        font-weight: 600;
+    }
+`
+const Tags = styled.ul`
+    display: flex;
+    gap: 1rem;
+`
+
 export {
     Container,
     TypeHeader,
@@ -153,5 +184,7 @@ export {
     CoverInputContainer,
     FormInputContainer, 
     OptInputsContainer,
-    GeneralDiv
+    GeneralDiv,
+    TagsContainer,
+    Tags
 }

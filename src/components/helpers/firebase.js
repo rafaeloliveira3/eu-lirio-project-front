@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes, getDownloadURL  } from "firebase/storage"
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject  } from "firebase/storage"
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, deleteUser } from "firebase/auth"
 import { v4 } from "uuid";
 
@@ -31,6 +31,16 @@ export const uploadImage = async (image, name) => {
     
   await uploadBytes(imageRef, image)
   return await getDownloadURL(imageRef)
+}
+export const deleteFile = async (downloadUrl) => {
+  const storage = getStorage(app)
+  const imageRef = ref(storage, downloadUrl)
+
+  await deleteObject(imageRef)
+  .catch((err) => {
+    console.log(err);
+  })
+  return true
 }
 export const uploadFile = async (file, name) => {
   const storage = getStorage(app)

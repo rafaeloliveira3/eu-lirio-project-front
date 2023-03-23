@@ -8,13 +8,17 @@ import { TagsContainer } from "./styles"
 import { Checkbox } from "../utils/Checkbox"
 import { Options } from "../utils/Options"
 import { toast, ToastContainer } from 'react-toastify';
-import { uploadCover, uploadFile } from "../../../helpers/firebase"
+import { deleteFile, uploadCover, uploadFile } from "../../../helpers/firebase"
+import { useNavigate } from "react-router-dom"
 
 export const Books = () => {
+
+    const navigate = useNavigate()
 
     const [imageUpload, setImageUpload] = useState(null)
     const [fileUpload, setFileUpload] = useState([null, null, null])
     const [previewUrl, setPreviewUrl] = useState("none")
+    const [spanDisplay, setSpanDisplay] = useState("block")
     const [genres, setGenres] = useState([])
     const [parentalRatings, setParentalRatings] = useState([])
 
@@ -24,6 +28,7 @@ export const Books = () => {
     const [sinopse, setSinopse] = useState("")
     const [preco, setPreco] = useState(0.00)
     const [currentRating, setCurrentRating] = useState(0)
+    const [publicationGenres, setPublicationGenres] = useState([])
 
     const userId = localStorage.getItem('id')
 
@@ -34,7 +39,7 @@ export const Books = () => {
             setGenres(data?.data)
         }
         fetchGenres()
-    }, [1])
+    }, [])
     useEffect(() => {
         const fetchRatings = async () => {
             const data = await axios.get(`${defaultUrl}parental-ratings`)
@@ -42,18 +47,19 @@ export const Books = () => {
             setParentalRatings(data?.data.parental_ratings)
         }
         fetchRatings()
-    }, [1])
+    }, [])
 
     const publicationFailed = (err) => toast.error(`${err.response.data} - Erro: ${err.response.status}`)
     const bdError = () => toast.warning('A Conexão com o Servidor Falhou. Tente Novamente Mais Tarde')
-    const publicationSuccess = () => toast.success('Usuário Cadastrado! - Faça login para entrar em sua conta!')
+    const publicationSuccess = () => toast.success('Livro públicado com sucesso!')
 
     const preview = (image) => {
         const fileReader = new FileReader()
         fileReader.onloadend = () => (setPreviewUrl(fileReader.result))
+        setSpanDisplay('none')
 
         if (image) {
-            fileReader.readAsDataURL(image);
+            fileReader.readAsDataURL(image)
         }
     }
     const handleOptions = (e) => {
@@ -75,6 +81,12 @@ export const Books = () => {
         
     const handleSubmit = async (e) => {
         e.preventDefault()
+        const genresJson = publicationGenres.map(item => {
+            return {
+                id_genero: item
+            }
+        })
+
         const urlArray = await handleFiles()
         const urlCover = await handleImage()
         
@@ -91,22 +103,42 @@ export const Books = () => {
             id_classificacao: currentRating,
             id_usuario: userId,
             id_tipo_publicacao : 1,
-            generos : [
-                {
-                    id_genero : 1
-                }
-            ]
+            generos : genresJson
         }
-        console.log(history)
-
-        const response = await axios.post(`${defaultUrl}announcement`, history)
+        const res = await axios.post(`${defaultUrl}announcement`, history)
             .catch((err) => {
+                deleteFile(urlCover)
+                urlArray.forEach(item => {
+                    deleteFile(item)
+                })
                 if (err.response?.status !== 500) {
                     publicationFailed(err)
                 }
                 bdError()
             })
-        console.log(response);
+        if (res.status === 201) {
+            publicationSuccess()
+            setTimeout(() => { navigate('/app/feed') }, 2500)
+        }
+    }
+
+    const handleCancel = (e) => {
+        e.preventDefault()
+    }
+
+    const handleGenres = (e) => {
+        const id = +e.currentTarget.id.split('-')[1]
+        if (e.currentTarget.checked) {
+            setPublicationGenres([...publicationGenres, id])
+        }
+        else {
+            let genreIndex = publicationGenres.indexOf(id)
+            if (genreIndex !== -1) {
+                setPublicationGenres(publicationGenres.filter((item, index) => {
+                    return genreIndex !== index
+                }))
+            }
+        }
     }
 
     return(
@@ -115,7 +147,7 @@ export const Books = () => {
                 E-BOOK
             </TypeHeader>
             <MainForm onSubmit={handleSubmit}>
-                <CoverInputContainer image={previewUrl}>
+                <CoverInputContainer image={previewUrl} span={spanDisplay}>
                     <input 
                         type="file" 
                         name="book-cover" 
@@ -191,7 +223,7 @@ export const Books = () => {
                             <span>Volume</span>
                             <input 
                                 type="number" 
-                                min="0" 
+                                min="1" 
                                 step="1"
                                 value={volume}
                                 onChange={(e) => {
@@ -219,7 +251,7 @@ export const Books = () => {
                             <span>Gêneros da História <i className="fa-solid fa-circle-exclamation"></i></span>
                             <TagsContainer>
                                 <Tags>
-                                    {genres?.map(item => <Checkbox type="genres" id={item.id} key={item.id} name={item.nome}/> )}
+                                    {genres?.map(item => <Checkbox onChange={handleGenres} type="genres" id={item.id} key={item.id} name={item.nome}/> )}
                                 </Tags>
                             </TagsContainer>
                         </GeneralDiv>
@@ -228,12 +260,12 @@ export const Books = () => {
                             <Files setFile={setFileUpload} file={fileUpload}/>
                         </GeneralDiv>
                         <ButtonsContainer>
-                            <ButtonCancel>Cancelar</ButtonCancel>
+                            <ButtonCancel onClick={handleCancel}>Cancelar</ButtonCancel>
                             <ButtonSave type="submit">Salvar</ButtonSave>
                         </ButtonsContainer>
                 </FormInputContainer>
             </MainForm>
-            <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={false}/>
+            <ToastContainer position={toast.POSITION.TOP_CENTER}/>
         </Container>
     )
 }

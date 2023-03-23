@@ -4,7 +4,7 @@ import Modal from "react-modal"
 import axios from "axios"
 import { defaultUrl } from "../../helpers/url"
 import { Checkbox } from "./utils/Checkbox"
-import { uploadImage } from "../../helpers/firebase"
+import { deleteFile, uploadImage } from "../../helpers/firebase"
 import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate, useOutletContext } from "react-router-dom"
 
@@ -18,6 +18,14 @@ export const Edit = () => {
 
     const navigate = useNavigate()
 
+    const [genres, setGenres] = useState([])
+    const [userGenres, setUserGenres] = useState([])
+    const [genresBackup, setGenresBackup] = useState([])
+
+    const [tags, setTags] = useState([])
+    const [userTags, setUserTags] = useState([])
+    const [tagsBackup, setTagsBackup] = useState([])
+
     const [userName, setUserName] = useState("")
     const [userFullName, setUserFullName] = useState("")
     const [userBio, setUserBio] = useState("Nada Informado")
@@ -27,29 +35,34 @@ export const Edit = () => {
     const [imageUpload, setImageUpload] = useState(null)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
     const [previewUrl, setPreviewUrl] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
-    const [tags, setTags] = useState([])
-    const [genres, setGenres] = useState([])
-    
-    const [tagsCheckboxes, setTagsCheckboxes] = useState([])
-    const [genresCheckboxes, setGenresCheckboxes] = useState([])
-    
-    const deleteSucces = () => toast.success('Usuário Deletado Com Sucesso!')
 
     const userId = localStorage.getItem('id')
-    const [user, setUser] = useState({})
+    
+    const deleteSucces = () => toast.success('Usuário Deletado Com Sucesso!')
     
     // FETCHING USER DATA
     useEffect(() => {
         const fetchUser = async () => {
             const data = await axios.get(`${defaultUrl}user/id/${userId}`)
             .catch((err) => { console.log(err) })
-    
-            setUser(data.data.user[0])
-            setUserName(data.data.user[0].user_name)
-            setUserFullName(data.data.user[0].nome)
-            setUserBirth(data.data.user[0].data_nascimento)
-            setUserEmail(data.data.user[0].email)
-            console.log(data.data.user[0])
+            setUserGenres(data?.data.user[0].generos.map(item => {
+                return item.id
+            }))
+            setGenresBackup(data?.data.user[0].generos.map(item => {
+                return item.id
+            }))
+
+            setUserTags(data?.data.user[0].tags.map(item => {
+                return item.id
+            }))
+            setTagsBackup(data?.data.user[0].tags.map(item => {
+                return item.id
+            }))
+
+            setUserName(data?.data.user[0].user_name)
+            setUserFullName(data?.data.user[0].nome)
+            setUserBirth(data?.data.user[0].data_nascimento)
+            setUserEmail(data?.data.user[0].email)
 
             if (data.data.user[0].foto !== null && data.data.user[0].foto !== undefined) setPreviewUrl(data.data.user[0].foto)
             if (data.data.user[0].biografia !== null && data.data.user[0].biografia !== undefined) setUserBio(data.data.user[0].biografia)
@@ -63,10 +76,9 @@ export const Edit = () => {
             const data = await axios.get(`${defaultUrl}tags`)
             .catch(err => {console.log(err)})  
             setTags(data?.data.tags)
-            setTagsCheckboxes(new Array(data?.data.tags.length).fill(false))
         }
         fetchTags()
-    }, [1])
+    }, [])
 
 
     //FETCHING BOOK GENRES
@@ -75,11 +87,29 @@ export const Edit = () => {
             const data = await axios.get(`${defaultUrl}genres`)
             .catch(err => {console.log(err)})  
             setGenres(data?.data)
-            setGenresCheckboxes(new Array(data?.data.length).fill(false))
         }
         fetchGenres()
-    }, [1])
+    }, [])
 
+    // FETCHING USER GENRES 
+    useEffect(() => {
+        const setCheckboxesActive = () => {
+            userGenres.forEach(item => {
+                document.querySelector(`#genres-${item}`).checked = true
+            })
+        }
+        setCheckboxesActive()
+    }, [genresBackup])
+
+    //FETCHING USER TAGS
+    useEffect(() => {
+        const setCheckboxesActive = () => {
+            userTags.forEach(item => {
+                document.querySelector(`#tags-${item}`).checked = true
+            })
+        }
+        setCheckboxesActive()
+    }, [tagsBackup])
 
     const preview = (image) => {
         const fileReader = new FileReader()
@@ -90,12 +120,33 @@ export const Edit = () => {
         }
     }
     const handleImage = async () => {
+        if (imageUpload === null) {
+            return {
+                exclude : false,
+                url : previewUrl
+            }
+        }
         let url = await uploadImage(imageUpload, imageUpload.name)
-        return url
+        return {
+            exlude : true,
+            url : url
+        }
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+    
+        let tagsArr = userTags
+
+        const genresJson = userGenres.map(item => {
+            return {
+                id_genero: item
+            }
+        })
+        if(tagsArr[1] === undefined) {
+            tagsArr[1] = null
+        }
+
         const imageurl = await handleImage()
         const birthDate = userBirth.split("T")[0]
 
@@ -103,23 +154,21 @@ export const Edit = () => {
             user_name: userName,
             nome: userFullName,
             data_nascimento: birthDate,
-            foto: imageurl,
+            foto: imageurl.url,
             biografia: userBio,
             email: userEmail,
             premium: 0,
-            id_tag_1: 1,
-            id_tag_2: null,
-            generos: [
-                {
-                    id_genero : 1
-                }
-            ]
+            id_tag_1: userTags[0],
+            id_tag_2: userTags[1] ? userTags[1] : null,
+            generos: genresJson
         }
         const res = await axios.put(`${defaultUrl}user/id/${userId}`, edited)
         .catch((err) => {
-            console.log(err);
+            console.log(err)
+            if (imageurl.exclude) {
+                deleteFile(imageurl)
+            }
         })
-        console.log(res);
         if (res.status === 200) {
             window.location.reload()
         }
@@ -135,15 +184,32 @@ export const Edit = () => {
 
     const handleTags = (e) => {
         const id = +e.currentTarget.id.split('-')[1]
-        console.log(id - 1);
-        const updatedTagsArr = tagsCheckboxes.map((item, index) =>
-            index === id - 1 ? !item : item
-        ) 
-        console.log(updatedTagsArr);
+        if (e.currentTarget.checked) {
+            setUserTags([...userTags, id])
+        }
+        else {
+            let tagIndex = userTags.indexOf(id)
+            if (tagIndex !== -1) {
+                setUserTags(userTags.filter((item, index) => {
+                    return tagIndex !== index
+                }))
+            }
+        }
     }
 
     const handleGenres = (e) => {
-        console.log(e.currentTarget.id);
+        const id = +e.currentTarget.id.split('-')[1]
+        if (e.currentTarget.checked) {
+            setUserGenres([...userGenres, id])
+        }
+        else {
+            let genreIndex = userGenres.indexOf(id)
+            if (genreIndex !== -1) {
+                setUserGenres(userGenres.filter((item, index) => {
+                    return genreIndex !== index
+                }))
+            }
+        }
     }
 
     const handleOpenModal = () => {
