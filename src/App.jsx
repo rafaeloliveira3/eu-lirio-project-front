@@ -9,7 +9,6 @@ import { SocialMedia } from "./components/SocialMedia"
 import { Me } from "./components/SocialMedia/Me";
 import { NotFound } from "./components/NotFound";
 import { GlobalStyle } from "./styles/global";
-import { Teste } from "./components/Test";
 import { Edit } from "./components/SocialMedia/Edit";
 import { Users } from "./components/SocialMedia/Users";
 import { NewPost } from "./components/SocialMedia/NewPost";
@@ -45,7 +44,6 @@ export function App() {
               </Route>
               <Route path="" element={<Navigate to="/app/feed" />}/>
             </Route>
-            <Route path="/teste" element={<Teste />}/>
             <Route path="/*" element={<NotFound />}></Route>
           </Routes>
       </Router>

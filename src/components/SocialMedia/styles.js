@@ -52,6 +52,7 @@ const UserInfoContainer = styled.div`
 const FeedContainer = styled.div`
     flex-grow: 1;
     height: 100%;
+    max-width: ${(props) => props.theme.width};
     overflow-x: scroll;
 `
 const PromotionContainer = styled.div`
@@ -77,12 +78,13 @@ const User = styled.div`
         border-radius: 360px;
         border: 2px solid var(--background);
     }
-    div {
+    .user-info {
         display: flex;
         flex-direction: column;
         font-family: 'League Spartan', sans-serif;
         justify-content: space-evenly;
         height: 80%;
+        gap: .6rem;
 
         .name {
             font-size: 1.8rem;
@@ -92,6 +94,27 @@ const User = styled.div`
             font-size: 1.2rem;
             font-weight: 300;
         }
+    }
+`
+const NamesContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+`
+const TagsContainer = styled.div`
+    display: flex;
+    height: min-content;
+    gap: .5rem;
+    span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 25px;
+        font-weight: 600;
+        border: 1.5px solid var(--purple-dark);
+        color: var(--font-color);
+        height: 1.7rem;
+        width: 5rem;
     }
 `
 
@@ -193,7 +216,6 @@ const NewPost = styled(Link)`
         font-size: 1.1rem;
     }
 `
-
 const SearchContainer = styled.div`
     display: ${(props) => props.theme.display};
     background-color: #fff;
@@ -222,5 +244,7 @@ export {
     Links,
     OptContainer,
     NewPost,
-    SearchContainer
+    SearchContainer,
+    TagsContainer,
+    NamesContainer
 }

@@ -1,4 +1,11 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+
+const MainContainer = styled.div`
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+`
 
 const ProfileHeader = styled.header`
     background-color: var(--yellow-medium);
@@ -33,7 +40,7 @@ const ProfileHeader = styled.header`
             &:hover {
                 background-color: var(--purple-dark);
                 color: #fff;
-                transform: translateY(-5px)
+                transform: translateY(-5px);
             }
         }
     }
@@ -96,8 +103,46 @@ const InfoStyle = styled.div`
     }
 `
 
+const TagsContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+
+const Filters = styled.div`
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: #FEFCF1;
+    height: 3rem;
+    border-bottom: 2px solid var(--yellow-medium);
+`
+
+const FilterItems = styled(Link)`
+    display: flex;
+    align-items: center;
+    height: 100%;
+    color: var(--font-color);
+    font-family: 'League Spartan', sans-serif;
+    font-size: 1.2rem;
+    gap: .8rem;
+    text-decoration: none;
+    i {
+        font-size: 1.7rem;
+    }
+`
+
+const Spacer = styled.div`
+    height: 1rem;
+`
+
 export {
     ProfileHeader,
     UserMain,
-    InfoStyle
+    InfoStyle,
+    TagsContainer,
+    Filters,
+    Spacer,
+    FilterItems,
+    MainContainer
 }

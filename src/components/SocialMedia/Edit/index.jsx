@@ -9,11 +9,12 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate, useOutletContext } from "react-router-dom"
 
 export const Edit = () => {
-    const { setAdsDisplay, setSearchbarDisplay } = useOutletContext()
+    const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
 
     useEffect(() => {
         setAdsDisplay(false)
         setSearchbarDisplay(false)
+        setFeedWidth(false)
     })
 
     const navigate = useNavigate()
@@ -45,27 +46,27 @@ export const Edit = () => {
         const fetchUser = async () => {
             const data = await axios.get(`${defaultUrl}user/id/${userId}`)
             .catch((err) => { console.log(err) })
-            setUserGenres(data?.data.user[0].generos.map(item => {
+            setUserGenres(data?.data.generos.map(item => {
                 return item.id
             }))
-            setGenresBackup(data?.data.user[0].generos.map(item => {
-                return item.id
-            }))
-
-            setUserTags(data?.data.user[0].tags.map(item => {
-                return item.id
-            }))
-            setTagsBackup(data?.data.user[0].tags.map(item => {
+            setGenresBackup(data?.data.generos.map(item => {
                 return item.id
             }))
 
-            setUserName(data?.data.user[0].user_name)
-            setUserFullName(data?.data.user[0].nome)
-            setUserBirth(data?.data.user[0].data_nascimento)
-            setUserEmail(data?.data.user[0].email)
+            setUserTags(data?.data.tags.map(item => {
+                return item.id
+            }))
+            setTagsBackup(data?.data.tags.map(item => {
+                return item.id
+            })) 
 
-            if (data.data.user[0].foto !== null && data.data.user[0].foto !== undefined) setPreviewUrl(data.data.user[0].foto)
-            if (data.data.user[0].biografia !== null && data.data.user[0].biografia !== undefined) setUserBio(data.data.user[0].biografia)
+            setUserName(data?.data.user_name)
+            setUserFullName(data?.data.nome)
+            setUserBirth(data?.data.data_nascimento)
+            setUserEmail(data?.data.email)
+
+            if (data.data.foto !== null && data.data.foto !== undefined) setPreviewUrl(data.data.foto)
+            if (data.data.biografia !== null && data.data.biografia !== undefined) setUserBio(data.data.biografia)
         }
         fetchUser()
     }, [userId])
@@ -94,7 +95,7 @@ export const Edit = () => {
     // FETCHING USER GENRES 
     useEffect(() => {
         const setCheckboxesActive = () => {
-            userGenres.forEach(item => {
+            userGenres?.forEach(item => {
                 document.querySelector(`#genres-${item}`).checked = true
             })
         }
@@ -104,7 +105,7 @@ export const Edit = () => {
     //FETCHING USER TAGS
     useEffect(() => {
         const setCheckboxesActive = () => {
-            userTags.forEach(item => {
+            userTags?.forEach(item => {
                 document.querySelector(`#tags-${item}`).checked = true
             })
         }
@@ -146,7 +147,6 @@ export const Edit = () => {
         if(tagsArr[1] === undefined) {
             tagsArr[1] = null
         }
-
         const imageurl = await handleImage()
         const birthDate = userBirth.split("T")[0]
 
@@ -158,8 +158,8 @@ export const Edit = () => {
             biografia: userBio,
             email: userEmail,
             premium: 0,
-            id_tag_1: userTags[0],
-            id_tag_2: userTags[1] ? userTags[1] : null,
+            id_tag_1: tagsArr[0],
+            id_tag_2: tagsArr[1],
             generos: genresJson
         }
         const res = await axios.put(`${defaultUrl}user/id/${userId}`, edited)
@@ -218,7 +218,7 @@ export const Edit = () => {
     const handleCloseModal = () => {
         setIsDeleteModalOpen(false)
     }
-
+    
     return (
         <Container>
             <Form onSubmit={handleSubmit} image={previewUrl}>

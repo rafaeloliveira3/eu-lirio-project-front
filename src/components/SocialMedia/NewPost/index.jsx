@@ -3,11 +3,12 @@ import { useEffect } from "react"
 import { Container } from "./styles"
 
 export const NewPost = () => {
-    const { setAdsDisplay, setSearchbarDisplay } = useOutletContext()
+    const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
 
     useEffect(() => {
         setAdsDisplay(true)
         setSearchbarDisplay(true)
+        setFeedWidth(true)
     })
 
     return (

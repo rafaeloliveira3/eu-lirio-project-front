@@ -2,10 +2,11 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { Navigate, Outlet, useNavigate } from "react-router-dom"
 import { defaultUrl } from "../helpers/url"
-import { Container, ExitContainer, FeedContainer, Links, NewPost, OptContainer, PromotionContainer, Sair, SearchContainer, User, UserInfoContainer, UserOpt } from "./styles"
+import { Container, ExitContainer, FeedContainer, Links, NamesContainer, NewPost, OptContainer, PromotionContainer, Sair, SearchContainer, TagsContainer, User, UserInfoContainer, UserOpt } from "./styles"
 import logo from "../../assets/img/logo.svg"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { Tags } from "./Tags"
 
 let linkTheme = {
     font: "var(--font-color)",
@@ -18,6 +19,13 @@ let linkThemeActive = {
     icon: "none",
     icon_color: "var(--purple-dark)",
     weight: "700"
+}
+
+let feedMax = {
+    width : "100%"
+}
+let feedMin = {
+    width : "50%"
 }
 
 let visibleDisplay = {
@@ -41,6 +49,8 @@ const SocialMedia = () => {
 
     const [adsDisplay, setAdsDisplay] = useState(false)
     const [searchbarDisplay, setSearchbarDisplay] = useState(false)
+    const [feedWidth, setFeedWidth] = useState(false)
+    const [tags, setTags] = useState([])
 
 
     const handleLinkChange = (e) => {
@@ -72,15 +82,11 @@ const SocialMedia = () => {
             const data = await axios.get(`${defaultUrl}user/id/${userId}`)
             .catch((err) => { console.log(err) })
     
-            setUser(data.data.user[0])
+            setUser(data?.data)
+            setTags(data?.data.tags)
         }
         fetchData()
     }, [userId])
-
-    if (user.foto === 'undefined' || user.foto == null)
-        image = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-    else 
-        image = user.foto 
 
     //if (userToken === null) {
     //    return <Navigate to="/login" />
@@ -113,10 +119,15 @@ const SocialMedia = () => {
             <div className="user-area-container">
                 <UserInfoContainer>
                     <User>
-                        <img src={image} alt="" />
-                        <div>
-                            <span className="name">{user.nome}</span>
-                            <span className="userName">@{user.user_name}</span>
+                        <img src={user?.foto} alt="" />
+                        <div className="user-info">
+                            <NamesContainer>
+                                <span className="name">{user.nome}</span>
+                                <span className="userName">@{user.user_name}</span>
+                            </NamesContainer>
+                            <TagsContainer>
+                                {tags?.map(item => <Tags key={item.id} name={item.tag}/>)}
+                            </TagsContainer>
                         </div>
                     </User>
                     <OptContainer>
@@ -179,8 +190,8 @@ const SocialMedia = () => {
                         </Sair>
                     </ExitContainer>
                 </UserInfoContainer>
-                <FeedContainer>
-                    <Outlet context={ {setAdsDisplay, setSearchbarDisplay} }/>
+                <FeedContainer theme={feedWidth ? feedMax : feedMin}>
+                    <Outlet context={ {setAdsDisplay, setSearchbarDisplay, setFeedWidth} }/>
                 </FeedContainer>
                 <PromotionContainer theme={adsDisplay ? invisibleDisplay : visibleDisplay}>
 
