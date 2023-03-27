@@ -122,8 +122,8 @@ const SocialMedia = () => {
                         <img src={user?.foto} alt="" />
                         <div className="user-info">
                             <NamesContainer>
-                                <span className="name">{user.nome}</span>
-                                <span className="userName">@{user.user_name}</span>
+                                <span className="name">{user?.nome}</span>
+                                <span className="userName">@{user?.user_name}</span>
                             </NamesContainer>
                             <TagsContainer>
                                 {tags?.map(item => <Tags key={item.id} name={item.tag}/>)}

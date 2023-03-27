@@ -32,15 +32,14 @@ const ProfileHeader = styled.header`
         }
         button {
             background-color: transparent;
-            border: 2px solid var(--purple-dark);
-            color: var(--purple-dark);
+            border: 2px solid var(--font-color);
+            color: var(--font-color);
             padding: .5rem 4rem;
             border-radius: 10px;
             transition: all 250ms;
             &:hover {
-                background-color: var(--purple-dark);
+                background-color: var(--font-color);
                 color: #fff;
-                transform: translateY(-5px);
             }
         }
     }

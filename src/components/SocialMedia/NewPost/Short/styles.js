@@ -1,3 +1,4 @@
+import { Editor } from "draft-js";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -120,6 +121,7 @@ const GeneralDiv = styled.div`
     flex-direction: column;
     width: 100%;
     gap: .3rem;
+    height: max-content;
     input[type="text"], input[type="number"], select {
         border: 0;
         width: 100%;

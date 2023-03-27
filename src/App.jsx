@@ -16,6 +16,8 @@ import { Choose } from "./components/SocialMedia/NewPost/Choose";
 import { Books } from "./components/SocialMedia/NewPost/Book";
 import { Short } from "./components/SocialMedia/NewPost/Short";
 import { Feed } from "./components/SocialMedia/Feed";
+import { Ebooks } from "./components/SocialMedia/Feed/Ebooks";
+import { Shorts } from "./components/SocialMedia/Feed/Shorts";
  
 Modal.setAppElement('#root')
 
@@ -32,10 +34,16 @@ export function App() {
               <Route path="" element={<Navigate to="/register/step1" />}/>
             </Route>
             <Route path="/app/" element={<SocialMedia />}>
-              <Route path="feed" element={<Feed />}/>
+              <Route path="feed/" element={<Feed />}>
+                <Route path="ebooks" element={<Ebooks />}/>
+                <Route path="shorts" element={<Shorts />}/>
+                <Route path="" element={<Navigate to="/app/feed/shorts" />}/>
+              </Route>
               <Route path="me" element={<Me />}/>
               <Route path="edit" element={<Edit />} />
               <Route path="profile/:id" element={<Users />} />
+              <Route path="ebook/:id" element={<h1>Teste</h1>} />
+              <Route path="short/:id" element={<h1>Teste</h1>} />
               <Route path="new/" element={<NewPost />}> 
                 <Route path="choose" element={<Choose />}/>
                 <Route path="short" element={<Short />}/>

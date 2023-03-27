@@ -4,6 +4,8 @@ import { registerUser, userLogin } from "../../helpers/firebase"
 import { toast, ToastContainer } from 'react-toastify';
 import { Form } from "../../utils/register"
 import { PasswordContainer } from "./styles";
+import axios from "axios";
+import { defaultUrl } from "../../helpers/url";
 
 export const Step1 = () => {
     const { setUrl } = useOutletContext()
@@ -13,6 +15,9 @@ export const Step1 = () => {
     })
 
     const registerError = (error) => toast.error(`Um erro ocorreu: ${error}`)
+    const usernameExists = () => toast.error(`Esse nome de usuário já está em uso!`, {
+        autoClose : 2000
+    })
     
     const navigate = useNavigate()
     const [userName, setUserName] = useState("")
@@ -39,21 +44,29 @@ export const Step1 = () => {
         
 
         if (isValid) {
-            const userFirebase = await registerUser(email, password)
-            if (userFirebase.error === undefined) {
-                await userLogin(email, password)
-                navigate('/register/step2', {
-                    state : {
-                        user : {
-                            username: userName, 
-                            email: email, 
-                            password: password
+            const verifyUsername = await axios.get(`${defaultUrl}verify-username/${userName}`)
+            .catch(async (err) => {
+                return err
+            })
+            if (verifyUsername.response?.status === 404) {
+                const userFirebase = await registerUser(email, password)
+                if (userFirebase.error === undefined) {
+                    await userLogin(email, password)
+                    navigate('/register/step2', {
+                        state : {
+                            user : {
+                                username: userName, 
+                                email: email, 
+                                password: password
+                            }
                         }
-                    }
-                })
+                    })
+                }
+            }
+            if (verifyUsername.data) {
+                usernameExists()
             }
         }
-
     }
 
     return (

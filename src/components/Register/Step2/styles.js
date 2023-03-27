@@ -77,7 +77,7 @@ const Label = styled.label`
     font-weight: 600;
     align-items: center;
     padding: .5rem;
-    width: 5vw;
+    width: 9rem;
     gap: .2rem;
     border-radius: 20px;
     background-color: #fff;
@@ -86,13 +86,13 @@ const Label = styled.label`
         margin-top: -.6rem;
         margin-bottom: -.6rem;
         margin-right: -.6rem;
-        height: 2.5vh;
+        height: 2.2rem;
         border-top-right-radius: 20px;
         border-bottom-right-radius: 20px;
-        width: 2.5vw;
+        width: 2rem;
         color: #fff;
-
         align-items: center;
+
         i{
             font-size: 1.5rem;
             margin: auto;
@@ -112,8 +112,8 @@ const CheckBox = styled.input`
         background-color: var(--purple-medium)
     }
     &:checked + ${Label} {
+        padding-left: 1.5rem;
         justify-content: space-between;
-        padding-left: 1rem;
     }
 ` 
 

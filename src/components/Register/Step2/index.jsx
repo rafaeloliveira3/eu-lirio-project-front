@@ -27,11 +27,8 @@ export const Step2 = () => {
 
     const [fullName, setFullName] = useState('')
     const [birth, setBirth] = useState('')
-    const [tagEscritor, setTagEscritor] = useState(false)
-    const [tagLeitor, setTagLeitor] = useState(false)
 
     const [tags, setTags] = useState([])
-    const [fixedTags, setFixedTags] = useState([])
 
     const [accepted, setAccepted] = useState(false)
 
@@ -45,23 +42,21 @@ export const Step2 = () => {
             else document.querySelector('#submit').setAttribute('disabled', true)
         }
     }
-    const fixTags = () => {
-        tags.forEach((item) => {
-            setFixedTags(fixedTags => [...fixedTags, {id_tag: item}])
-        })
-    }
 
     useEffect(() => canSubmit())
-    useEffect(() => fixTags())
 
-    const handleCheckboxes = (id) => {
-        if (tags.indexOf(id) > -1) {
-            setTags(tags => tags.filter((tag) => {
-                return tag !== id
-            }))
+    const handleCheckboxes = (e) => {
+        const id = +e.currentTarget.id
+        if (e.currentTarget.checked) {
+            setTags([...tags, id])
         }
         else {
-            setTags(tags => [...tags, id])
+            let tagIndex = tags.indexOf(id)
+            if (tagIndex !== -1) {
+                setTags(tags.filter((item, index) => {
+                    return tagIndex !== index
+                }))
+            }
         }
     }
     
@@ -72,12 +67,15 @@ export const Step2 = () => {
         const birthYear = birth.split('-')[0]
         const user = await currentUser()
 
-        let fixed = [...new Map(fixedTags.map(item => [item['id_tag'], item])).values()]
+        let fixed = tags.map((item) => {
+            return {
+                id_tag : item
+            }
+        })
         if (fixed.length === 0) {
             tagsRequired()
             return
         }
-
         if (date - birthYear < 18) { 
             await userDelete()
             onlyAdults()
@@ -101,8 +99,9 @@ export const Step2 = () => {
             }
 
             const res = await axios.post(`${defaultUrl}user`, registered)
-            .catch((err) => { 
+            .catch(async (err) => { 
                 console.log(err);
+                await userDelete()
                 if (err.request.status === 400) {
                     registerFailed(err)
                 }
@@ -161,8 +160,7 @@ export const Step2 = () => {
                             type="checkbox" 
                             name="tag-checkbox" 
                             id="1" 
-                            checked={tagEscritor}
-                            onChange={(e) => {setTagEscritor(!tagEscritor) ; handleCheckboxes(e.currentTarget.id)}}
+                            onChange={(e) => {handleCheckboxes(e)}}
                         />
                         <Label htmlFor="1">Escritor <div><i className="fa-solid fa-check"></i></div></Label>
                     </div>
@@ -171,8 +169,7 @@ export const Step2 = () => {
                             type="checkbox" 
                             name="tag-checkbox" 
                             id="2" 
-                            checked={tagLeitor}
-                            onChange={(e) => {setTagLeitor(!tagLeitor) ; handleCheckboxes(e.currentTarget.id)}}
+                            onChange={(e) => {handleCheckboxes(e)}}
                         />
                         <Label htmlFor="2">Leitor <div><i className="fa-solid fa-check"></i></div></Label>
                     </div>

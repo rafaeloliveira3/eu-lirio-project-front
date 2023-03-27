@@ -6,6 +6,7 @@ import { ProfileHeader, UserMain } from "./styles"
 import { Info } from "./Info"
 import { useParams, useOutletContext } from "react-router-dom"
 import { Error } from "./Error"
+import { Navigate } from 'react-router-dom'
 
 export const Users = () => {
 
@@ -20,6 +21,7 @@ export const Users = () => {
     const { id } = useParams()
     const [user, setUser] = useState({})
     const [userTags, setUserTags] = useState({})
+    const userId = localStorage.getItem('id')
     let image
     let biografia
     
@@ -27,7 +29,6 @@ export const Users = () => {
         const fetchUser = async () => {
             const data = await axios.get(`${defaultUrl}user/id/${id}`)
             .catch((err) => { return err })
-
             if (data?.response?.status === 404) {
                 setUser( {
                     error : true
@@ -35,7 +36,7 @@ export const Users = () => {
                 return 
             }
     
-            setUser(data.data.user[0])
+            setUser(data.data)
         }
         const fetchTags = async () => {
             const data = await axios.get(`${defaultUrl}tags/id/${id}`)
@@ -54,8 +55,6 @@ export const Users = () => {
         fetchTags()
     }, [id])
 
-    console.log(user.foto);
-
     if (user.foto === undefined || user.foto === null)
         image = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
     else 
@@ -65,6 +64,12 @@ export const Users = () => {
         biografia = 'Nada Informado'
     else 
         biografia = user.biografia
+
+    if (id === userId) {
+        return (
+            <Navigate to='/app/me' />
+        )
+    }
 
     return (
         <Containers>

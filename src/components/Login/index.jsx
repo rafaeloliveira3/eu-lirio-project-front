@@ -28,7 +28,6 @@ export const Login = () => {
             
             const res = await axios.post(`${defaultUrl}user/login`, login)
             .catch((err) => { 
-                console.log(err);
                 if (err.request.status === 400 || err.request.status === 404) {
                     loginFailed()
                 }

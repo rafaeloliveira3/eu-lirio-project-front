@@ -27,6 +27,8 @@ export const Edit = () => {
     const [userTags, setUserTags] = useState([])
     const [tagsBackup, setTagsBackup] = useState([])
 
+    const [photoBackup, setPhotoBackup] = useState("")
+
     const [userName, setUserName] = useState("")
     const [userFullName, setUserFullName] = useState("")
     const [userBio, setUserBio] = useState("Nada Informado")
@@ -66,6 +68,7 @@ export const Edit = () => {
             setUserEmail(data?.data.email)
 
             if (data.data.foto !== null && data.data.foto !== undefined) setPreviewUrl(data.data.foto)
+            if (data.data.foto !== null && data.data.foto !== undefined) setPhotoBackup(data.data.foto)
             if (data.data.biografia !== null && data.data.biografia !== undefined) setUserBio(data.data.biografia)
         }
         fetchUser()
@@ -127,6 +130,7 @@ export const Edit = () => {
                 url : previewUrl
             }
         }
+        await deleteFile(photoBackup)
         let url = await uploadImage(imageUpload, imageUpload.name)
         return {
             exlude : true,
