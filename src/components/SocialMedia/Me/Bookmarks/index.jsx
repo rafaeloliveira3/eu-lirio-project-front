@@ -6,13 +6,13 @@ export const Bookmarks = (props) => {
         <Container>
             <TagContainer>
                 {
-                    props.tags?.map(item => <Tags class="tag" name={item.tag} key={item.id} />)
+                    props.tags?.map(item => <Tags class="tag" name={item.nome_tag} key={item.id_tag} />)
                 }
             </TagContainer>
             <Separator/>
             <GenreContainer>
                 {
-                    props.genres?.map(item => <Tags class="genre" name={item.nome} key={item.id} />)
+                    props.genres?.map(item => <Tags class="genre" name={item.nome_genero} key={item.id_genero} />)
                 }
             </GenreContainer>
         </Container>

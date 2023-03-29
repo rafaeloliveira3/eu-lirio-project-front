@@ -8,6 +8,7 @@ export const GlobalStyle = createGlobalStyle`
         --purple-dark: #381871;
         --purple-medium: #7822BE;
         --yellow-medium: #FBDB5A;
+        --yellow-dark: #F9C73E;
 
         --font-color: #1E1E1E;
     }

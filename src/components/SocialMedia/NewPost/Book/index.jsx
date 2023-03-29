@@ -251,7 +251,7 @@ export const Books = () => {
                             <span>Gêneros da História <i className="fa-solid fa-circle-exclamation"></i></span>
                             <TagsContainer>
                                 <Tags>
-                                    {genres?.map(item => <Checkbox onChange={handleGenres} type="genres" id={item.id} key={item.id} name={item.nome}/> )}
+                                    {genres?.map(item => <Checkbox onChange={handleGenres} type="genres" id={item.id_genero} key={item.id_genero} name={item.nome_genero}/> )}
                                 </Tags>
                             </TagsContainer>
                         </GeneralDiv>

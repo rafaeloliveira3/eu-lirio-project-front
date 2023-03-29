@@ -75,35 +75,33 @@ export const Short = () => {
                 id_genero: item
             }
         })
-
-        console.log(history);
         
-        // const urlCover = await handleImage()
+        const urlCover = await handleImage()
 
-        // let submitHistory = {
-        //     titulo : titulo,
-        //     sinopse : sinopse,
-        //     capa : urlCover,
-        //     historia : history,
-        //     premium : 0,
-        //     id_usuario : userId,
-        //     id_tipo_publicacao : 2,
-        //     id_classificacao : currentRating,
-        //     generos : genresJson
-        // }
+        let submitHistory = {
+            titulo : titulo,
+            sinopse : sinopse,
+            capa : urlCover,
+            historia : history,
+            premium : 0,
+            id_usuario : userId,
+            id_tipo_publicacao : 2,
+            id_classificacao : currentRating,
+            generos : genresJson
+        }
 
-        // const res = await axios.post(`${defaultUrl}short-storie`, submitHistory)
-        //     .catch((err) => {
-        //         deleteFile(urlCover)
-        //         if (err.response?.status !== 500) {
-        //             publicationFailed(err)
-        //         }
-        //         bdError()
-        //     })
-        // if (res.status === 201) {
-        //     publicationSuccess()
-        //     setTimeout(() => { navigate('/app/feed') }, 2500)
-        // }
+        const res = await axios.post(`${defaultUrl}short-storie`, submitHistory)
+            .catch((err) => {
+                deleteFile(urlCover)
+                if (err.response?.status !== 500) {
+                    publicationFailed(err)
+                }
+                bdError()
+            })
+        if (res.status === 201) {
+            publicationSuccess()
+            setTimeout(() => { navigate('/app/feed') }, 2500)
+        }
     }
 
     const handleGenres = (e) => {
@@ -193,7 +191,7 @@ export const Short = () => {
                             <span>Gêneros da História <i className="fa-solid fa-circle-exclamation"></i></span>
                             <TagsContainer>
                                 <Tags>
-                                    {genres?.map(item => <Checkbox onChange={handleGenres} type="genres" id={item.id} key={item.id} name={item.nome}/> )}
+                                    {genres?.map(item => <Checkbox onChange={handleGenres} type="genres" id={item.id_genero} key={item.id_genero} name={item.nome_genero}/> )}
                                 </Tags>
                             </TagsContainer>
                         </GeneralDiv>

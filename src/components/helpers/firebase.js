@@ -34,6 +34,7 @@ export const uploadImage = async (image, name) => {
 }
 export const deleteFile = async (downloadUrl) => {
   const storage = getStorage(app)
+  console.log(downloadUrl);
   const imageRef = ref(storage, downloadUrl)
 
   await deleteObject(imageRef)

@@ -5,8 +5,8 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
-    height: 100%;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
     background-color: var(--background);
     .app-header {
         display: flex;
@@ -33,7 +33,7 @@ const Container = styled.div`
     .user-area-container {
         display: flex;
         width: 100%;
-        height: 100%;
+        height: calc(100vh - 5rem);
         justify-content: space-between;
     }
 `
@@ -51,7 +51,6 @@ const UserInfoContainer = styled.div`
 `
 const FeedContainer = styled.div`
     flex-grow: 1;
-    height: 100%;
     max-width: ${(props) => props.theme.width};
     overflow-x: scroll;
 `

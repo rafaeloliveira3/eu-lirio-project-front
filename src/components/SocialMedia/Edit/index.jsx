@@ -22,13 +22,13 @@ export const Edit = () => {
     const [genres, setGenres] = useState([])
     const [userGenres, setUserGenres] = useState([])
     const [genresBackup, setGenresBackup] = useState([])
-
+    
     const [tags, setTags] = useState([])
     const [userTags, setUserTags] = useState([])
     const [tagsBackup, setTagsBackup] = useState([])
-
+    
     const [photoBackup, setPhotoBackup] = useState("")
-
+    
     const [userName, setUserName] = useState("")
     const [userFullName, setUserFullName] = useState("")
     const [userBio, setUserBio] = useState("Nada Informado")
@@ -38,7 +38,7 @@ export const Edit = () => {
     const [imageUpload, setImageUpload] = useState(null)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
     const [previewUrl, setPreviewUrl] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
-
+    
     const userId = localStorage.getItem('id')
     
     const deleteSucces = () => toast.success('Usuário Deletado Com Sucesso!')
@@ -49,17 +49,17 @@ export const Edit = () => {
             const data = await axios.get(`${defaultUrl}user/id/${userId}`)
             .catch((err) => { console.log(err) })
             setUserGenres(data?.data.generos.map(item => {
-                return item.id
+                return item.id_genero
             }))
             setGenresBackup(data?.data.generos.map(item => {
-                return item.id
+                return item.id_genero
             }))
 
             setUserTags(data?.data.tags.map(item => {
-                return item.id
+                return item.id_tag
             }))
             setTagsBackup(data?.data.tags.map(item => {
-                return item.id
+                return item.id_tag
             })) 
 
             setUserName(data?.data.user_name)
@@ -97,23 +97,21 @@ export const Edit = () => {
 
     // FETCHING USER GENRES 
     useEffect(() => {
-        const setCheckboxesActive = () => {
+        if (userGenres !== undefined) {
             userGenres?.forEach(item => {
                 document.querySelector(`#genres-${item}`).checked = true
             })
         }
-        setCheckboxesActive()
-    }, [genresBackup])
+    })
 
     //FETCHING USER TAGS
     useEffect(() => {
-        const setCheckboxesActive = () => {
+        if (userTags !== undefined) {
             userTags?.forEach(item => {
                 document.querySelector(`#tags-${item}`).checked = true
             })
         }
-        setCheckboxesActive()
-    }, [tagsBackup])
+    })
 
     const preview = (image) => {
         const fileReader = new FileReader()

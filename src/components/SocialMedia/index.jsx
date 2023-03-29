@@ -43,7 +43,7 @@ const SocialMedia = () => {
     const navigator = useNavigate()
     const exitSuccess = () => toast.success('Usuário deslogado com Sucesso!')
 
-    const StyleBackup = new Array(7).fill(false)
+    const StyleBackup = new Array(8).fill(false)
     StyleBackup[0] = true
     const [navBarStyleSetter, setNavBarStyleSetter] = useState(StyleBackup)
 
@@ -81,7 +81,6 @@ const SocialMedia = () => {
         const fetchData = async () => {
             const data = await axios.get(`${defaultUrl}user/id/${userId}`)
             .catch((err) => { console.log(err) })
-    
             setUser(data?.data)
             setTags(data?.data.tags)
         }
@@ -126,7 +125,7 @@ const SocialMedia = () => {
                                 <span className="userName">@{user?.user_name}</span>
                             </NamesContainer>
                             <TagsContainer>
-                                {tags?.map(item => <Tags key={item.id} name={item.tag}/>)}
+                                {tags?.map(item => <Tags key={item.id_tag} name={item.nome_tag}/>)}
                             </TagsContainer>
                         </div>
                     </User>
@@ -164,13 +163,19 @@ const SocialMedia = () => {
                                     </Links>
                                 </li>
                                 <li>
+                                    <Links to="/app/my-publications" onClick={handleLinkChange} theme={navBarStyleSetter[5] ? linkThemeActive : linkTheme} id="5">
+                                        <i className="fa-solid fa-pen"></i>
+                                        <span>MINHAS OBRAS</span>
+                                    </Links>
+                                </li>
+                                <li>
                                     <Links onClick={handleLinkChange} theme={navBarStyleSetter[6] ? linkThemeActive : linkTheme} id="6">
                                         <i className="fa-solid fa-shopping-cart"></i>
                                         <span>CARRINHO</span>
                                     </Links>
                                 </li>
                                 <li>
-                                    <Links onClick={handleLinkChange} theme={navBarStyleSetter[5] ? linkThemeActive : linkTheme} id="5">
+                                    <Links onClick={handleLinkChange} theme={navBarStyleSetter[7] ? linkThemeActive : linkTheme} id="7">
                                         <i className="fa-solid fa-crown"></i>
                                         <span>LÍRIO PLUS</span>
                                     </Links>
