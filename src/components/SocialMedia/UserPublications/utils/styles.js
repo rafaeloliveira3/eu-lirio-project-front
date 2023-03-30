@@ -3,12 +3,14 @@ import styled from "styled-components"
 const ItemContainer = styled.div`
     display: flex;
     align-items: center;
+    position: relative;
     background-color: #fff;
     padding: .5rem;
     transition: all 230ms;
     width: 100%;
     height: 12rem;
     border-radius: 8px;
+    cursor: pointer;
     .cover-container {
         height: 100%;
     }
@@ -20,6 +22,7 @@ const ItemContainer = styled.div`
     &:hover {
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
     }
+
 `
 const ItemText = styled.div`
     display: flex;

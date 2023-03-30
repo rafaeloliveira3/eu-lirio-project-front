@@ -48,6 +48,9 @@ export const Edit = () => {
         const fetchUser = async () => {
             const data = await axios.get(`${defaultUrl}user/id/${userId}`)
             .catch((err) => { console.log(err) })
+
+            console.log(data.data);
+
             setUserGenres(data?.data.generos.map(item => {
                 return item.id_genero
             }))
@@ -78,7 +81,8 @@ export const Edit = () => {
     useEffect(() => {
         const fetchTags = async () => {
             const data = await axios.get(`${defaultUrl}tags`)
-            .catch(err => {console.log(err)})  
+            .catch(err => {console.log("sumas")})  
+            console.log(data.data);
             setTags(data?.data.tags)
         }
         fetchTags()
@@ -97,28 +101,30 @@ export const Edit = () => {
 
     // FETCHING USER GENRES 
     useEffect(() => {
-        if (userGenres !== undefined) {
-            userGenres?.forEach(item => {
-                document.querySelector(`#genres-${item}`).checked = true
-            })
-        }
-    })
+        userGenres?.forEach(item => {
+            const checkbox = document.querySelector(`#genres-${item}`)
+            if (checkbox) {
+                checkbox.checked = true
+            }
+        })
+    }, [userGenres])
 
     //FETCHING USER TAGS
     useEffect(() => {
-        if (userTags !== undefined) {
-            userTags?.forEach(item => {
-                document.querySelector(`#tags-${item}`).checked = true
-            })
-        }
-    })
+        userTags?.forEach(item => {
+            const checkbox = document.querySelector(`#tags-${item}`)
+            if (checkbox) {
+                checkbox.checked = true
+            }
+        })
+    }, [userTags])
 
     const preview = (image) => {
         const fileReader = new FileReader()
         fileReader.onloadend = () => (setPreviewUrl(fileReader.result))
 
         if (image) {
-            fileReader.readAsDataURL(image);
+            fileReader.readAsDataURL(image)
         }
     }
     const handleImage = async () => {
@@ -172,7 +178,7 @@ export const Edit = () => {
             }
         })
         if (res.status === 200) {
-            window.location.reload()
+            document.location.reload()
         }
     }
 
@@ -267,13 +273,13 @@ export const Edit = () => {
                     <Tags>
                         <span>Você é...</span>
                         <TagsContainer>
-                            {tags?.map(item => <Checkbox type="tags" id={item.id} onChange={handleTags} key={item.id} name={item.tag}/> )}
+                            {tags?.map(item => <Checkbox type="tags" id={item.id_tag} onChange={handleTags} key={item.id_tag} name={item.nome_tag}/> )}
                         </TagsContainer>
                     </Tags>
                     <Tags>
                         <span><i className="fa-solid fa-tag"></i></span>
                         <TagsContainer>
-                            {genres?.map(item => <Checkbox type="genres" id={item.id} onChange={handleGenres} key={item.id} name={item.nome}/> )}
+                            {genres?.map(item => <Checkbox type="genres" id={item.id_genero} onChange={handleGenres} key={item.id_genero} name={item.nome_genero}/> )}
                         </TagsContainer>
                     </Tags>
                 </div>

@@ -45,7 +45,7 @@ export const deleteFile = async (downloadUrl) => {
 }
 export const uploadFile = async (file, name) => {
   const storage = getStorage(app)
-  const documentRef = ref(storage, `file/${name + v4()}`)
+  const documentRef = ref(storage, `file/${name +"-"+v4()}`)
 
   await uploadBytes(documentRef, file)
   return await getDownloadURL(documentRef)
@@ -56,6 +56,12 @@ export const uploadCover = async (image, name) => {
     
   await uploadBytes(imageRef, image)
   return await getDownloadURL(imageRef)
+}
+export const getFilesName = async (fileUrl) => {
+  const storage = getStorage(app)
+  const fileRef = ref(storage, fileUrl)
+
+  return fileRef.name.split("-")[0]
 }
 
 
@@ -86,6 +92,8 @@ export const userLogin = async (email, password) => {
       error: firebaseAuthErrors[err.code],
       code: err.code
   } })
+
+  console.log(user);
 
   return user
 }

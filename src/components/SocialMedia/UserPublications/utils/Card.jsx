@@ -3,8 +3,11 @@ import { useEffect, useState } from "react"
 import { defaultUrl } from "../../../helpers/url"
 import { Genres } from "./Genres"
 import { ContentContainer, GenreContainer, ItemContainer, ItemText, LikesContainer } from "./styles"
+import { useNavigate } from "react-router-dom"
 
 export const Card = (props) => {
+    const navigate = useNavigate()
+
     const [anuncio, setAnuncio] = useState({})
 
     useEffect(() => {
@@ -14,11 +17,14 @@ export const Card = (props) => {
         }
         getAnuncio()
     }, [1])
-
-    console.log(anuncio);
+    
+    const handleClick = (e) => {
+        const id = e.currentTarget.id
+        navigate(`/app/book/edit/${id}`)
+    }
 
     return (
-        <ItemContainer>
+        <ItemContainer id={anuncio?.id} onClick={handleClick}>
             <div className="cover-container">
                 <img src={anuncio?.capa} alt="" />
             </div>
