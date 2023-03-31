@@ -21,11 +21,9 @@ export const Edit = () => {
 
     const [genres, setGenres] = useState([])
     const [userGenres, setUserGenres] = useState([])
-    const [genresBackup, setGenresBackup] = useState([])
     
     const [tags, setTags] = useState([])
     const [userTags, setUserTags] = useState([])
-    const [tagsBackup, setTagsBackup] = useState([])
     
     const [photoBackup, setPhotoBackup] = useState("")
     
@@ -49,21 +47,13 @@ export const Edit = () => {
             const data = await axios.get(`${defaultUrl}user/id/${userId}`)
             .catch((err) => { console.log(err) })
 
-            console.log(data.data);
-
             setUserGenres(data?.data.generos.map(item => {
-                return item.id_genero
-            }))
-            setGenresBackup(data?.data.generos.map(item => {
                 return item.id_genero
             }))
 
             setUserTags(data?.data.tags.map(item => {
                 return item.id_tag
             }))
-            setTagsBackup(data?.data.tags.map(item => {
-                return item.id_tag
-            })) 
 
             setUserName(data?.data.user_name)
             setUserFullName(data?.data.nome)
@@ -81,7 +71,7 @@ export const Edit = () => {
     useEffect(() => {
         const fetchTags = async () => {
             const data = await axios.get(`${defaultUrl}tags`)
-            .catch(err => {console.log("sumas")})  
+            .catch(err => console.log(err))  
             console.log(data.data);
             setTags(data?.data.tags)
         }

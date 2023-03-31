@@ -21,8 +21,9 @@ const TypeHeader = styled.header`
 `
 const MainForm = styled.form`
     display: flex;
+    flex-direction: column;
     flex-grow: 1;
-    justify-content: space-evenly;
+    gap: 1rem;
     padding: 2rem 5rem;
     input[type="number"] {
         -moz-appearance: textfield;
@@ -145,7 +146,7 @@ const GeneralDiv = styled.div`
         font-size: 1rem;
     }
     #history {
-        height: 15rem;
+        height: 18rem;
     }
     span {
         font-family: 'League Spartan', sans-serif;
@@ -178,6 +179,27 @@ const Tags = styled.ul`
     display: flex;
     gap: 1rem;
 `
+const HistoryContainer = styled.div`
+    display: flex;
+    justify-content: space-evenly;
+`
+const HistoryDiv = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    height: max-content;
+    div {
+        width: 87%;
+    }
+    @media(max-width:1280px) {
+        div {
+            width: 94%;
+        }
+    }
+`
+
 
 export {
     Container,
@@ -188,5 +210,7 @@ export {
     OptInputsContainer,
     GeneralDiv,
     TagsContainer,
-    Tags
+    Tags,
+    HistoryContainer,
+    HistoryDiv
 }

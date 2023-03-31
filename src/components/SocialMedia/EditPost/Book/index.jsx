@@ -20,9 +20,16 @@ export const Book = () => {
     const [publication, setPublication] = useState({})
     const [authorId, setAuthorId] = useState(currentUser)
 
+    const [bookGenres, setBookGenres] = useState([])
+
     const [imageUpload, setImageUpload] = useState(null)
+    const [imageBackup, setImageBackup] = useState(null)
+
     const [fileUpload, setFileUpload] = useState([null, null, null])
+    const [fileBackup, setFileBackup] = useState([null, null, null])
+
     const [filesName, setFilesName] = useState([{}, {}, {name: null}])
+
     const [previewUrl, setPreviewUrl] = useState("none")
     const [spanDisplay, setSpanDisplay] = useState("block")
     const [genres, setGenres] = useState([])
@@ -34,14 +41,19 @@ export const Book = () => {
     const [sinopse, setSinopse] = useState("")
     const [preco, setPreco] = useState(0.00)
     const [currentRating, setCurrentRating] = useState(0)
-    const [publicationGenres, setPublicationGenres] = useState([])
 
     useEffect(() => {
         const getBookById = async () => {
             const data = await axios.get(`${defaultUrl}announcement/id/${id}`)
             .catch(err => console.log(err))
 
-            console.log(data);
+            console.log(data.data);
+
+            setBookGenres(data?.data[0].generos.map((item) => {
+                return item.id_genero
+            }))
+            setCurrentRating(data?.data[0].classificacao[0].id_classificacao)
+
             setPublication(data?.data[0])
             setAuthorId(data?.data[0].usuario[0].id_usuario)
 
@@ -52,6 +64,7 @@ export const Book = () => {
             setPaginas(data?.data[0].quantidade_paginas)
 
             setPreviewUrl(data?.data[0].capa)
+            setImageBackup(data?.data[0].capa)
             setSpanDisplay('none')
 
             const arr = [data?.data[0].pdf, data?.data[0].epub, data?.data[0].mobi]
@@ -66,9 +79,55 @@ export const Book = () => {
                 }
             }))
             setFilesName(names)
+            setFileUpload(arr.map((item) => {
+                if (item !== 'null') {
+                    return item
+                }
+                return null
+            }))
+            setFileBackup(arr.map((item) => {
+                if (item !== 'null') {
+                    return item
+                }
+                return null
+            }))
         }
         getBookById()
     }, [id])
+
+    useEffect(() => {
+        const fetchGenres = async () => {
+            const data = await axios.get(`${defaultUrl}genres`)
+            .catch(err => {console.log(err)})  
+            setGenres(data?.data)
+        }
+        fetchGenres()
+    }, [])
+
+    useEffect(() => {
+        const fetchRatings = async () => {
+            const data = await axios.get(`${defaultUrl}parental-ratings`)
+            .catch(err => {console.log(err)})  
+            setParentalRatings(data?.data.parental_ratings)
+        }
+        fetchRatings()
+    }, [])
+
+    useEffect(() => {
+        const select = document.querySelector('#ratings')
+        if (currentRating !== 0) {
+            select.value = currentRating
+        }
+    }, [currentRating])
+
+    useEffect(() => {
+        bookGenres?.forEach(item => {
+            const checkbox = document.querySelector(`#genres-${item}`)
+            if (checkbox) {
+                checkbox.checked = true
+            }
+        })
+    }, [bookGenres])
 
     const preview = (image) => {
         const fileReader = new FileReader()
@@ -80,11 +139,79 @@ export const Book = () => {
         }
     }
 
+    const handleFiles = async () => {
+        const fixedFiles = await Promise.all(fileUpload.map(async(item, index) => {
+            if (item !== fileBackup[index]) {
+                await deleteFile(fileBackup[index])
+                return await uploadFile(item, item.name)
+            }
+            return fileBackup[index]
+        }))
+        return fixedFiles
+    }
+    const handleImage = async () => {
+        if (imageUpload === null) {
+            return {
+                exclude : false,
+                url : previewUrl
+            }
+        }
+        await deleteFile(imageBackup)
+        let url = await uploadCover(imageUpload, imageUpload.name)
+        return {
+            exlude : true,
+            url : url
+        }
+    }
+
     const handleOptions = (e) => {
         setCurrentRating(e.currentTarget.options[e.currentTarget.selectedIndex].value)
     }
     const handleSubmit = async (e) => {
         e.preventDefault()
+
+        const genresJson = bookGenres.map(item => {
+            return {
+                id_genero: item
+            }
+        })
+
+        const filesArr = await handleFiles()
+        const urlCover = await handleImage()
+
+        let history = {
+            titulo : titulo,
+            volume : volume,
+            capa : urlCover.url,
+            sinopse: sinopse,
+            quantidade_paginas: paginas,
+            preco: preco,
+            pdf: filesArr[0],
+            epub: filesArr[1],
+            mobi: filesArr[2],
+            id_classificacao: currentRating,
+            id_usuario: currentUser,
+            id_tipo_publicacao : 1,
+            generos : genresJson
+        }
+        console.log(history);
+
+        axios.put(`${defaultUrl}announcement/id/${parsedId}`, history)
+    }
+
+    const handleGenres = (e) => {
+        const id = +e.currentTarget.id.split('-')[1]
+        if (e.currentTarget.checked) {
+            setBookGenres([...bookGenres, id])
+        }
+        else {
+            let genreIndex = bookGenres.indexOf(id)
+            if (genreIndex !== -1) {
+                setBookGenres(bookGenres.filter((item, index) => {
+                    return genreIndex !== index
+                }))
+            }
+        }
     }
 
     if(isNaN(parsedId) || authorId !== currentUser) {
@@ -102,7 +229,6 @@ export const Book = () => {
                         name="book-cover" 
                         id="book-cover" 
                         accept="image/*"
-                        required
                         onChange={(e) => {
                             setImageUpload(e.target.files[0])
                             preview(e.target.files[0])
@@ -161,7 +287,7 @@ export const Book = () => {
                         </GeneralDiv>
                         <GeneralDiv>
                             <span>Classificação Indicativa <i className="fa-solid fa-circle-exclamation"></i></span>
-                            <select onChange={handleOptions} required defaultValue="" name="" id="">
+                            <select onChange={handleOptions} required defaultValue="" name="" id="ratings">
                                 <option value="" disabled hidden>Selecione a faixa etária</option>
                                 {
                                     parentalRatings?.map(item => <Options name={item.classificacao} id={item.id} key={item.id} />) 
@@ -200,7 +326,7 @@ export const Book = () => {
                             <span>Gêneros da História <i className="fa-solid fa-circle-exclamation"></i></span>
                             <TagsContainer>
                                 <Tags>
-                                    {/* {genres?.map(item => <Checkbox onChange={handleGenres} type="genres" id={item.id_genero} key={item.id_genero} name={item.nome_genero}/> )} */}
+                                    {genres?.map(item => <Checkbox onChange={handleGenres} type="genres" id={item.id_genero} key={item.id_genero} name={item.nome_genero}/> )}
                                 </Tags>
                             </TagsContainer>
                         </GeneralDiv>
@@ -208,6 +334,7 @@ export const Book = () => {
                             <span>E-book</span>
                             <Files filesName={filesName} setFile={setFileUpload} file={fileUpload}/>
                         </GeneralDiv>
+                        <button type="submit">Teste</button>
                 </FormInputContainer>
             </MainForm>
             <ToastContainer position={toast.POSITION.TOP_CENTER}/>

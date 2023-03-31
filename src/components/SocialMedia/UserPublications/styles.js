@@ -3,8 +3,6 @@ import styled from "styled-components";
 const Container = styled.main`
     display: flex;
     flex-direction: column;
-    align-items: center;
-    overflow-y: auto;
 `
 const NavBar = styled.nav`
     display: flex;
@@ -45,9 +43,31 @@ const ListItem = styled.li`
     }
 `
 
+const CardsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    gap: 1rem;
+`
+const SelectContainer = styled.div`
+    display: flex;
+    width: 100%;
+    padding: 1rem 0 0 1rem;
+    select {
+        font-family: 'League Spartan', sans-serif;
+        font-size: 1rem;
+        border: 1px solid var(--font-color);
+        width: 8rem;
+        padding: .5rem .2rem;
+        border-radius: 10px;
+    }
+`
+
 export {
     Container,
     NavBar,
     ListContainer,
-    ListItem
+    ListItem,
+    CardsContainer,
+    SelectContainer
 }

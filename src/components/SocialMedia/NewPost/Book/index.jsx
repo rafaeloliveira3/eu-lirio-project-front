@@ -106,10 +106,9 @@ export const Books = () => {
             generos : genresJson
         }
 
-
-        console.log(history);
         const res = await axios.post(`${defaultUrl}announcement`, history)
             .catch((err) => {
+                console.log(err);
                 deleteFile(urlCover)
                 urlArray.forEach(item => {
                     deleteFile(item)

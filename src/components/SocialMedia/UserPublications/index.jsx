@@ -1,4 +1,4 @@
-import { Container, NavBar, ListContainer, ListItem } from "./styles"
+import { Container, NavBar, ListContainer, ListItem, CardsContainer, SelectContainer } from "./styles"
 import { useOutletContext } from "react-router-dom"
 import { useEffect, useState } from "react"
 import axios from "axios"
@@ -19,6 +19,8 @@ export const UserPublications = () => {
     const [userClick, setUserClick] = useState(false)
     const [user, setUser] = useState({})
 
+    const [historyTypeSelector, setHistoryTypeSelector] = useState(1)
+
     const userId = localStorage.getItem('id')
 
     useEffect(() => {
@@ -35,6 +37,10 @@ export const UserPublications = () => {
         setSearchbarDisplay(false)
         setFeedWidth(false)
     })
+
+    const handleSelectChange = (e) => {
+        setHistoryTypeSelector(+e.currentTarget.value)
+    }
 
     return (
         <Container>
@@ -54,9 +60,17 @@ export const UserPublications = () => {
                     </ListItem>
                 </ListContainer>
             </NavBar>
-            {
-                (userClick) ? <h1>tem</h1> : <Published user={user}/>
-            }
+            <SelectContainer>
+                <select defaultValue="1" onChange={handleSelectChange}>
+                    <option value="1">Livros</option>
+                    <option value="2">Curtas</option>
+                </select>
+            </SelectContainer>
+            <CardsContainer>
+                {
+                    (userClick) ? <h1>tem</h1> : <Published type={historyTypeSelector} user={user}/>
+                }
+            </CardsContainer>
         </Container>
     )
 }

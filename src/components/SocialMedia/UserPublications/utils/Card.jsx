@@ -7,12 +7,13 @@ import { useNavigate } from "react-router-dom"
 
 export const Card = (props) => {
     const navigate = useNavigate()
-
+    const url = props.url
     const [anuncio, setAnuncio] = useState({})
 
     useEffect(() => {
         const getAnuncio = async () => {
-            const data = await axios.get(`${defaultUrl}announcement/id/${props.anuncio.id}`)
+            const data = await axios.get(`${defaultUrl}${url}/id/${props.anuncio.id}`)
+            .catch(err => console.log(err))
             setAnuncio(data?.data[0])
         }
         getAnuncio()
@@ -20,7 +21,10 @@ export const Card = (props) => {
     
     const handleClick = (e) => {
         const id = e.currentTarget.id
-        navigate(`/app/book/edit/${id}`)
+        if(props.type === 1)
+            navigate(`/app/book/edit/${id}`)
+        else 
+            navigate(`/app/short/edit/${id}`)
     }
 
     return (

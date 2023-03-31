@@ -9,14 +9,13 @@ export const Files = (props) => {
     const [fileNameMobi, setFileNameMobi] = useState("Arquivo em MOBI")
 
     useEffect(() => {
+        console.log("teste")
         setFileNamePdf(props.filesName[0]?.name)
         setFileNameEpub(props.filesName[1]?.name)
-        console.log("teste 1");
-        if (props.filesName[2]?.name !== null) {
-            console.log("teste 2");
+        if (props.filesName[2]?.name !== null) { 
             setFileNameMobi(props.filesName[2]?.name)
         }
-    })
+    }, [props.filesName])
 
     const handleFileChange = (e) => {
         const id = e.currentTarget.id
@@ -28,6 +27,7 @@ export const Files = (props) => {
         let filesArray = [...props.file]
         const newFilesArray = filesArray.map((item, index) => {
             if (index === fileIndex[id]) {
+                console.log(e.target.files[0].name)
                 switch(index) {
                     case 0 : 
                         setFileNamePdf(e.target.files[0].name)
@@ -55,7 +55,6 @@ export const Files = (props) => {
                     id="file-pdf" 
                     accept=".pdf"
                     onChange={handleFileChange} 
-                    required
                 />
                 <label htmlFor="file-pdf">
                     <div className="label-content-container">
@@ -77,7 +76,6 @@ export const Files = (props) => {
                     id="file-epub" 
                     accept=".epub"
                     onChange={handleFileChange} 
-                    required
                 />
                 <label htmlFor="file-epub">
                     <div className="label-content-container">

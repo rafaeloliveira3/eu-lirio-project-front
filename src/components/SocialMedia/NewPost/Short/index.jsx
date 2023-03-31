@@ -1,4 +1,4 @@
-import { Container, CoverInputContainer, FormInputContainer, MainForm, TypeHeader, GeneralDiv, OptInputsContainer } from "./styles"
+import { Container, CoverInputContainer, FormInputContainer, MainForm, TypeHeader, GeneralDiv, OptInputsContainer, HistoryContainer, HistoryDiv } from "./styles"
 import { useState, useEffect } from "react"
 import { defaultUrl } from "../../../helpers/url"
 import { Checkbox } from "../utils/Checkbox"
@@ -92,12 +92,14 @@ export const Short = () => {
 
         const res = await axios.post(`${defaultUrl}short-storie`, submitHistory)
             .catch((err) => {
+                console.log(err)
                 deleteFile(urlCover)
                 if (err.response?.status !== 500) {
                     publicationFailed(err)
                 }
                 bdError()
             })
+            console.log('sus');
         if (res.status === 201) {
             publicationSuccess()
             setTimeout(() => { navigate('/app/feed') }, 2500)
@@ -125,76 +127,81 @@ export const Short = () => {
                 HISTÓRIA PEQUENA
             </TypeHeader>
             <MainForm onSubmit={handleSubmit}>
-                <CoverInputContainer image={previewUrl} span={spanDisplay}>
-                    <input 
-                        type="file" 
-                        name="book-cover" 
-                        id="book-cover" 
-                        accept="image/*"
-                        required
-                        onChange={(e) => {
-                            setImageUpload(e.target.files[0])
-                            preview(e.target.files[0])
-                        }} 
-                    />
-                    <label htmlFor="book-cover">
-                        <div className="label-content-container">
-                            <div></div>
-                            <div className="text-container">
-                                <i className="fa-solid fa-file-image"></i>
-                                <span>Adicione a Capa</span>
-                            </div>
-                            <div className="icon-container">
-                                <i className="fa-solid fa-circle-exclamation"></i>
-                            </div>
-                        </div>
-                    </label>
-                </CoverInputContainer>
-                <FormInputContainer>
-                    <GeneralDiv>
-                        <span>Título <i className="fa-solid fa-circle-exclamation"></i></span>
+                <HistoryContainer>
+                    <CoverInputContainer image={previewUrl} span={spanDisplay}>
                         <input 
-                            type="text" 
-                            value={titulo}
+                            type="file" 
+                            name="book-cover" 
+                            id="book-cover" 
+                            accept="image/*"
                             required
                             onChange={(e) => {
-                                setTitulo(e.currentTarget.value)
-                            }}
+                                setImageUpload(e.target.files[0])
+                                preview(e.target.files[0])
+                            }} 
                         />
-                    </GeneralDiv>
-                    <GeneralDiv>
-                        <span>Sinopse <i className="fa-solid fa-circle-exclamation"></i></span>
-                        <textarea 
-                            name="" 
-                            required
-                            id="" 
-                            cols="30" 
-                            rows="10"
-                            value={sinopse}
-                            onChange={(e) => {
-                                setSinopse(e.currentTarget.value)
-                            }}
-                        ></textarea>
-                    </GeneralDiv>
-                    <OptInputsContainer>
-                        <GeneralDiv>
-                            <span>Classificação Indicativa <i className="fa-solid fa-circle-exclamation"></i></span>
-                            <select onChange={handleOptions} required defaultValue="" name="" id="">
-                                <option value="" disabled hidden>Selecione a faixa etária</option>
-                                {
-                                    parentalRatings?.map(item => <Options name={item.classificacao} id={item.id} key={item.id} />) 
-                                }
-                            </select>
-                        </GeneralDiv>
-                    </OptInputsContainer>
-                        <GeneralDiv>
-                            <span>Gêneros da História <i className="fa-solid fa-circle-exclamation"></i></span>
-                            <TagsContainer>
-                                <Tags>
-                                    {genres?.map(item => <Checkbox onChange={handleGenres} type="genres" id={item.id_genero} key={item.id_genero} name={item.nome_genero}/> )}
-                                </Tags>
-                            </TagsContainer>
-                        </GeneralDiv>
+                        <label htmlFor="book-cover">
+                            <div className="label-content-container">
+                                <div></div>
+                                <div className="text-container">
+                                    <i className="fa-solid fa-file-image"></i>
+                                    <span>Adicione a Capa</span>
+                                </div>
+                                <div className="icon-container">
+                                    <i className="fa-solid fa-circle-exclamation"></i>
+                                </div>
+                            </div>
+                        </label>
+                    </CoverInputContainer>
+                        <FormInputContainer>
+                            <GeneralDiv>
+                                <span>Título <i className="fa-solid fa-circle-exclamation"></i></span>
+                                <input 
+                                    type="text" 
+                                    value={titulo}
+                                    required
+                                    onChange={(e) => {
+                                        setTitulo(e.currentTarget.value)
+                                    }}
+                                />
+                            </GeneralDiv>
+                            <GeneralDiv>
+                                <span>Sinopse <i className="fa-solid fa-circle-exclamation"></i></span>
+                                <textarea 
+                                    name="" 
+                                    required
+                                    id="" 
+                                    cols="30" 
+                                    rows="10"
+                                    value={sinopse}
+                                    onChange={(e) => {
+                                        setSinopse(e.currentTarget.value)
+                                    }}
+                                ></textarea>
+                            </GeneralDiv>
+                            <OptInputsContainer>
+                                <GeneralDiv>
+                                    <span>Classificação Indicativa <i className="fa-solid fa-circle-exclamation"></i></span>
+                                    <select onChange={handleOptions} required defaultValue="" name="" id="">
+                                        <option value="" disabled hidden>Selecione a faixa etária</option>
+                                        {
+                                            parentalRatings?.map(item => <Options name={item.classificacao} id={item.id} key={item.id} />) 
+                                        }
+                                    </select>
+                                </GeneralDiv>
+                            </OptInputsContainer>
+                                <GeneralDiv>
+                                    <span>Gêneros da História <i className="fa-solid fa-circle-exclamation"></i></span>
+                                    <TagsContainer>
+                                        <Tags>
+                                            {genres?.map(item => <Checkbox onChange={handleGenres} type="genres" id={item.id_genero} key={item.id_genero} name={item.nome_genero}/> )}
+                                        </Tags>
+                                    </TagsContainer>
+                                </GeneralDiv>
+                        </FormInputContainer>
+
+                </HistoryContainer>
+                    <HistoryDiv>
                         <GeneralDiv>
                             <span>História <i className="fa-solid fa-circle-exclamation"></i></span>
                             <textarea 
@@ -214,7 +221,7 @@ export const Short = () => {
                             <ButtonCancel>Cancelar</ButtonCancel>
                             <ButtonSave type="submit">Salvar</ButtonSave>
                         </ButtonsContainer>
-                </FormInputContainer>
+                    </HistoryDiv>
             </MainForm>
             <ToastContainer position={toast.POSITION.TOP_CENTER}/>
         </Container>
