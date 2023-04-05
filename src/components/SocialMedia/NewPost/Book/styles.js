@@ -171,6 +171,7 @@ const TagsContainer = styled.div`
 const Tags = styled.ul`
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
 `
 
 export {

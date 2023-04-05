@@ -1,5 +1,5 @@
 import { Container, CoverInputContainer, FormInputContainer, MainForm, TypeHeader, GeneralDiv, OptInputsContainer, HistoryContainer, HistoryDiv } from "./styles"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { defaultUrl } from "../../../helpers/url"
 import { Checkbox } from "../utils/Checkbox"
 import { ButtonCancel, ButtonSave, ButtonsContainer } from "../styles"
@@ -9,9 +9,13 @@ import axios from "axios"
 import { toast, ToastContainer } from 'react-toastify';
 import { uploadCover, deleteFile } from "../../../helpers/firebase"
 import { useNavigate } from "react-router-dom"
+import { Editor } from "@tinymce/tinymce-react"
+import { Interweave } from "interweave"
+import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../../../helpers/toasts"
 
 export const Short = () => {
     const navigate = useNavigate()
+    const editorRef = useRef()
 
     const [imageUpload, setImageUpload] = useState(null)
     const [previewUrl, setPreviewUrl] = useState("none")
@@ -20,8 +24,8 @@ export const Short = () => {
     const [parentalRatings, setParentalRatings] = useState([])
 
     const [titulo, setTitulo] = useState("")
-    const [sinopse, setSinopse] = useState("")
     const [history, setHistory] = useState("")
+    const [sinopse, setSinopse] = useState("")
     const [currentRating, setCurrentRating] = useState(0)
     const [publicationGenres, setPublicationGenres] = useState([])
 
@@ -44,10 +48,6 @@ export const Short = () => {
         fetchRatings()
     }, [])
 
-    const publicationFailed = (err) => toast.error(`${err.response.data} - Erro: ${err.response.status}`)
-    const bdError = () => toast.warning('A Conexão com o Servidor Falhou. Tente Novamente Mais Tarde')
-    const publicationSuccess = () => toast.success('História curta públicada com sucesso!')
-
     const preview = (image) => {
         const fileReader = new FileReader()
         fileReader.onloadend = () => (setPreviewUrl(fileReader.result))
@@ -69,6 +69,8 @@ export const Short = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+
+        setHistory(editorRef.current.getContent())
 
         const genresJson = publicationGenres.map(item => {
             return {
@@ -95,13 +97,13 @@ export const Short = () => {
                 console.log(err)
                 deleteFile(urlCover)
                 if (err.response?.status !== 500) {
-                    publicationFailed(err)
+                    MESSAGE_ERROR.default(err)
                 }
-                bdError()
+                MESSAGE_ERROR.bdError()
             })
             console.log('sus');
         if (res.status === 201) {
-            publicationSuccess()
+            MESSAGE_SUCCESS.register("História Curta")
             setTimeout(() => { navigate('/app/feed') }, 2500)
         }
     }
@@ -204,18 +206,20 @@ export const Short = () => {
                     <HistoryDiv>
                         <GeneralDiv>
                             <span>História <i className="fa-solid fa-circle-exclamation"></i></span>
-                            <textarea 
-                                required 
-                                placeholder="Escreva a sua História" 
-                                name="" 
-                                id="history" 
-                                cols="30" 
-                                rows="10"
-                                value={history}
-                                onChange={(e) => {
-                                    setHistory(e.currentTarget.value)
+                            <Editor 
+                                onInit={(e, editor) => editorRef.current = editor}
+                                required
+                                init={{	
+                                    menubar: false,	
+                                    selector: 'textarea',	
+                                    resize: false,
+                                    width: '100%',
+                                    skin: 'naked',
+                                    icons: 'thin',
+                                    placeholder: 'Escreva a sua História',
+                                    toolbar: 'undo redo | fontsize | bold italic underline | alignleft aligncenter alignright alignjustify | indent outdent | removeformat'
                                 }}
-                            ></textarea>
+                            />
                         </GeneralDiv>
                         <ButtonsContainer>
                             <ButtonCancel>Cancelar</ButtonCancel>
@@ -224,6 +228,7 @@ export const Short = () => {
                     </HistoryDiv>
             </MainForm>
             <ToastContainer position={toast.POSITION.TOP_CENTER}/>
+            <Interweave content={history} />
         </Container>
     )
 }

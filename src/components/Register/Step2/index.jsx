@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { TosContainer, BDate, Label, CheckBox, CheckBoxContainer } from "./styles"
 import axios from "axios";
 import { currentUser, userDelete } from "../../helpers/firebase";
+import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../../helpers/toasts";
 
 export const Step2 = () => {
     const { setUrl } = useOutletContext()
@@ -18,12 +19,6 @@ export const Step2 = () => {
 
     const location = useLocation()
     const navigate = useNavigate()
-
-    const registerFailed = (err) => toast.error(`${err.response.data} - Erro: ${err.response.status}`)
-    const bdError = () => toast.warning('A Conexão com o Servidor Falhou. Tente Novamente Mais Tarde')
-    const onlyAdults = () => toast.warning('Apenas maiores de idade podem se Cadastrar! Redirecionando...')
-    const registerSuccess = () => toast.success('Usuário Cadastrado! - Faça login para entrar em sua conta!')
-    const tagsRequired = () => toast.warning('É obrigatório selecionar uma tag!')
 
     const [fullName, setFullName] = useState('')
     const [birth, setBirth] = useState('')
@@ -73,12 +68,12 @@ export const Step2 = () => {
             }
         })
         if (fixed.length === 0) {
-            tagsRequired()
+            MESSAGE_ERROR.tagsRequired()
             return
         }
         if (date - birthYear < 18) { 
             await userDelete()
-            onlyAdults()
+            MESSAGE_ERROR.onlyAdults()
             setTimeout(() => { navigate('/') }, 2500)
         }
         else {
@@ -103,21 +98,17 @@ export const Step2 = () => {
                 console.log(err);
                 await userDelete()
                 if (err.request.status === 400) {
-                    registerFailed(err)
+                    MESSAGE_ERROR.default(err)
                 }
                 else {
-                    bdError()
+                    MESSAGE_ERROR.bdError()
                 }
                 setTimeout(() => { navigate('/register/step1') }, 2500)
             })
 
             if (res.status === 201) {
-                registerSuccess()
+                MESSAGE_SUCCESS.register("Usuário")
                 setTimeout(() => { navigate('/login') }, 2500)
-            }
-            else {
-                registerFailed()
-                setTimeout(() => { navigate('/register/step1') }, 2500)
             }
         }
     }

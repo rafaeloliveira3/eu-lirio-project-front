@@ -7,6 +7,7 @@ import { Checkbox } from "./utils/Checkbox"
 import { deleteFile, uploadImage } from "../../helpers/firebase"
 import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate, useOutletContext } from "react-router-dom"
+import { MESSAGE_SUCCESS } from "../../helpers/toasts"
 
 export const Edit = () => {
     const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
@@ -38,8 +39,6 @@ export const Edit = () => {
     const [previewUrl, setPreviewUrl] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
     
     const userId = localStorage.getItem('id')
-    
-    const deleteSucces = () => toast.success('Usuário Deletado Com Sucesso!')
     
     // FETCHING USER DATA
     useEffect(() => {
@@ -175,7 +174,7 @@ export const Edit = () => {
     const handleDeleteAccount = async () => {
         const res = await axios.delete(`${defaultUrl}user/id/${userId}`)
         if(res.status === 200 ) {
-            deleteSucces()
+            MESSAGE_SUCCESS.delete("Usuário")
             setTimeout(() => { navigate('/login') }, 2500)
         }
     }
@@ -283,8 +282,8 @@ export const Edit = () => {
             <Modal
                 isOpen={isDeleteModalOpen}
                 onRequestClose={handleCloseModal}
-                overlayClassName="delete-user-modal-overlay"
-                className="delete-user-modal-content"
+                overlayClassName="delete-modal-overlay"
+                className="delete-modal-content"
             >
                 <ModalContentContainer>
                     <i className="fa-solid fa-trash"></i>

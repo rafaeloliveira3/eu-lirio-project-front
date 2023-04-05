@@ -35,7 +35,6 @@ export const GlobalStyle = createGlobalStyle`
     body, html {
         height: 100%;
         width: 100%;
-        overflow-y: scroll;
     }
 
     body, input, textarea, button {
@@ -57,7 +56,7 @@ export const GlobalStyle = createGlobalStyle`
         cursor: not-allowed;
     }
 
-    .delete-user-modal-overlay {
+    .delete-modal-overlay {
         background-color: #00000055;
 
         position: fixed;
@@ -70,7 +69,7 @@ export const GlobalStyle = createGlobalStyle`
         align-items: center;
         justify-content: center;
     }
-    .delete-user-modal-content {
+    .delete-modal-content {
         background-color: #fff;
         padding: 2rem;
         height: 20rem;

@@ -1,4 +1,4 @@
-import { Container, CoverInputContainer, FormInputContainer, MainForm, TypeHeader, GeneralDiv, OptInputsContainer, Tags } from "./styles"
+import { Container, CoverInputContainer, FormInputContainer, MainForm, TypeHeader, GeneralDiv, OptInputsContainer, Tags, ModalContentContainer } from "./styles"
 import { useState, useEffect } from "react"
 import axios from "axios"
 import { Files } from "./Files"
@@ -8,14 +8,26 @@ import { Checkbox } from "../../NewPost/utils/Checkbox"
 import { Options } from "../../NewPost/utils/Options"
 import { toast, ToastContainer } from 'react-toastify';
 import { deleteFile, getFilesName, uploadCover, uploadFile } from "../../../helpers/firebase"
-import { useParams, Navigate } from "react-router-dom"
-
-
+import { useParams, Navigate, useOutletContext, useNavigate } from "react-router-dom"
+import { ButtonCancel, ButtonSave, ButtonsContainer } from "../../NewPost/styles"
+import Modal from "react-modal"
+import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../../../helpers/toasts"
 
 export const Book = () => {
+    const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
+
+    useEffect(() => {
+        setAdsDisplay(true)
+        setSearchbarDisplay(true)
+        setFeedWidth(true)
+    })
+
     const { id } = useParams()
     const parsedId = +id
     const currentUser = localStorage.getItem('id')
+    const navigate = useNavigate()
+
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
     const [publication, setPublication] = useState({})
     const [authorId, setAuthorId] = useState(currentUser)
@@ -47,11 +59,12 @@ export const Book = () => {
             const data = await axios.get(`${defaultUrl}announcement/id/${id}`)
             .catch(err => console.log(err))
 
-            console.log(data.data);
+            if (data?.data[0].generos !== undefined) {
+                setBookGenres(data?.data[0].generos.map((item) => {
+                    return item.id_genero
+                }))
+            }
 
-            setBookGenres(data?.data[0].generos.map((item) => {
-                return item.id_genero
-            }))
             setCurrentRating(data?.data[0].classificacao[0].id_classificacao)
 
             setPublication(data?.data[0])
@@ -68,7 +81,7 @@ export const Book = () => {
             setSpanDisplay('none')
 
             const arr = [data?.data[0].pdf, data?.data[0].epub, data?.data[0].mobi]
-            const names = await Promise.all(arr.map(async(item) => {
+            const names = await Promise.all(arr?.map(async(item) => {
                 if (item !== 'null') {
                     return {
                         name : await getFilesName(item)
@@ -128,6 +141,13 @@ export const Book = () => {
             }
         })
     }, [bookGenres])
+    
+    const handleOpenModal = () => {
+        setIsDeleteModalOpen(true)
+    }
+    const handleCloseModal = () => {
+        setIsDeleteModalOpen(false)
+    }
 
     const preview = (image) => {
         const fileReader = new FileReader()
@@ -194,9 +214,22 @@ export const Book = () => {
             id_tipo_publicacao : 1,
             generos : genresJson
         }
-        console.log(history);
 
-        axios.put(`${defaultUrl}announcement/id/${parsedId}`, history)
+        const res = await axios.put(`${defaultUrl}announcement/id/${parsedId}`, history)
+        .catch((err) => {
+            if (urlCover.exclude) {
+                deleteFile(urlCover.url)
+            }
+            if (err.response?.status !== 500) {
+                MESSAGE_ERROR.default(err)
+            }
+            MESSAGE_ERROR.bdError()
+        })
+
+        if (res.status === 200) {
+            MESSAGE_SUCCESS.update("Livro")
+            setTimeout(() => { navigate('/app/my-publications') }, 2500)
+        }
     }
 
     const handleGenres = (e) => {
@@ -211,6 +244,28 @@ export const Book = () => {
                     return genreIndex !== index
                 }))
             }
+        }
+    }
+
+    const handleDelete = async () => {
+        const canDelete = true
+
+        await axios.delete(`${defaultUrl}announcement/id/${parsedId}`)
+        .catch(err => canDelete = false)
+
+        if (canDelete) {
+            const filesArr = await handleFiles() 
+            const urlCover = await handleImage()
+    
+            await deleteFile(urlCover.url)
+            await Promise.all(filesArr.map(async (item) => {
+                if (item !== null) {
+                    await deleteFile(item)
+                }
+            }))
+        }
+        else {
+
         }
     }
 
@@ -334,9 +389,28 @@ export const Book = () => {
                             <span>E-book</span>
                             <Files filesName={filesName} setFile={setFileUpload} file={fileUpload}/>
                         </GeneralDiv>
-                        <button type="submit">Teste</button>
+                        <ButtonsContainer>
+                            <ButtonCancel type="button" onClick={handleOpenModal}>Excluir</ButtonCancel>
+                            <ButtonSave type="submit">Salvar</ButtonSave>
+                        </ButtonsContainer>
                 </FormInputContainer>
             </MainForm>
+            <Modal
+                isOpen={isDeleteModalOpen}
+                onRequestClose={handleCloseModal}
+                overlayClassName="delete-modal-overlay"
+                className="delete-modal-content"
+            >
+                <ModalContentContainer>
+                    <i className="fa-solid fa-trash"></i>
+                    <h2>Deseja mesmo excluir o livro {titulo}?</h2>
+                    <p>Essa ação é irreversível e resultará na exclusão completa dessa publicação dentro da plataforma.</p>
+                    <span>
+                        <button className="cancelar" onClick={handleCloseModal}>Cancelar</button>
+                        <button className="apagar" onClick={handleDelete}>Apagar</button>
+                    </span>
+                </ModalContentContainer>
+            </Modal>
             <ToastContainer position={toast.POSITION.TOP_CENTER}/>
         </Container>
     )

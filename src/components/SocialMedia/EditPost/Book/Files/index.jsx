@@ -9,7 +9,6 @@ export const Files = (props) => {
     const [fileNameMobi, setFileNameMobi] = useState("Arquivo em MOBI")
 
     useEffect(() => {
-        console.log("teste")
         setFileNamePdf(props.filesName[0]?.name)
         setFileNameEpub(props.filesName[1]?.name)
         if (props.filesName[2]?.name !== null) { 

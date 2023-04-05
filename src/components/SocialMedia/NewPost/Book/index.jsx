@@ -10,6 +10,7 @@ import { Options } from "../utils/Options"
 import { toast, ToastContainer } from 'react-toastify';
 import { deleteFile, uploadCover, uploadFile } from "../../../helpers/firebase"
 import { useNavigate } from "react-router-dom"
+import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../../../helpers/toasts"
 
 export const Books = () => {
 
@@ -48,10 +49,6 @@ export const Books = () => {
         }
         fetchRatings()
     }, [])
-
-    const publicationFailed = (err) => toast.error(`${err.response.data} - Erro: ${err.response.status}`)
-    const bdError = () => toast.warning('A Conexão com o Servidor Falhou. Tente Novamente Mais Tarde')
-    const publicationSuccess = () => toast.success('Livro públicado com sucesso!')
 
     const preview = (image) => {
         const fileReader = new FileReader()
@@ -108,18 +105,17 @@ export const Books = () => {
 
         const res = await axios.post(`${defaultUrl}announcement`, history)
             .catch((err) => {
-                console.log(err);
                 deleteFile(urlCover)
                 urlArray.forEach(item => {
                     deleteFile(item)
                 })
                 if (err.response?.status !== 500) {
-                    publicationFailed(err)
+                    MESSAGE_ERROR.default(err)
                 }
-                bdError()
+                MESSAGE_ERROR.bdError()
             })
         if (res.status === 201) {
-            publicationSuccess()
+            MESSAGE_SUCCESS.register("Livro")
             setTimeout(() => { navigate('/app/feed') }, 2500)
         }
     }

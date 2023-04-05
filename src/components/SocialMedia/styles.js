@@ -52,7 +52,7 @@ const UserInfoContainer = styled.div`
 const FeedContainer = styled.div`
     flex-grow: 1;
     max-width: ${(props) => props.theme.width};
-    overflow-x: scroll;
+    overflow-x: auto;
 `
 const PromotionContainer = styled.div`
     background: linear-gradient(0deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.25)), var(--yellow-medium);

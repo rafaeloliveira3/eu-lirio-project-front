@@ -5,7 +5,7 @@ const Container = styled.div`
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding: 2.5rem;
     background-color: #FEFCF1;
     .button-delete {

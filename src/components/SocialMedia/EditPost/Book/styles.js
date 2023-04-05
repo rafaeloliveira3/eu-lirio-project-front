@@ -171,8 +171,48 @@ const TagsContainer = styled.div`
 `
 const Tags = styled.ul`
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
 `
+
+const ModalContentContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 100%;
+    width: 100%;
+    font-family: 'League Spartan', sans-serif;
+    gap: 1rem;
+    padding: 0 1rem;
+    text-align: center;
+    i {
+        font-size: 2rem;
+        color: #BD0020;
+    }
+    p {
+        text-align: center;
+        font-size: 1.2rem;
+    }
+    span {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 1rem;
+        button {
+            border: 0;
+            background-color: #fff;
+        }
+        .cancelar {
+            font-weight: 600;
+        }
+        .apagar {
+            font-weight: 600;
+            color: #BD0020;
+        }
+    }
+` 
 
 export {
     Container,
@@ -183,5 +223,6 @@ export {
     OptInputsContainer,
     GeneralDiv,
     TagsContainer,
-    Tags
+    Tags,
+    ModalContentContainer
 }

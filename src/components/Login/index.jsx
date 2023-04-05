@@ -7,12 +7,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { Advices, AdvicesContent, Container, IconsContainer, IconsOrganizer, Logo, RegisterContainer, UserArea, UserForms } from "./styles"
 import axios from "axios";
 import { userLogin } from "../helpers/firebase";
+import { MESSAGE_ERROR } from "../helpers/toasts";
 
 export const Login = () => {
     
     const navigate = useNavigate()
-    const loginFailed = () => toast.error('Usuário e/ou Senha Incorretos!')
-    const bdError = () => toast.warning('A Conexão com o Servidor Falhou. Tente Novamente Mais Tarde')
         
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -29,10 +28,10 @@ export const Login = () => {
             const res = await axios.post(`${defaultUrl}user/login`, login)
             .catch((err) => { 
                 if (err.request.status === 400 || err.request.status === 404) {
-                    loginFailed()
+                    MESSAGE_ERROR.login()
                 }
                 else {
-                    bdError()
+                    MESSAGE_ERROR.bdError()
                 }
             })
     
@@ -46,7 +45,7 @@ export const Login = () => {
             }
         }
         else {
-            loginFailed()
+            MESSAGE_ERROR.login()
         }
     }
 
