@@ -65,12 +65,15 @@ export const GlobalStyle = createGlobalStyle`
         left: 0;
         right: 0;
 
+        z-index: 98;
+
         display: flex;
         align-items: center;
         justify-content: center;
     }
     .delete-modal-content {
         background-color: #fff;
+        z-index: 99;
         padding: 2rem;
         height: 20rem;
         width: 30rem;

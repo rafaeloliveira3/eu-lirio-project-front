@@ -20,6 +20,7 @@ import { Ebooks } from "./components/SocialMedia/Feed/Ebooks";
 import { Shorts } from "./components/SocialMedia/Feed/Shorts";
 import { UserPublications } from "./components/SocialMedia/UserPublications";
 import { Book } from "./components/SocialMedia/EditPost/Book";
+import { EditShorts } from "./components/SocialMedia/EditPost/Shorts";
  
 Modal.setAppElement('#root')
 
@@ -54,6 +55,7 @@ export function App() {
                 <Route path="" element={<Navigate to="/app/new/choose" />}/>
               </Route>
               <Route path="book/edit/:id" element={<Book />}/>
+              <Route path="short/edit/:id" element={<EditShorts />}/>
               <Route path="" element={<Navigate to="/app/feed" />}/>
             </Route>
             <Route path="/*" element={<NotFound />}></Route>

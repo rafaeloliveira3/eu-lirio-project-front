@@ -44,8 +44,11 @@ const SocialMedia = () => {
     const exitSuccess = () => toast.success('Usuário deslogado com Sucesso!')
 
     const StyleBackup = new Array(8).fill(false)
-    StyleBackup[0] = true
+    StyleBackup[parseInt(sessionStorage.getItem('index') || '0')] = true
     const [navBarStyleSetter, setNavBarStyleSetter] = useState(StyleBackup)
+    const [navBarIndex, setNavBarIndex] = useState(() => {
+        return parseInt(sessionStorage.getItem('index') || '0')
+    })
 
     const [adsDisplay, setAdsDisplay] = useState(false)
     const [searchbarDisplay, setSearchbarDisplay] = useState(false)
@@ -55,8 +58,14 @@ const SocialMedia = () => {
 
     const handleLinkChange = (e) => {
         const id = +e.currentTarget.id
+        sessionStorage.setItem('index', id)
+        setNavBarIndex(id)
+
+        styleChanger()
+    }
+    const styleChanger = () => {
         const newArr = StyleBackup.map((item, index) => {
-            if (index === id) {
+            if (index === parseInt(sessionStorage.getItem('index'))) {
                 return true
             }
             else {
@@ -65,6 +74,7 @@ const SocialMedia = () => {
         })
         setNavBarStyleSetter(newArr)
     }
+
     const navBarReseter = () => {
         setNavBarStyleSetter(StyleBackup.map((item, index) => {
             if (index === 0) {
@@ -75,7 +85,6 @@ const SocialMedia = () => {
     }
 
     const [user, setUser] = useState({})
-    let image
     
     useEffect(() => {
         const fetchData = async () => {

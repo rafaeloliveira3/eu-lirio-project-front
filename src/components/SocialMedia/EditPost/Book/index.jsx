@@ -129,7 +129,9 @@ export const Book = () => {
     useEffect(() => {
         const select = document.querySelector('#ratings')
         if (currentRating !== 0) {
-            select.value = currentRating
+            if (select) {
+                select.value = currentRating
+            }
         }
     }, [currentRating])
 
@@ -215,6 +217,8 @@ export const Book = () => {
             generos : genresJson
         }
 
+        console.log(history);
+
         const res = await axios.put(`${defaultUrl}announcement/id/${parsedId}`, history)
         .catch((err) => {
             if (urlCover.exclude) {
@@ -233,7 +237,7 @@ export const Book = () => {
     }
 
     const handleGenres = (e) => {
-        const id = +e.currentTarget.id.split('-')[1]
+        const id = e.currentTarget.id.split('-')[1]
         if (e.currentTarget.checked) {
             setBookGenres([...bookGenres, id])
         }

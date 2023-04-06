@@ -1,34 +1,81 @@
-import { Container, CoverInputContainer, FormInputContainer, MainForm, TypeHeader, GeneralDiv, OptInputsContainer, HistoryContainer, HistoryDiv } from "./styles"
-import { useState, useEffect, useRef } from "react"
-import { defaultUrl } from "../../../helpers/url"
-import { Checkbox } from "../utils/Checkbox"
-import { ButtonCancel, ButtonSave, ButtonsContainer } from "../styles"
-import { TagsContainer, Tags } from "../Book/styles"
-import { Options } from "../utils/Options"
+import { Container, CoverInputContainer, FormInputContainer, MainForm, TypeHeader, GeneralDiv, OptInputsContainer, HistoryContainer, HistoryDiv, TagsContainer, Tags } from "./styles"
+import { useOutletContext, useNavigate, useParams, Navigate } from "react-router-dom"
+import { useEffect, useState, useRef } from "react"
 import axios from "axios"
-import { toast, ToastContainer } from 'react-toastify';
+import { defaultUrl } from "../../../helpers/url"
 import { uploadCover, deleteFile } from "../../../helpers/firebase"
-import { useNavigate } from "react-router-dom"
-import { Editor } from "@tinymce/tinymce-react"
-import { Interweave } from "interweave"
 import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../../../helpers/toasts"
+import { Options } from "../../NewPost/utils/Options"
+import { ButtonSave, ButtonCancel, ButtonsContainer } from "../../NewPost/styles"
+import { Editor } from "@tinymce/tinymce-react"
+import { toast, ToastContainer } from "react-toastify"
+import { Checkbox } from "../../NewPost/utils/Checkbox"
+import Modal from "react-modal"
+import { ModalContentContainer } from "../Book/styles"
 
-export const Short = () => {
+export const EditShorts = () => {
+    const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
+
+    useEffect(() => {
+        setAdsDisplay(true)
+        setSearchbarDisplay(true)
+        setFeedWidth(true)
+    })
+
+    const { id } = useParams()
+    const parsedId = +id
+    const currentUser = localStorage.getItem('id')
     const navigate = useNavigate()
+
     const editorRef = useRef()
 
     const [imageUpload, setImageUpload] = useState(null)
     const [previewUrl, setPreviewUrl] = useState("none")
+    const [imageBackup, setImageBackup] = useState(null)
+
     const [spanDisplay, setSpanDisplay] = useState("block")
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+    const [status, setStatus] = useState(1)
+
     const [genres, setGenres] = useState([])
+    const [shortGenres, setShortGenres] = useState([])
+
     const [parentalRatings, setParentalRatings] = useState([])
+    const [authorId, setAuthorId] = useState(currentUser)
+    const [initialValue, setInitialValue] = useState("")
 
     const [titulo, setTitulo] = useState("")
     const [sinopse, setSinopse] = useState("")
     const [currentRating, setCurrentRating] = useState(0)
-    const [publicationGenres, setPublicationGenres] = useState([])
 
     const userId = localStorage.getItem('id')
+
+    useEffect(() => {
+        const getShortById = async () => {
+            const data = await axios.get(`${defaultUrl}short-storie/id/${id}`)
+            .catch(err => console.log(err))
+
+            setInitialValue(data?.data[0].historia)
+            console.log(data.data[0]);
+            if (data?.data[0].generos !== undefined) {
+                setShortGenres(data?.data[0].generos.map((item) => {
+                    return item.id_genero
+                }))
+            }
+
+            setCurrentRating(data?.data[0].classificacao[0].id_classificacao)
+            setAuthorId(data?.data[0].usuario[0].id_usuario)
+
+            setTitulo(data?.data[0].titulo)
+            setSinopse(data?.data[0].sinopse)
+
+            setPreviewUrl(data?.data[0].capa)
+            setImageBackup(data?.data[0].capa)
+            setSpanDisplay('none')
+        }
+        getShortById()
+    }, [id])
 
     useEffect(() => {
         const fetchGenres = async () => {
@@ -46,6 +93,29 @@ export const Short = () => {
         }
         fetchRatings()
     }, [])
+    useEffect(() => {
+        const select = document.querySelector('#ratings')
+        if (currentRating !== 0) {
+            if (select) {
+                select.value = currentRating
+            }
+        }
+    }, [currentRating])
+    useEffect(() => {
+        shortGenres?.forEach(item => {
+            const checkbox = document.querySelector(`#genres-${item}`)
+            if (checkbox) {
+                checkbox.checked = true
+            }
+        })
+    }, [shortGenres])
+
+    const handleOpenModal = () => {
+        setIsDeleteModalOpen(true)
+    }
+    const handleCloseModal = () => {
+        setIsDeleteModalOpen(false)
+    }
 
     const preview = (image) => {
         const fileReader = new FileReader()
@@ -58,8 +128,18 @@ export const Short = () => {
     }
 
     const handleImage = async () => {
+        if (imageUpload === null) {
+            return {
+                exclude : false,
+                url : previewUrl
+            }
+        }
+        await deleteFile(imageBackup)
         let url = await uploadCover(imageUpload, imageUpload.name)
-        return url
+        return {
+            exlude : true,
+            url : url
+        }
     }
 
     const handleOptions = (e) => {
@@ -69,9 +149,9 @@ export const Short = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        let history = editorRef.current.getContent()
+        const history = editorRef.current.getContent()
 
-        const genresJson = publicationGenres.map(item => {
+        const genresJson = shortGenres.map(item => {
             return {
                 id_genero: item
             }
@@ -82,46 +162,53 @@ export const Short = () => {
         let submitHistory = {
             titulo : titulo,
             sinopse : sinopse,
-            capa : urlCover,
+            capa : urlCover.url,
             historia : history,
-            premium : 0,
             id_usuario : userId,
+            status : status,
             id_tipo_publicacao : 2,
             id_classificacao : currentRating,
             generos : genresJson
         }
 
-        const res = await axios.post(`${defaultUrl}short-storie`, submitHistory)
+        const res = await axios.put(`${defaultUrl}short-storie/id/${parsedId}`, submitHistory)
             .catch((err) => {
-                console.log(err)
-                deleteFile(urlCover)
+                if (urlCover.exlude) {
+                    deleteFile(urlCover)
+                }
                 if (err.response?.status !== 500) {
                     MESSAGE_ERROR.default(err)
                 }
                 MESSAGE_ERROR.bdError()
             })
-            console.log('sus');
         if (res.status === 201) {
-            MESSAGE_SUCCESS.register("História Curta")
-            setTimeout(() => { navigate('/app/feed') }, 2500)
+            MESSAGE_SUCCESS.update("História Curta")
+            setTimeout(() => { navigate('/app/my-publications') }, 2500)
         }
     }
 
     const handleGenres = (e) => {
-        const id = +e.currentTarget.id.split('-')[1]
+        const id = e.currentTarget.id.split('-')[1]
         if (e.currentTarget.checked) {
-            setPublicationGenres([...publicationGenres, id])
+            setShortGenres([...shortGenres, id])
         }
         else {
-            let genreIndex = publicationGenres.indexOf(id)
+            let genreIndex = shortGenres.indexOf(id)
             if (genreIndex !== -1) {
-                setPublicationGenres(publicationGenres.filter((item, index) => {
+                setShortGenres(shortGenres.filter((item, index) => {
                     return genreIndex !== index
                 }))
             }
         }
     }
 
+    const handleDelete = () => {
+        console.log("testando")
+    }
+
+    if(isNaN(parsedId) || authorId !== currentUser) {
+        return <Navigate to="/app/my-publicatiobs"/>
+    }
     return(
         <Container>
             <TypeHeader>
@@ -135,7 +222,6 @@ export const Short = () => {
                             name="book-cover" 
                             id="book-cover" 
                             accept="image/*"
-                            required
                             onChange={(e) => {
                                 setImageUpload(e.target.files[0])
                                 preview(e.target.files[0])
@@ -183,7 +269,7 @@ export const Short = () => {
                             <OptInputsContainer>
                                 <GeneralDiv>
                                     <span>Classificação Indicativa <i className="fa-solid fa-circle-exclamation"></i></span>
-                                    <select onChange={handleOptions} required defaultValue="" name="" id="">
+                                    <select onChange={handleOptions} required defaultValue="" name="" id="ratings">
                                         <option value="" disabled hidden>Selecione a faixa etária</option>
                                         {
                                             parentalRatings?.map(item => <Options name={item.classificacao} id={item.id} key={item.id} />) 
@@ -218,14 +304,31 @@ export const Short = () => {
                                     placeholder: 'Escreva a sua História',
                                     toolbar: 'undo redo | fontsize | bold italic underline | alignleft aligncenter alignright alignjustify | indent outdent | removeformat'
                                 }}
+                                initialValue={initialValue}
                             />
                         </GeneralDiv>
                         <ButtonsContainer>
-                            <ButtonCancel>Cancelar</ButtonCancel>
+                            <ButtonCancel type="button" onClick={handleOpenModal}>Excluir</ButtonCancel>
                             <ButtonSave type="submit">Salvar</ButtonSave>
                         </ButtonsContainer>
                     </HistoryDiv>
             </MainForm>
+            <Modal
+                isOpen={isDeleteModalOpen}
+                onRequestClose={handleCloseModal}
+                overlayClassName="delete-modal-overlay"
+                className="delete-modal-content"
+            >
+                <ModalContentContainer>
+                    <i className="fa-solid fa-trash"></i>
+                    <h2>Deseja mesmo excluir o livro {titulo}?</h2>
+                    <p>Essa ação é irreversível e resultará na exclusão completa dessa publicação dentro da plataforma.</p>
+                    <span>
+                        <button className="cancelar" onClick={handleCloseModal}>Cancelar</button>
+                        <button className="apagar" onClick={handleDelete}>Apagar</button>
+                    </span>
+                </ModalContentContainer>
+            </Modal>
             <ToastContainer position={toast.POSITION.TOP_CENTER}/>
         </Container>
     )
