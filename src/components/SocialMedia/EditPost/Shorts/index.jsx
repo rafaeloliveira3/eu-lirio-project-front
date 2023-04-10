@@ -207,7 +207,7 @@ export const EditShorts = () => {
     }
 
     if(isNaN(parsedId) || authorId !== currentUser) {
-        return <Navigate to="/app/my-publicatiobs"/>
+        return <Navigate to="/app/"/>
     }
     return(
         <Container>

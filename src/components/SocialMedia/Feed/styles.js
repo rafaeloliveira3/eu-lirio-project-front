@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Logo } from "../../Login/styles";
 
 const Container = styled.main`
     display: flex;
@@ -10,9 +11,11 @@ const NavBar = styled.nav`
     justify-content: center;
     align-items: center;
     background-color: var(--yellow-medium);
-    width: 100%;
+    width: 50%;
     height: 4rem;
     border-radius: 0 0 20px 20px;
+    position: fixed;
+    z-index: 999;
 `
 const ListContainer = styled.ul`
     display: flex;
@@ -22,19 +25,40 @@ const ListContainer = styled.ul`
     justify-content: space-evenly;
     align-items: center;
     li {
+        height: 100%;
         display: flex;
-        gap: 1rem;
-        align-items: center;
-        justify-content: center;
-        i {
-            height: 1.3rem;
-            width: 1.3rem;
+        flex-direction: column;
+        a {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 200ms;
+            color: var(--font-color);
+            padding: .5rem;
+            i {
+                height: 1.3rem;
+                width: 1.3rem;
+            }
+            &:hover {
+                color: var(--purple-dark);
+            }
         }
     }
+`
+
+const Indicator = styled.div`
+    height: .25rem;
+    border-radius: 10px;
+    background-color: ${(props) => props.theme.color};
 `
 
 export {
     Container,
     NavBar,
-    ListContainer
+    ListContainer,
+    Indicator
 }

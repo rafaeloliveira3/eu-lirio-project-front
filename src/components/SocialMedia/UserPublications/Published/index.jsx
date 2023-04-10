@@ -4,26 +4,32 @@ import { useState } from "react";
 
 export const Published = (props) => {
     const type = props.type 
-    let err = false
+    const [err, setErr] = useState("")
     let anuncios
     let url
 
     if (type === 1) {
         anuncios = props.user?.anuncios
         if (anuncios === undefined) {
-            err = "Você não tem nenhum livro cadastrado!"
+            if (err === "") {
+                setErr("Você não tem nenhum livro cadastrado!")
+            }
         }
+        else if(err !== "") setErr("")
         url = 'announcement'
     }
     else {
         anuncios = props.user?.historias_curtas
         if (anuncios === undefined) {
-            err = "Você não tem nenhuma curta cadastrada!"
+            if (err === "") {
+                setErr("Você não tem nenhuma curta cadastrada!")
+            }
         }
+        else if(err !== "") setErr("")
         url = 'short-storie'
     }
 
-    if (err) {
+    if (err !== "") {
         return (
             <MessageError>{err}</MessageError>
         )

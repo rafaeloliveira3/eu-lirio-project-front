@@ -40,7 +40,7 @@ export function App() {
               <Route path="feed/" element={<Feed />}>
                 <Route path="ebooks" element={<Ebooks />}/>
                 <Route path="shorts" element={<Shorts />}/>
-                <Route path="" element={<Navigate to="/app/feed/shorts" />}/>
+                <Route path="" element={<Navigate to="/app/feed/ebooks" />}/>
               </Route>
               <Route path="me" element={<Me />}/>
               <Route path="edit" element={<Edit />} />

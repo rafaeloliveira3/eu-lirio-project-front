@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { defaultUrl } from "../../helpers/url"
 import { Published } from "./Published"
+import { Desactivated } from "./Desactivated"
 
 const selected = {
     bottom_color: 'var(--purple-dark)'
@@ -68,7 +69,7 @@ export const UserPublications = () => {
             </SelectContainer>
             <CardsContainer>
                 {
-                    (userClick) ? <h1>tem</h1> : <Published type={historyTypeSelector} user={user}/>
+                    (userClick) ? <Desactivated type={historyTypeSelector} user={user}/> : <Published type={historyTypeSelector} user={user}/>
                 }
             </CardsContainer>
         </Container>
