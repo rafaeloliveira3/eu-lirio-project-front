@@ -15,6 +15,9 @@ const NavBar = styled.nav`
     height: 4rem;
     border-radius: 0 0 20px 20px;
     position: fixed;
+    left: 0;
+    right: 0;
+    transform: translate(50%);
     z-index: 999;
 `
 const ListContainer = styled.ul`
@@ -51,8 +54,8 @@ const ListContainer = styled.ul`
 `
 
 const Indicator = styled.div`
-    height: .25rem;
-    border-radius: 10px;
+    height: .20rem;
+    border-radius: 15px;
     background-color: ${(props) => props.theme.color};
 `
 

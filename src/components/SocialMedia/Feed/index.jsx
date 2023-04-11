@@ -20,12 +20,15 @@ export const Feed = () => {
         setFeedWidth(false)
     })
 
-    const [indicatorSetter, setIndicatorSetter] = useState([true, false, false])
+    const indicatorBackup = [false, false, false]
+    indicatorBackup[parseInt(sessionStorage.getItem('feed-index') || '0')] = true
+    const [indicatorSetter, setIndicatorSetter] = useState(indicatorBackup)
 
     const handleLinkChange = (e) => {
         const id = +e.currentTarget.id
+        sessionStorage.setItem('feed-index', id)
         setIndicatorSetter(indicatorSetter.map((item, index) => {
-            if (id === index) {
+            if (index === parseInt(sessionStorage.getItem('feed-index'))) {
                 return true   
             }
             return false

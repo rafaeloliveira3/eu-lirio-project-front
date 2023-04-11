@@ -5,6 +5,7 @@ export const GlobalStyle = createGlobalStyle`
         --background: #F2F2F2;
         --button-background: #FFDE5A;
         --button-stroke: #F9C73E;
+        --purple-darken: #1B0C36;
         --purple-dark: #381871;
         --purple-medium: #7822BE;
         --yellow-medium: #FBDB5A;

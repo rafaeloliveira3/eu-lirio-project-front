@@ -157,13 +157,22 @@ const UserOpt = styled.div`
                 }
             }
             i {
-                font-size: clamp(1rem, 1vw, 1.3rem);
+                font-size: 1.3rem;
                 height: 1.7rem;
                 width: 1.7rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                @media(max-width: 1920px) {
+                    font-size:1rem;
+                }
             }
             span {
-                font-size: clamp(1rem, 1vw, 1.3rem);
+                font-size: 1.3rem;
                 letter-spacing: 0.03rem;
+                @media(max-width: 1920px) {
+                    font-size:1rem;
+                }
             }
         }
     }
