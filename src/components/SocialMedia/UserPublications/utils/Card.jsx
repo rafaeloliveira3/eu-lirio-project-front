@@ -12,8 +12,9 @@ export const Card = (props) => {
 
     useEffect(() => {
         const getAnuncio = async () => {
-            const data = await axios.get(`${defaultUrl}${url}/id/${props.anuncio.id}`)
+            const data = await axios.get(`${defaultUrl}${url}/id/${props.anuncio?.id}`)
             .catch(err => console.log(err))
+
             setAnuncio(data?.data[0])
         }
         getAnuncio()
@@ -45,7 +46,7 @@ export const Card = (props) => {
                     <LikesContainer>
                         <div className="icon-container">
                             <i className="fa-regular fa-heart"></i>
-                            <span>570</span>
+                            <span>{anuncio?.curtidas?.quantidade_curtidas || 0}</span>
                         </div>
                         <div className="separator">
 

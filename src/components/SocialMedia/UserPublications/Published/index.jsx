@@ -1,43 +1,49 @@
 import { Card } from "../utils/Card"
 import { Container, MessageError } from "./styles"
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { defaultUrl } from "../../../helpers/url";
+import axios from "axios";
 
 export const Published = (props) => {
     const type = props.type 
-    const [err, setErr] = useState("")
-    let anuncios
-    let url
+    const [error, setError] = useState("")
+    const [anuncios, setAnuncios] = useState([])
+    const url = ["announcement", "short-storie"]
 
-    if (type === 1) {
-        anuncios = props.user?.anuncios
-        if (anuncios === undefined) {
-            if (err === "") {
-                setErr("Você não tem nenhum livro cadastrado!")
+    useEffect(() => {
+        const getDeactivatedBooks = async () => {
+            const fixedUrl = url[parseInt(type)-1]
+            if (props.user?.id !== undefined) {
+                console.log(props.user?.id);
+                const data = await axios.get(`${defaultUrl}activated-${fixedUrl}/user-id/${props.user?.id}`)
+                .catch((err) => {
+                    if (err.response.status === 404) {
+                        if (type === 1) {
+                            setError("Você não tem nenhum livro cadastrado!")
+                        }
+                        else {
+                            setError("Você não tem nenhuma curta cadastrada!")
+                        }
+                    }
+                })
+                if (data !== undefined) {
+                    setError("")
+                    setAnuncios(data?.data)
+                }
             }
         }
-        else if(err !== "") setErr("")
-        url = 'announcement'
-    }
-    else {
-        anuncios = props.user?.historias_curtas
-        if (anuncios === undefined) {
-            if (err === "") {
-                setErr("Você não tem nenhuma curta cadastrada!")
-            }
-        }
-        else if(err !== "") setErr("")
-        url = 'short-storie'
-    }
+        getDeactivatedBooks()
+    }, [type])
 
-    if (err !== "") {
+    if (error !== "") {
         return (
-            <MessageError>{err}</MessageError>
+            <MessageError>{error}</MessageError>
         )
     }
     return (
         <Container>
             {
-                anuncios?.map((item) => <Card type={type} url={url} key={item.id} anuncio={item} />) 
+                anuncios?.map((item) => <Card type={type} url={url[parseInt(type)-1]} key={item.id} anuncio={item} />) 
             }
         </Container>
     )

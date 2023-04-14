@@ -8,29 +8,31 @@ export const Desactivated = (props) => {
     const type = props.type 
     const [error, setError] = useState("")
     const [anuncios, setAnuncios] = useState([])
-    const [url, setUrl] = useState(() => {
-        if (type === 1) return 'announcements'
-        else return 'short-stories'
-    })
+    const url = ["announcement", "short-storie"]
 
     useEffect(() => {
         const getDeactivatedBooks = async () => {
-            const data = await axios.get(`${defaultUrl}desactivated-${url}/user-id/${props.user?.id}`)
-            .catch((err) => {
-                if (err.response.status === 404) {
-                    if (type === 1) {
-                        setError("Você não tem nenhum livro desativado!")
+            const fixedUrl = url[parseInt(type)-1]
+            if (props.user?.id !== undefined) {
+                const data = await axios.get(`${defaultUrl}desactivated-${fixedUrl}/user-id/${props.user?.id}`)
+                .catch((err) => {
+                    if (err.response.status === 404) {
+                        if (type === 1) {
+                            setError("Você não tem nenhum livro desativado!")
+                        }
+                        else {
+                            setError("Você não tem nenhuma curta desativada!")
+                        }
                     }
-                    else {
-                        setError("Você não tem nenhuma curta desativado!")
-                    }
+                })
+                if (data !== undefined) {
+                    setError("")
+                    setAnuncios(data?.data)
                 }
-            })
-            setAnuncios(data?.data)
-            console.log(anuncios);
+            }
         }
         getDeactivatedBooks()
-    })
+    }, [url])
 
     if (error !== "") {
         return (
@@ -40,7 +42,7 @@ export const Desactivated = (props) => {
     return (
         <Container>
             {
-                anuncios?.map((item) => <Card type={type} url={url} key={item.id} anuncio={item} />) 
+                anuncios?.map((item) => <Card type={type} url={url[parseInt(type)-1]} key={item.id} anuncio={item} />) 
             }
         </Container>
     )

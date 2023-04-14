@@ -12,6 +12,7 @@ import { toast, ToastContainer } from "react-toastify"
 import { Checkbox } from "../../NewPost/utils/Checkbox"
 import Modal from "react-modal"
 import { ModalContentContainer } from "../Book/styles"
+import Toggle from "react-styled-toggle"
 
 export const EditShorts = () => {
     const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
@@ -32,6 +33,9 @@ export const EditShorts = () => {
     const [imageUpload, setImageUpload] = useState(null)
     const [previewUrl, setPreviewUrl] = useState("none")
     const [imageBackup, setImageBackup] = useState(null)
+
+    const [desactivateSwitch, setDesactivateSwitch] = useState(false)
+    const [bookStatus, setBookStatus] = useState(false)
 
     const [spanDisplay, setSpanDisplay] = useState("block")
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -66,6 +70,9 @@ export const EditShorts = () => {
 
             setCurrentRating(data?.data[0].classificacao[0].id_classificacao)
             setAuthorId(data?.data[0].usuario[0].id_usuario)
+
+            setBookStatus(data?.data[0].status)
+            setDesactivateSwitch(data?.data[0].status)
 
             setTitulo(data?.data[0].titulo)
             setSinopse(data?.data[0].sinopse)
@@ -202,6 +209,24 @@ export const EditShorts = () => {
         }
     }
 
+    const handleDesactivate = () => {
+        setDesactivateSwitch(!desactivateSwitch)
+        let switchState = !desactivateSwitch
+
+        const activate = async () => {
+            if (!bookStatus) {
+                await axios.put(`${defaultUrl}activate-short-storie/id/${parsedId}`)
+            }
+        } 
+        const desactivate = async () => {
+            if (bookStatus) {
+                await axios.put(`${defaultUrl}desactivate-short-storie/id/${parsedId}`)
+            }
+        }
+
+        switchState ? activate() :  desactivate()
+    }
+
     const handleDelete = () => {
         console.log("testando")
     }
@@ -308,6 +333,10 @@ export const EditShorts = () => {
                             />
                         </GeneralDiv>
                         <ButtonsContainer>
+                            <Toggle
+                                onChange={handleDesactivate}
+                                checked={desactivateSwitch}
+                            />
                             <ButtonCancel type="button" onClick={handleOpenModal}>Excluir</ButtonCancel>
                             <ButtonSave type="submit">Salvar</ButtonSave>
                         </ButtonsContainer>

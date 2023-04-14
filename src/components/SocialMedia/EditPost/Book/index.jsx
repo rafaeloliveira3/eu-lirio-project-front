@@ -12,6 +12,7 @@ import { useParams, Navigate, useOutletContext, useNavigate } from "react-router
 import { ButtonCancel, ButtonSave, ButtonsContainer } from "../../NewPost/styles"
 import Modal from "react-modal"
 import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../../../helpers/toasts"
+import Toggle from 'react-styled-toggle';
 
 export const Book = () => {
     const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
@@ -28,6 +29,7 @@ export const Book = () => {
     const navigate = useNavigate()
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+    const [desactivateSwitch, setDesactivateSwitch] = useState(false)
 
     const [publication, setPublication] = useState({})
     const [authorId, setAuthorId] = useState(currentUser)
@@ -36,6 +38,8 @@ export const Book = () => {
 
     const [imageUpload, setImageUpload] = useState(null)
     const [imageBackup, setImageBackup] = useState(null)
+
+    const [bookStatus, setBookStatus] = useState(false)
 
     const [fileUpload, setFileUpload] = useState([null, null, null])
     const [fileBackup, setFileBackup] = useState([null, null, null])
@@ -75,6 +79,11 @@ export const Book = () => {
             setPreco(data?.data[0].preco)
             setVolume(data?.data[0].volume)
             setPaginas(data?.data[0].quantidade_paginas)
+
+            setBookStatus(data?.data[0].status)
+            setDesactivateSwitch(data?.data[0].status)
+
+            console.log(data?.data[0].status)
 
             setPreviewUrl(data?.data[0].capa)
             setImageBackup(data?.data[0].capa)
@@ -251,6 +260,24 @@ export const Book = () => {
         }
     }
 
+    const handleDesactivate = () => {
+        setDesactivateSwitch(!desactivateSwitch)
+        let switchState = !desactivateSwitch
+
+        const activate = async () => {
+            if (!bookStatus) {
+                await axios.put(`${defaultUrl}activate-announcement/id/${parsedId}`)
+            }
+        } 
+        const desactivate = async () => {
+            if (bookStatus) {
+                await axios.put(`${defaultUrl}desactivate-announcement/id/${parsedId}`)
+            }
+        }
+
+        switchState ? activate() :  desactivate()
+    }
+
     const handleDelete = async () => {
         const canDelete = true
 
@@ -394,6 +421,10 @@ export const Book = () => {
                             <Files filesName={filesName} setFile={setFileUpload} file={fileUpload}/>
                         </GeneralDiv>
                         <ButtonsContainer>
+                            <Toggle
+                                onChange={handleDesactivate}
+                                checked={desactivateSwitch}
+                            />
                             <ButtonCancel type="button" onClick={handleOpenModal}>Excluir</ButtonCancel>
                             <ButtonSave type="submit">Salvar</ButtonSave>
                         </ButtonsContainer>
