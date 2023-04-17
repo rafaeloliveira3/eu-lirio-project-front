@@ -9,10 +9,11 @@ export const Card = (props) => {
     const navigate = useNavigate()
     const url = props.url
     const [anuncio, setAnuncio] = useState({})
+    const userId = localStorage.getItem("id")
 
     useEffect(() => {
         const getAnuncio = async () => {
-            const data = await axios.get(`${defaultUrl}${url}/id/${props.anuncio?.id}`)
+            const data = await axios.get(`${defaultUrl}${url}/id/?${url}Id=${props.anuncio?.id}&userId=${userId}`)
             .catch(err => console.log(err))
 
             setAnuncio(data?.data[0])

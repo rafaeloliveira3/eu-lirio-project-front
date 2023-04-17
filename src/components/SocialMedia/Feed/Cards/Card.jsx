@@ -15,7 +15,7 @@ export const Card = (props) => {
 
     useEffect(() => {
         const getAnuncio = async () => {
-            const data = await axios.get(`${defaultUrl}${url}/id/${props.id}`)
+            const data = await axios.get(`${defaultUrl}${url}/id/?${url}Id=${props.id}&userId=${user}`)
             .catch(err => console.log(err))
 
             console.log(data.data)
@@ -124,7 +124,7 @@ export const Card = (props) => {
                         </div>
                         <button onClick={handleFavorite} className="icon-container">
                             <i className={favorited ? "fa-solid fa-bookmark" : "fa-regular fa-bookmark"}></i>
-                            <span>{anuncio?.favoritos?.quantidade_favoritos}</span>
+                            <span>{anuncio?.favoritos?.quantidade_favoritos || 0}</span>
                         </button>
                         <div className="separator">
 

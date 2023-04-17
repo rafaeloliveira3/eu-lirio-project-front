@@ -60,7 +60,7 @@ export const Book = () => {
 
     useEffect(() => {
         const getBookById = async () => {
-            const data = await axios.get(`${defaultUrl}announcement/id/${id}`)
+            const data = await axios.get(`${defaultUrl}announcement/id/?announcementId=${id}&userId=${currentUser}`)
             .catch(err => console.log(err))
 
             if (data?.data[0].generos !== undefined) {

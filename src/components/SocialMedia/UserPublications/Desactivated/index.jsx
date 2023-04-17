@@ -3,11 +3,13 @@ import { Container, MessageError } from "./styles"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { defaultUrl } from "../../../helpers/url";
+import { Loader } from "../utils/styles";
 
 export const Desactivated = (props) => {
     const type = props.type 
     const [error, setError] = useState("")
     const [anuncios, setAnuncios] = useState([])
+    const [loading, setLoading] = useState(true)
     const url = ["announcement", "short-storie"]
 
     useEffect(() => {
@@ -19,21 +21,31 @@ export const Desactivated = (props) => {
                     if (err.response.status === 404) {
                         if (type === 1) {
                             setError("Você não tem nenhum livro desativado!")
+                            setLoading(false)
                         }
                         else {
                             setError("Você não tem nenhuma curta desativada!")
+                            setLoading(false)
                         }
                     }
                 })
                 if (data !== undefined) {
                     setError("")
                     setAnuncios(data?.data)
+                    setLoading(false)
                 }
             }
         }
         getDeactivatedBooks()
-    }, [url])
+    }, [type, props.user?.id])
 
+    if (loading) {
+        return (
+            <MessageError>
+                <Loader className="fa-solid fa-circle-notch"></Loader>
+            </MessageError>
+        )
+    }
     if (error !== "") {
         return (
             <MessageError>{error}</MessageError>
