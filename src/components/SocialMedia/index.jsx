@@ -46,9 +46,6 @@ const SocialMedia = () => {
     const StyleBackup = new Array(8).fill(false)
     StyleBackup[parseInt(sessionStorage.getItem('index') || '0')] = true
     const [navBarStyleSetter, setNavBarStyleSetter] = useState(StyleBackup)
-    const [navBarIndex, setNavBarIndex] = useState(() => {
-        return parseInt(sessionStorage.getItem('index') || '0')
-    })
 
     const [adsDisplay, setAdsDisplay] = useState(false)
     const [searchbarDisplay, setSearchbarDisplay] = useState(false)
@@ -59,13 +56,15 @@ const SocialMedia = () => {
     const handleLinkChange = (e) => {
         const id = +e.currentTarget.id
         sessionStorage.setItem('index', id)
-        setNavBarIndex(id)
-
         styleChanger()
     }
     const styleChanger = () => {
         const newArr = StyleBackup.map((item, index) => {
             if (index === parseInt(sessionStorage.getItem('index'))) {
+                if (parseInt(sessionStorage.getItem('index')) === 0) {
+                    console.log("a");
+                    sessionStorage.setItem('feed-index', 0)
+                }
                 return true
             }
             else {
@@ -167,8 +166,8 @@ const SocialMedia = () => {
                                 </li>
                                 <li>   
                                     <Links onClick={handleLinkChange} theme={navBarStyleSetter[4] ? linkThemeActive : linkTheme} id="4">
-                                        <i className="fa-solid fa-shopping-bag"></i>
-                                        <span>MEUS E-BOOKS</span>
+                                        <i className="fa-solid fa-swatchbook"></i>
+                                        <span>ESTANTE</span>
                                     </Links>
                                 </li>
                                 <li>

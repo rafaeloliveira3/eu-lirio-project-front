@@ -14,7 +14,7 @@ import Modal from "react-modal"
 import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../../../helpers/toasts"
 import Toggle from 'react-styled-toggle';
 
-export const Book = () => {
+export const EditBook = () => {
     const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
 
     useEffect(() => {
@@ -279,7 +279,7 @@ export const Book = () => {
     }
 
     const handleDelete = async () => {
-        const canDelete = true
+        let canDelete = true
 
         await axios.delete(`${defaultUrl}announcement/id/${parsedId}`)
         .catch(err => canDelete = false)

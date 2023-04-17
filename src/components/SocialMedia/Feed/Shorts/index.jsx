@@ -13,7 +13,7 @@ export const Shorts = () => {
 
     useEffect(() => {
         const getShorts = async () => {
-            const data = await axios.get(`${defaultUrl}short-storie/user-id/${user}`)
+            const data = await axios.get(`${defaultUrl}short-story/user-id/${user}`)
             .catch(err => console.log(err))
 
             setLoad(false)

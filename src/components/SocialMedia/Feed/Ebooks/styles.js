@@ -22,8 +22,14 @@ const LoaderAnimation = keyframes`
         transform: rotate(360deg);
     }
 `
-const Loader = styled.i`
+const LoaderContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
     height: 90vh;
+`
+const Loader = styled.i`
     font-size: 5rem;
     display: flex;
     align-items: center;
@@ -57,5 +63,6 @@ const Card = styled.div`
 export {
     Container,
     Card,
-    Loader
+    Loader,
+    LoaderContainer
 }
