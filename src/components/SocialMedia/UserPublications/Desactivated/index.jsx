@@ -3,7 +3,7 @@ import { Container, MessageError } from "./styles"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { defaultUrl } from "../../../helpers/url";
-import { Loader } from "../utils/styles";
+import { Loader, LoaderContainer } from "../utils/styles";
 
 export const Desactivated = (props) => {
     const type = props.type 
@@ -41,9 +41,9 @@ export const Desactivated = (props) => {
 
     if (loading) {
         return (
-            <MessageError>
+            <LoaderContainer>
                 <Loader className="fa-solid fa-circle-notch"></Loader>
-            </MessageError>
+            </LoaderContainer>
         )
     }
     if (error !== "") {

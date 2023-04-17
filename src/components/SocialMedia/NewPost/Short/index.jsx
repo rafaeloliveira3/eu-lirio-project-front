@@ -186,7 +186,7 @@ export const Short = () => {
                                     <select onChange={handleOptions} required defaultValue="" name="" id="">
                                         <option value="" disabled hidden>Selecione a faixa etária</option>
                                         {
-                                            parentalRatings?.map(item => <Options name={item.classificacao} id={item.id} key={item.id} />) 
+                                            parentalRatings?.map(item => <Options name={item.classificacao} id={item.id_classificacao} key={item.id} />) 
                                         }
                                     </select>
                                 </GeneralDiv>

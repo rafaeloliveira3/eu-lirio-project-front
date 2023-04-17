@@ -33,6 +33,14 @@ const ImageContainer = styled.div`
         object-fit: cover;
     }
 ` 
+const BookContainer = styled.div`
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+`
+
 const BookTitleAndTagsContainer = styled.div`
     font-family: 'Montserrat', sans-serif;
     display: flex;
@@ -63,11 +71,89 @@ const BookTitleAndTagsContainer = styled.div`
     }
    
 ` 
+const BottomSection = styled.section`
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+`
+const TopSection = styled.section`
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+    .icon-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 2rem;
+        width: 2rem;
+        cursor: pointer;
+        i {
+            font-size: 1.3rem;
+        }
+    }
+`
+const RatingContainer = styled.div`
+    display: flex;
+    gap: 1rem;
+    .rating {    
+        font-family: 'League Spartan', sans-serif;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+    }
+    .rating-number {
+        font-size: 1.5rem;
+    }
+`
+const StatsContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    .stats-separator {
+        height: 2.7rem;
+        width: 2px;
+        border-radius: 360px;
+        background-color: #1E1E1E88;
+    }
+`
+
+const ReportContainer = styled.div`
+    display: ${(props) => props.display};
+    position: absolute;
+    right: 4.5rem;
+    top: 10.3rem;
+    span {
+        i {
+            color: #BD0020;
+        }
+        font-family: 'Quicksand', sans-serif;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        border-radius: 10px;
+        background-color: #fff;
+        padding: .6rem;
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.12);
+        &:hover {
+            background-color: #F5F5F5;
+        }
+    }
+`
 
 export {
     Container,
     BookInfoSection,
     BookData,
     ImageContainer,
-    BookTitleAndTagsContainer
+    BookTitleAndTagsContainer,
+    BookContainer,
+    RatingContainer,
+    BottomSection,
+    StatsContainer,
+    TopSection,
+    ReportContainer
 }

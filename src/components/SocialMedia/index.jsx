@@ -47,6 +47,8 @@ const SocialMedia = () => {
     StyleBackup[parseInt(sessionStorage.getItem('index') || '0')] = true
     const [navBarStyleSetter, setNavBarStyleSetter] = useState(StyleBackup)
 
+    const [searchModal, setSearchModal] = useState(false)
+
     const [adsDisplay, setAdsDisplay] = useState(false)
     const [searchbarDisplay, setSearchbarDisplay] = useState(false)
     const [feedWidth, setFeedWidth] = useState(false)
@@ -107,15 +109,13 @@ const SocialMedia = () => {
             navigator('/login') 
         }, 2500) 
     }
-
-
     return (
         <Container>
             <header className="app-header">
                 <div>
                     <img src={logo} alt="" />
                 </div>
-                <SearchContainer className="search" theme={searchbarDisplay ? invisibleDisplay : visibleDisplay}>
+                <SearchContainer onFocus={() => {setSearchModal(true)}} onBlur={() => {setSearchModal(false)}} className="search" theme={searchbarDisplay ? invisibleDisplay : visibleDisplay}>
                     <input type="text" placeholder="Pesquisar" name="" id="" />
                     <i className="fa-solid fa-magnifying-glass"></i>
                 </SearchContainer>

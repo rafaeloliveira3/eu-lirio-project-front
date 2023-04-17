@@ -15,10 +15,11 @@ export const Ebooks = () => {
         const getBooks = async () => {
             const data = await axios.get(`${defaultUrl}announcements/user-id/${user}`)
             .catch(err => console.log(err))
-            console.log(user);
-
-            setLoad(false)
-            setBooks(data?.data)
+            
+            if (data?.data !== undefined) {
+                setLoad(false)
+                setBooks(data?.data)
+            }
         }
         getBooks()
     }, [1])

@@ -27,7 +27,7 @@ const LoaderContainer = styled.div`
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 90vh;
+    height: 50vh;
 `
 const Loader = styled.i`
     font-size: 5rem;

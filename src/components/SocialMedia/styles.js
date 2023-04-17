@@ -240,6 +240,10 @@ const SearchContainer = styled.div`
     }
 `
 
+const SearchModal = styled.div`
+
+`
+
 export {
     Container,
     UserInfoContainer,

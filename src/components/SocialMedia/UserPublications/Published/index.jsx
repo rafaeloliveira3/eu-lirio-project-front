@@ -3,7 +3,7 @@ import { Container, MessageError } from "./styles"
 import { useState, useEffect } from "react";
 import { defaultUrl } from "../../../helpers/url";
 import axios from "axios";
-import { Loader } from "../utils/styles";
+import { Loader, LoaderContainer } from "../utils/styles";
 
 export const Published = (props) => {
     const type = props.type 
@@ -41,9 +41,9 @@ export const Published = (props) => {
 
     if (loading) {
         return (
-            <Container>
+            <LoaderContainer>
                 <Loader className="fa-solid fa-circle-notch"></Loader>
-            </Container>
+            </LoaderContainer>
         )
     }
     if (error !== "") {
@@ -54,7 +54,7 @@ export const Published = (props) => {
     return (
         <Container>
             {
-                anuncios?.map((item) => <Card type={type} url={url[parseInt(type)-1]} key={item.id} anuncio={item} />) 
+                anuncios?.map((item) => <Card rd type={type} url={url[parseInt(type)-1]} key={item.id} anuncio={item} />) 
             }
         </Container>
     )

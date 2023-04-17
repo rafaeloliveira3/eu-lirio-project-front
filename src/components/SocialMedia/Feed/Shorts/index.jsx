@@ -16,9 +16,10 @@ export const Shorts = () => {
             const data = await axios.get(`${defaultUrl}short-story/user-id/${user}`)
             .catch(err => console.log(err))
 
-            setLoad(false)
-
-            setShorts(data?.data)
+            if (data?.data !== undefined) {
+                setLoad(false)
+                setShorts(data?.data)
+            }
         }
         getShorts()
     }, [1])

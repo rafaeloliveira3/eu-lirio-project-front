@@ -101,6 +101,13 @@ const LoaderAnimation = keyframes`
         transform: rotate(360deg);
     }
 `
+const LoaderContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50vh;
+`
 const Loader = styled.i`
     font-size: 5rem;
     display: flex;
@@ -109,12 +116,12 @@ const Loader = styled.i`
     color: var(--purple-dark);
     animation: ${LoaderAnimation} 2s linear infinite;
 `
-
 export {
     ItemContainer,
     ItemText,
     GenreContainer,
     ContentContainer,
     LikesContainer,
-    Loader
+    Loader,
+    LoaderContainer
 }
