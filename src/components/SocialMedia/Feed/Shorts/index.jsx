@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import { useState } from "react"
 import { defaultUrl } from "../../../helpers/url"
 import { Card } from "../Cards/Card"
-import { Container, Loader } from "./styles"
+import { Container, Loader, LoaderContainer } from "./styles"
 
 export const Shorts = () => {
     const [shorts, setShorts] = useState([])
@@ -26,9 +26,9 @@ export const Shorts = () => {
 
     if (load) {
         return (
-            <Container>
+            <LoaderContainer>
                 <Loader className="fa-solid fa-circle-notch"></Loader>
-            </Container>
+            </LoaderContainer>
         )
     }
     return (

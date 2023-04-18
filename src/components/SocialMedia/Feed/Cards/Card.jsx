@@ -17,8 +17,15 @@ export const Card = (props) => {
         const getAnuncio = async () => {
             const data = await axios.get(`${defaultUrl}${url}/id/?${url}Id=${props.id}&userId=${user}`)
             .catch(err => console.log(err))
+            console.log(data?.data[0]);
 
-            console.log(data.data)
+            if (data?.data[0].curtido) {
+                setLiked(true)
+            }
+            if (data?.data[0].favorito) {
+                setFavorited(true)
+            }
+            
             setAnuncio(data?.data[0])
         }
         getAnuncio()

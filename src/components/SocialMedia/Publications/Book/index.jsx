@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams, useOutletContext } from "react-router-dom"
 import axios from "axios"
 import { defaultUrl } from "../../../helpers/url"
-import { BookContainer, BookData, BookInfoSection, BookTitleAndTagsContainer, BottomSection, Container, ImageContainer, RatingContainer, ReportContainer, StatsContainer, TopSection } from "./styles"
+import { BookAndUserInfo, BookContainer, BookData, BookExtrasSection, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, Container, ImageContainer, RatingContainer, ReportContainer, StatsContainer, TopSection } from "./styles"
 import { Tags } from "../../Tags"
 import { Rating } from "react-simple-star-rating"
 import { StatsCard } from "../utils/StatsCard"
@@ -13,6 +13,11 @@ export const Book = () => {
     const { id } = useParams()
     const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
     const [rating, setRating] = useState(3.5)
+
+    const [liked, setLiked] = useState(false)
+    const [favorited, setFavorited] = useState(false)
+    const [read, setRead] = useState(false)
+
     const [reportModal, setReportModal] = useState(false)
     const [isReportModalOpen, setIsReportModalOpen] = useState(false)
 
@@ -30,16 +35,75 @@ export const Book = () => {
             const data = await axios.get(`${defaultUrl}announcement/id/?announcementId=${id}&userId=${userId}`)
             .catch(err => console.log(err))
 
+            if (data?.data[0].curtido) {
+                setLiked(true)
+            }
+            if (data?.data[0].favorito) {
+                setFavorited(true)
+            }
+            if (data?.data[0].lido) {
+                setRead(true)
+            }
+
             setBook(data?.data[0])
         }
         getBookById()
-    }, [id, userId])
+    }, [id, userId, liked, favorited, read])
 
     const handleCloseModal = () => {
         setIsReportModalOpen(false)
     }
     const handleOpenModal = () => {
         setIsReportModalOpen(true)
+    }
+
+    const handleLike = async (e) => {
+        const status = !liked
+        setLiked(!liked)
+        if (status) {
+            await axios.post(`${defaultUrl}like-announcement`, {
+                id_anuncio : id,
+                id_usuario : userId
+            })
+        }
+        else {
+            await axios.post(`${defaultUrl}dislike-announcement`, {
+                id_anuncio : id,
+                id_usuario : userId
+            })
+        }
+    }
+    const handleFavorite = async () => {
+        const status = !favorited
+        setFavorited(!favorited)
+        if (status) {
+            await axios.post(`${defaultUrl}favorite-announcement`, {
+                id_anuncio : id,
+                id_usuario : userId
+            })
+        }
+        else {
+            await axios.post(`${defaultUrl}unfavorite-announcement`, {
+                id_anuncio : id,
+                id_usuario : userId
+            })
+        }
+    }
+    const handleRead = async (e) => {
+        const status = !read
+        setLiked(!read)
+        if (status) {
+            await axios.post(`${defaultUrl}mark-announcement-as-read`, {
+                id_anuncio : id,
+                id_usuario : userId
+            })
+        }
+        else {
+            await axios.post(`${defaultUrl}unread-announcement`, {
+                id_anuncio : id,
+                id_usuario : userId
+            })
+        }
     }
 
     return (
@@ -87,16 +151,35 @@ export const Book = () => {
                                 <span className="rating rating-number">{rating}</span>
                             </RatingContainer>
                             <StatsContainer>
-                                <StatsCard icon="fa-regular fa-heart" name="curtidas" number={5}/>
+                                <StatsCard onClick={handleLike} icon={`fa-${liked ? "solid" : "regular" } fa-heart`} name="curtidas" number={book?.curtidas?.quantidade_curtidas || 0}/>
                                 <div className="stats-separator"></div>
-                                <StatsCard icon="fa-regular fa-bookmark" name="favoritos" number={"5K"}/>
+                                <StatsCard onClick={handleFavorite} icon={`fa-${favorited ? "solid" : "regular" } fa-bookmark`} name="favoritos" number={book?.favoritos?.quantidade_favoritos || 0}/>
                                 <div className="stats-separator"></div>
-                                <StatsCard icon="fa-regular fa-check-circle" name="lidos" number={"4.1K"}/>
+                                <StatsCard onClick={handleRead} icon={`fa-${read ? "solid" : "regular" } fa-check-circle`} name="lidos" number={"4.1K"}/>
                             </StatsContainer>
                         </BottomSection>
                     </BookContainer>
                 </BookData>
             </BookInfoSection>
+            <BookExtrasSection>
+                <BookInfoContainer>
+                    <div>
+                        <BookAndUserInfo>
+                            Usuário
+                            <div className="stats-separator"></div>
+                            <StatsCard icon={`fa-solid fa-file-lines`} name="páginas" number={book?.quantidade_paginas} />
+                            <div className="stats-separator"></div>
+                            <StatsCard icon={`fa-solid fa-book`} name="volume" number={book?.volume} />
+                            <div className="stats-separator"></div>
+                            <StatsCard icon={`fa-solid fa-shopping-bag`} name="vendas" number={0} />
+                            <div className="stats-separator"></div>
+                            <StatsCard icon={`fa-solid fa-calendar-days`} name="publicação" number={0} />
+                            <div className="stats-separator"></div>
+                            <img src={book?.classificacao[0]?.icone} alt="" className="classificacao" />
+                        </BookAndUserInfo>
+                    </div>
+                </BookInfoContainer>
+            </BookExtrasSection>
             <Modal
                 isOpen={isReportModalOpen}
                 onRequestClose={handleCloseModal}

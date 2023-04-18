@@ -144,6 +144,35 @@ const ReportContainer = styled.div`
     }
 `
 
+const BookExtrasSection = styled.section`
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    background-color: tomato;
+` 
+const BookInfoContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 65%;
+    background-color: aqua;
+    .stats-separator {
+        height: 2.7rem;
+        width: 2px;
+        border-radius: 360px;
+        background-color: #1E1E1E88;
+    }
+`
+const BookAndUserInfo = styled.div`
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    .classificacao {
+        height: 2.3rem;
+    }
+` 
+
 export {
     Container,
     BookInfoSection,
@@ -155,5 +184,8 @@ export {
     BottomSection,
     StatsContainer,
     TopSection,
-    ReportContainer
+    ReportContainer,
+    BookExtrasSection,
+    BookInfoContainer,
+    BookAndUserInfo
 }
