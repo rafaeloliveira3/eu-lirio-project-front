@@ -46,7 +46,6 @@ export function App() {
               <Route path="me" element={<Me />}/>
               <Route path="edit" element={<Edit />} />
               <Route path="profile/:id" element={<Users />} />
-              <Route path="profile/:id" element={<Users />} />
               <Route path="my-publications" element={<UserPublications />} />
               <Route path="short/:id" element={<h1>Teste</h1>} />
               <Route path="new/" element={<NewPost />}> 

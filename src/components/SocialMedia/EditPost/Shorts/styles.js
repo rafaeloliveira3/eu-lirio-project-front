@@ -199,6 +199,21 @@ const HistoryDiv = styled.div`
         }
     }
 `
+const OptContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+`
+const ToggleContainer = styled.div`
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+    span {
+        font-family: 'Montserrat', sans-serif;    
+    }
+`
 
 
 export {
@@ -212,5 +227,7 @@ export {
     TagsContainer,
     Tags,
     HistoryContainer,
-    HistoryDiv
+    HistoryDiv,
+    OptContainer,
+    ToggleContainer
 }

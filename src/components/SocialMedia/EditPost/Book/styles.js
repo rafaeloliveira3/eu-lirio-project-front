@@ -213,6 +213,21 @@ const ModalContentContainer = styled.div`
         }
     }
 ` 
+const OptContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+`
+const ToggleContainer = styled.div`
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+    span {
+        font-family: 'Montserrat', sans-serif;    
+    }
+`
 
 export {
     Container,
@@ -224,5 +239,7 @@ export {
     GeneralDiv,
     TagsContainer,
     Tags,
-    ModalContentContainer
+    ModalContentContainer,
+    OptContainer,
+    ToggleContainer
 }

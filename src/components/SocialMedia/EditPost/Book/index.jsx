@@ -1,4 +1,4 @@
-import { Container, CoverInputContainer, FormInputContainer, MainForm, TypeHeader, GeneralDiv, OptInputsContainer, Tags, ModalContentContainer } from "./styles"
+import { Container, CoverInputContainer, FormInputContainer, MainForm, TypeHeader, GeneralDiv, OptInputsContainer, Tags, ModalContentContainer, OptContainer, ToggleContainer } from "./styles"
 import { useState, useEffect } from "react"
 import axios from "axios"
 import { Files } from "./Files"
@@ -420,14 +420,20 @@ export const EditBook = () => {
                             <span>E-book</span>
                             <Files filesName={filesName} setFile={setFileUpload} file={fileUpload}/>
                         </GeneralDiv>
-                        <ButtonsContainer>
-                            <Toggle
-                                onChange={handleDesactivate}
-                                checked={desactivateSwitch}
-                            />
-                            <ButtonCancel type="button" onClick={handleOpenModal}>Excluir</ButtonCancel>
-                            <ButtonSave type="submit">Salvar</ButtonSave>
-                        </ButtonsContainer>
+                        <OptContainer>
+                            <ToggleContainer>
+                                <Toggle
+                                    onChange={handleDesactivate}
+                                    checked={desactivateSwitch}
+                                    backgroundColorChecked={"var(--purple-dark)"}
+                                />
+                                <span>{desactivateSwitch ? "Desativar" : "Ativar"} Livro</span>
+                            </ToggleContainer>
+                            <ButtonsContainer>
+                                <ButtonCancel type="button" onClick={handleOpenModal}>Excluir</ButtonCancel>
+                                <ButtonSave type="submit">Salvar</ButtonSave>
+                            </ButtonsContainer>
+                        </OptContainer>
                 </FormInputContainer>
             </MainForm>
             <Modal

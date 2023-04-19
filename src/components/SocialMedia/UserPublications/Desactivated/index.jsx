@@ -18,7 +18,7 @@ export const Desactivated = (props) => {
             if (props.user?.id !== undefined) {
                 const data = await axios.get(`${defaultUrl}desactivated-${fixedUrl}/user-id/${props.user?.id}`)
                 .catch((err) => {
-                    if (err.response.status === 404) {
+                    if (err.response?.status === 404) {
                         if (type === 1) {
                             setError("Você não tem nenhum livro desativado!")
                             setLoading(false)

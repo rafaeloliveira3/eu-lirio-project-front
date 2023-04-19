@@ -149,14 +149,13 @@ const BookExtrasSection = styled.section`
     width: 100%;
     display: flex;
     justify-content: space-between;
-    background-color: tomato;
 ` 
 const BookInfoContainer = styled.div`
     display: flex;
     flex-direction: column;
+    align-items: center;
     height: 100%;
     width: 65%;
-    background-color: aqua;
     .stats-separator {
         height: 2.7rem;
         width: 2px;
@@ -164,14 +163,40 @@ const BookInfoContainer = styled.div`
         background-color: #1E1E1E88;
     }
 `
+const BookAndUserInfoContainer = styled.div`
+    width: 100%;
+    display: flex;
+    padding: 0 1vw;
+`
 const BookAndUserInfo = styled.div`
     display: flex;
-    gap: 1rem;
+    width: 100%;
+    justify-content: space-evenly;
+    border-bottom: 1px solid var(--font-color);
+    padding: .5rem 1rem;
     align-items: center;
     .classificacao {
         height: 2.3rem;
     }
 ` 
+
+const SynopsisContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 1rem;
+    padding: 1rem 1rem;
+    span {
+        font-family: 'League Spartan', sans-serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+    p {
+        font-family: 'Quicksand', sans-serif;
+        font-weight: 300;
+    }
+`
 
 export {
     Container,
@@ -187,5 +212,7 @@ export {
     ReportContainer,
     BookExtrasSection,
     BookInfoContainer,
-    BookAndUserInfo
+    BookAndUserInfo,
+    BookAndUserInfoContainer,
+    SynopsisContainer
 }

@@ -1,4 +1,4 @@
-import { Container, CoverInputContainer, FormInputContainer, MainForm, TypeHeader, GeneralDiv, OptInputsContainer, HistoryContainer, HistoryDiv, TagsContainer, Tags } from "./styles"
+import { Container, CoverInputContainer, FormInputContainer, MainForm, TypeHeader, GeneralDiv, OptInputsContainer, HistoryContainer, HistoryDiv, TagsContainer, Tags, OptContainer, ToggleContainer } from "./styles"
 import { useOutletContext, useNavigate, useParams, Navigate } from "react-router-dom"
 import { useEffect, useState, useRef } from "react"
 import axios from "axios"
@@ -40,8 +40,6 @@ export const EditShorts = () => {
     const [spanDisplay, setSpanDisplay] = useState("block")
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
-    const [status, setStatus] = useState(1)
-
     const [genres, setGenres] = useState([])
     const [shortGenres, setShortGenres] = useState([])
 
@@ -57,7 +55,7 @@ export const EditShorts = () => {
 
     useEffect(() => {
         const getShortById = async () => {
-            const data = await axios.get(`${defaultUrl}short-storie/id/${id}`)
+            const data = await axios.get(`${defaultUrl}short-storie/id/?shortStorieId=${id}&userId=${userId}`)
             .catch(err => console.log(err))
 
             setInitialValue(data?.data[0].historia)
@@ -172,7 +170,6 @@ export const EditShorts = () => {
             capa : urlCover.url,
             historia : history,
             id_usuario : userId,
-            status : status,
             id_tipo_publicacao : 2,
             id_classificacao : currentRating,
             generos : genresJson
@@ -332,14 +329,20 @@ export const EditShorts = () => {
                                 initialValue={initialValue}
                             />
                         </GeneralDiv>
-                        <ButtonsContainer>
-                            <Toggle
-                                onChange={handleDesactivate}
-                                checked={desactivateSwitch}
-                            />
-                            <ButtonCancel type="button" onClick={handleOpenModal}>Excluir</ButtonCancel>
-                            <ButtonSave type="submit">Salvar</ButtonSave>
-                        </ButtonsContainer>
+                        <OptContainer>
+                            <ToggleContainer>
+                                <Toggle
+                                    onChange={handleDesactivate}
+                                    checked={desactivateSwitch}
+                                    backgroundColorChecked={"var(--purple-dark)"}
+                                />
+                                <span>{desactivateSwitch ? "Desativar" : "Ativar"} Livro</span>
+                            </ToggleContainer>
+                            <ButtonsContainer>
+                                <ButtonCancel type="button" onClick={handleOpenModal}>Excluir</ButtonCancel>
+                                <ButtonSave type="submit">Salvar</ButtonSave>
+                            </ButtonsContainer>
+                        </OptContainer>
                     </HistoryDiv>
             </MainForm>
             <Modal

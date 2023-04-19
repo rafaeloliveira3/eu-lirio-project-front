@@ -2,17 +2,19 @@ import { useEffect, useState } from "react"
 import { useParams, useOutletContext } from "react-router-dom"
 import axios from "axios"
 import { defaultUrl } from "../../../helpers/url"
-import { BookAndUserInfo, BookContainer, BookData, BookExtrasSection, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, Container, ImageContainer, RatingContainer, ReportContainer, StatsContainer, TopSection } from "./styles"
+import { BookAndUserInfo, BookAndUserInfoContainer, BookContainer, BookData, BookExtrasSection, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, Container, ImageContainer, RatingContainer, ReportContainer, StatsContainer, SynopsisContainer, TopSection } from "./styles"
 import { Tags } from "../../Tags"
 import { Rating } from "react-simple-star-rating"
 import { StatsCard } from "../utils/StatsCard"
 import Modal from "react-modal"
 import { ModalContentContainer } from "../../Edit/styles"
+import { UserCard } from "../utils/UserCard"
 
 export const Book = () => {
     const { id } = useParams()
     const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
     const [rating, setRating] = useState(3.5)
+    const [date, setDate] = useState("")
 
     const [liked, setLiked] = useState(false)
     const [favorited, setFavorited] = useState(false)
@@ -28,7 +30,7 @@ export const Book = () => {
         setSearchbarDisplay(false)
         setFeedWidth(true)
     })
-    const [book, setBook] = useState({})
+    const [book, setBook] = useState({classificacao:[""], usuario:[""]})
 
     useEffect(() => {
         const getBookById = async () => {
@@ -45,6 +47,16 @@ export const Book = () => {
                 setRead(true)
             }
 
+            setDate(() => {
+                const months = ["Jan.", "Fev.", "Mar.", "Abr.", "Mai.", "Jun.", "Jul.", "Ago.", "Set.", "Out.", "Nov.", "Dez."]
+                const date = data?.data[0]?.data.split("T")[0].split("-") || false
+                if (date) {
+                    const monthName = months[parseInt(date[1]) - 1]
+                    return `${date[2]} ${monthName} ${date[0]}`
+                }
+                return ""
+            })
+            
             setBook(data?.data[0])
         }
         getBookById()
@@ -151,11 +163,11 @@ export const Book = () => {
                                 <span className="rating rating-number">{rating}</span>
                             </RatingContainer>
                             <StatsContainer>
-                                <StatsCard onClick={handleLike} icon={`fa-${liked ? "solid" : "regular" } fa-heart`} name="curtidas" number={book?.curtidas?.quantidade_curtidas || 0}/>
+                                <StatsCard clickable onClick={handleLike} icon={`fa-${liked ? "solid" : "regular" } fa-heart`} name="curtidas" number={book?.curtidas?.quantidade_curtidas || 0}/>
                                 <div className="stats-separator"></div>
-                                <StatsCard onClick={handleFavorite} icon={`fa-${favorited ? "solid" : "regular" } fa-bookmark`} name="favoritos" number={book?.favoritos?.quantidade_favoritos || 0}/>
+                                <StatsCard clickable onClick={handleFavorite} icon={`fa-${favorited ? "solid" : "regular" } fa-bookmark`} name="favoritos" number={book?.favoritos?.quantidade_favoritos || 0}/>
                                 <div className="stats-separator"></div>
-                                <StatsCard onClick={handleRead} icon={`fa-${read ? "solid" : "regular" } fa-check-circle`} name="lidos" number={"4.1K"}/>
+                                <StatsCard clickable onClick={handleRead} icon={`fa-${read ? "solid" : "regular" } fa-check-circle`} name="lidos" number={"4.1K"}/>
                             </StatsContainer>
                         </BottomSection>
                     </BookContainer>
@@ -163,21 +175,25 @@ export const Book = () => {
             </BookInfoSection>
             <BookExtrasSection>
                 <BookInfoContainer>
-                    <div>
+                    <BookAndUserInfoContainer>
                         <BookAndUserInfo>
-                            Usuário
+                            <UserCard user={book?.usuario[0]?.id_usuario} name={book?.usuario[0]?.nome_usuario} username={book?.usuario[0]?.user_name} photo={book?.usuario[0]?.foto}/>
                             <div className="stats-separator"></div>
-                            <StatsCard icon={`fa-solid fa-file-lines`} name="páginas" number={book?.quantidade_paginas} />
+                            <StatsCard clickable={false} icon={`fa-solid fa-file-lines`} name="páginas" number={book?.quantidade_paginas} />
                             <div className="stats-separator"></div>
-                            <StatsCard icon={`fa-solid fa-book`} name="volume" number={book?.volume} />
+                            <StatsCard clickable={false} icon={`fa-solid fa-book`} name="volume" number={book?.volume} />
                             <div className="stats-separator"></div>
-                            <StatsCard icon={`fa-solid fa-shopping-bag`} name="vendas" number={0} />
+                            <StatsCard clickable={false} icon={`fa-solid fa-shopping-bag`} name="vendas" number={0} />
                             <div className="stats-separator"></div>
-                            <StatsCard icon={`fa-solid fa-calendar-days`} name="publicação" number={0} />
+                            <StatsCard clickable={false} icon={`fa-solid fa-calendar-days`} name="publicação" number={date} />
                             <div className="stats-separator"></div>
                             <img src={book?.classificacao[0]?.icone} alt="" className="classificacao" />
                         </BookAndUserInfo>
-                    </div>
+                    </BookAndUserInfoContainer>
+                    <SynopsisContainer>
+                        <span>Sinopse</span>
+                        <p>{book?.sinopse}</p>
+                    </SynopsisContainer>
                 </BookInfoContainer>
             </BookExtrasSection>
             <Modal

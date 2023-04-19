@@ -7,13 +7,17 @@ import { useNavigate } from "react-router-dom"
 
 export const Card = (props) => {
     const navigate = useNavigate()
-    const url = props.url
+    let url = props.url
+    let shortStorieUrl
     const [anuncio, setAnuncio] = useState({})
     const userId = localStorage.getItem("id")
 
     useEffect(() => {
         const getAnuncio = async () => {
-            const data = await axios.get(`${defaultUrl}${url}/id/?${url}Id=${props.anuncio?.id}&userId=${userId}`)
+            if (url === 'short-storie') shortStorieUrl = "shortStorie"
+            else shortStorieUrl = undefined
+            
+            const data = await axios.get(`${defaultUrl}${url}/id/?${shortStorieUrl || url}Id=${props.anuncio?.id}&userId=${userId}`)
             .catch(err => console.log(err))
 
             setAnuncio(data?.data[0])
