@@ -15,9 +15,14 @@ export const Card = (props) => {
 
     useEffect(() => {
         const getAnuncio = async () => {
-            const data = await axios.get(`${defaultUrl}${url}/id/?${url}Id=${props.id}&userId=${user}`)
+            const urlFix = () => {
+                if (url === "short-storie") {
+                    return "shortStorie"
+                }
+                return url
+            }
+            const data = await axios.get(`${defaultUrl}${url}/id/?${urlFix()}Id=${props.id}&userId=${user}`)
             .catch(err => console.log(err))
-            console.log(data?.data[0]);
 
             if (data?.data[0].curtido) {
                 setLiked(true)

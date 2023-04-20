@@ -22,6 +22,7 @@ import { UserPublications } from "./components/SocialMedia/UserPublications";
 import { EditBook } from "./components/SocialMedia/EditPost/Book";
 import { EditShorts } from "./components/SocialMedia/EditPost/Shorts";
 import { Book } from "./components/SocialMedia/Publications/Book";
+import { ShortByID } from "./components/SocialMedia/Publications/Short";
  
 Modal.setAppElement('#root')
 
@@ -47,13 +48,13 @@ export function App() {
               <Route path="edit" element={<Edit />} />
               <Route path="profile/:id" element={<Users />} />
               <Route path="my-publications" element={<UserPublications />} />
-              <Route path="short/:id" element={<h1>Teste</h1>} />
               <Route path="new/" element={<NewPost />}> 
                 <Route path="choose" element={<Choose />}/>
                 <Route path="short" element={<Short />}/>
                 <Route path="book" element={<Books />}/>
                 <Route path="" element={<Navigate to="/app/new/choose" />}/>
               </Route>
+              <Route path="short/:id" element={<ShortByID />} />
               <Route path="book/:id" element={<Book />}/>
               <Route path="book/edit/:id" element={<EditBook />}/>
               <Route path="short/edit/:id" element={<EditShorts />}/>

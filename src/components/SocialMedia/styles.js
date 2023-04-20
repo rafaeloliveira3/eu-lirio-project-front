@@ -241,7 +241,16 @@ const SearchContainer = styled.div`
 `
 
 const SearchModal = styled.div`
-
+    display: ${(props) => props.display};
+    position: absolute;
+    background-color: #fff;
+    flex-direction: column;
+    height: 15rem;
+    z-index: 999;
+    width: calc(15vw + 2.1rem);
+    top: 4rem;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
 `
 
 export {
@@ -258,5 +267,6 @@ export {
     NewPost,
     SearchContainer,
     TagsContainer,
-    NamesContainer
+    NamesContainer,
+    SearchModal
 }

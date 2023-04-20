@@ -2,16 +2,15 @@ import { useEffect, useState } from "react"
 import { useParams, useOutletContext } from "react-router-dom"
 import axios from "axios"
 import { defaultUrl } from "../../../helpers/url"
-import { BookAndUserInfo, BookAndUserInfoContainer, BookContainer, BookData, BookExtrasSection, BookFormatsContainer, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, BuyBookCard, BuyBookCardContainer, BuyButtonsContainer, Container, ImageContainer, RatingContainer, ReportContainer, StatsContainer, SynopsisContainer, TopSection } from "./styles"
+import { BookAndUserInfo, BookAndUserInfoContainer, BookContainer, BookData, BookExtrasSection, BookFormatsContainer, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, BuyBookCardContainer, Container, ImageContainer, RatingContainer, ReportContainer, StatsContainer, SynopsisContainer, TopSection } from "./styles"
 import { Tags } from "../../Tags"
 import { Rating } from "react-simple-star-rating"
 import { StatsCard } from "../utils/StatsCard"
 import Modal from "react-modal"
 import { ModalContentContainer } from "../../Edit/styles"
 import { UserCard } from "../utils/UserCard"
-import { AvailableFormats } from "./AvailableFormats"
 
-export const Book = () => {
+export const ShortByID = () => {
     const { id } = useParams()
     const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
     const [rating, setRating] = useState(3.5)
@@ -24,8 +23,6 @@ export const Book = () => {
     const [reportModal, setReportModal] = useState(false)
     const [isReportModalOpen, setIsReportModalOpen] = useState(false)
 
-    const [bookFormats, setBookFormats] = useState(["PDF", "ePUB", "MOBI"])
-
     const userId = localStorage.getItem('id')
 
     useEffect(() => {
@@ -37,7 +34,7 @@ export const Book = () => {
 
     useEffect(() => {
         const getBookById = async () => {
-            const data = await axios.get(`${defaultUrl}announcement/id/?announcementId=${id}&userId=${userId}`)
+            const data = await axios.get(`${defaultUrl}short-storie/id/?shortStorieId=${id}&userId=${userId}`)
             .catch(err => console.log(err))
 
             if (data?.data[0].curtido) {
@@ -48,9 +45,6 @@ export const Book = () => {
             }
             if (data?.data[0].lido) {
                 setRead(true)
-            }
-            if (data?.data[0].mobi === 'null') {
-                setBookFormats(["PDF", "EPUB", false])
             }
 
             setDate(() => {
@@ -79,14 +73,14 @@ export const Book = () => {
         const status = !liked
         setLiked(!liked)
         if (status) {
-            await axios.post(`${defaultUrl}like-announcement`, {
-                id_anuncio : id,
+            await axios.post(`${defaultUrl}like-short-storie`, {
+                id_historia_curta : id,
                 id_usuario : userId
             })
         }
         else {
-            await axios.post(`${defaultUrl}dislike-announcement`, {
-                id_anuncio : id,
+            await axios.post(`${defaultUrl}dislike-short-storie`, {
+                id_historia_curta : id,
                 id_usuario : userId
             })
         }
@@ -95,14 +89,14 @@ export const Book = () => {
         const status = !favorited
         setFavorited(!favorited)
         if (status) {
-            await axios.post(`${defaultUrl}favorite-announcement`, {
-                id_anuncio : id,
+            await axios.post(`${defaultUrl}favorite-short-storie`, {
+                id_historia_curta : id,
                 id_usuario : userId
             })
         }
         else {
-            await axios.post(`${defaultUrl}unfavorite-announcement`, {
-                id_anuncio : id,
+            await axios.post(`${defaultUrl}unfavorite-short-storie`, {
+                id_historia_curta : id,
                 id_usuario : userId
             })
         }
@@ -111,14 +105,14 @@ export const Book = () => {
         const status = !read
         setLiked(!read)
         if (status) {
-            await axios.post(`${defaultUrl}mark-announcement-as-read`, {
-                id_anuncio : id,
+            await axios.post(`${defaultUrl}mark-short-storie-as-read`, {
+                id_historia_curta : id,
                 id_usuario : userId
             })
         }
         else {
-            await axios.post(`${defaultUrl}unread-announcement`, {
-                id_anuncio : id,
+            await axios.post(`${defaultUrl}unread-short-storie`, {
+                id_historia_curta : id,
                 id_usuario : userId
             })
         }
@@ -184,16 +178,11 @@ export const Book = () => {
                     <BookAndUserInfoContainer>
                         <BookAndUserInfo>
                             <UserCard user={book?.usuario[0]?.id_usuario} name={book?.usuario[0]?.nome_usuario} username={book?.usuario[0]?.user_name} photo={book?.usuario[0]?.foto}/>
-                            <div className="stats-separator"></div>
-                            <StatsCard clickable={false} icon={`fa-solid fa-file-lines`} name="páginas" number={book?.quantidade_paginas} />
-                            <div className="stats-separator"></div>
-                            <StatsCard clickable={false} icon={`fa-solid fa-book`} name="volume" number={book?.volume} />
-                            <div className="stats-separator"></div>
-                            <StatsCard clickable={false} icon={`fa-solid fa-shopping-bag`} name="vendas" number={0} />
-                            <div className="stats-separator"></div>
-                            <StatsCard clickable={false} icon={`fa-solid fa-calendar-days`} name="publicação" number={date} />
-                            <div className="stats-separator"></div>
-                            <img src={book?.classificacao[0]?.icone} alt="" className="classificacao" />
+                            <div className="spacer">
+                                <StatsCard clickable={false} icon={`fa-solid fa-calendar-days`} name="publicação" number={date} />
+                                <div className="stats-separator"></div>
+                                <img src={book?.classificacao[0]?.icone} alt="" className="classificacao" />
+                            </div>
                         </BookAndUserInfo>
                     </BookAndUserInfoContainer>
                     <SynopsisContainer>
@@ -202,21 +191,7 @@ export const Book = () => {
                     </SynopsisContainer>
                 </BookInfoContainer>
                 <BuyBookCardContainer>
-                    <BuyBookCard>
-                        <BookFormatsContainer>
-                            <span>
-                                Disponível em:
-                            </span>
-                            <ul>
-                                {bookFormats.map(item => item ? <AvailableFormats name={item} key={item}/> : null)}
-                            </ul>
-                        </BookFormatsContainer>
-                        <BuyButtonsContainer>
-                            <h1>R$ {book?.preco}</h1>
-                            <button>ADICIONAR AO CARRINHO</button>
-                            <button>COMPRAR</button>
-                        </BuyButtonsContainer>
-                    </BuyBookCard>
+                    SUS
                 </BuyBookCardContainer>
             </BookExtrasSection>
             <Modal

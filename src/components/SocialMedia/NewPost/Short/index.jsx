@@ -10,7 +10,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import { uploadCover, deleteFile } from "../../../helpers/firebase"
 import { useNavigate } from "react-router-dom"
 import { Editor } from "@tinymce/tinymce-react"
-import { Interweave } from "interweave"
 import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../../../helpers/toasts"
 
 export const Short = () => {

@@ -18,7 +18,7 @@ const NavBar = styled.nav`
     left: 0;
     right: 0;
     transform: translate(50%);
-    z-index: 999;
+    z-index: 99;
 `
 const ListContainer = styled.ul`
     display: flex;

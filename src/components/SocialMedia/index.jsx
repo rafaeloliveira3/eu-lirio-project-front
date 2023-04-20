@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { Navigate, Outlet, useNavigate } from "react-router-dom"
 import { defaultUrl } from "../helpers/url"
-import { Container, ExitContainer, FeedContainer, Links, NamesContainer, NewPost, OptContainer, PromotionContainer, Sair, SearchContainer, TagsContainer, User, UserInfoContainer, UserOpt } from "./styles"
+import { Container, ExitContainer, FeedContainer, Links, NamesContainer, NewPost, OptContainer, PromotionContainer, Sair, SearchContainer, SearchModal, TagsContainer, User, UserInfoContainer, UserOpt } from "./styles"
 import logo from "../../assets/img/logo.svg"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
@@ -118,6 +118,9 @@ const SocialMedia = () => {
                 <SearchContainer onFocus={() => {setSearchModal(true)}} onBlur={() => {setSearchModal(false)}} className="search" theme={searchbarDisplay ? invisibleDisplay : visibleDisplay}>
                     <input type="text" placeholder="Pesquisar" name="" id="" />
                     <i className="fa-solid fa-magnifying-glass"></i>
+                    <SearchModal display={searchModal ? "flex" : "none"}>
+
+                    </SearchModal>
                 </SearchContainer>
                 <div className="fixer">
 
