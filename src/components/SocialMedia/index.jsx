@@ -54,9 +54,12 @@ const SocialMedia = () => {
     const [feedWidth, setFeedWidth] = useState(false)
     const [tags, setTags] = useState([])
 
-
     const handleLinkChange = (e) => {
-        const id = +e.currentTarget.id
+        let id
+
+        if (typeof(e) === "string") id = e
+        else id = +e.currentTarget.id 
+
         sessionStorage.setItem('index', id)
         styleChanger()
     }
@@ -64,7 +67,6 @@ const SocialMedia = () => {
         const newArr = StyleBackup.map((item, index) => {
             if (index === parseInt(sessionStorage.getItem('index'))) {
                 if (parseInt(sessionStorage.getItem('index')) === 0) {
-                    console.log("a");
                     sessionStorage.setItem('feed-index', 0)
                 }
                 return true
@@ -84,6 +86,12 @@ const SocialMedia = () => {
             else return item
         }))
     }
+
+    const useEffectHandler = sessionStorage.getItem('index')
+    useEffect(() => {
+        const id = sessionStorage.getItem('index')
+        handleLinkChange(id)
+    }, [useEffectHandler])
 
     const [user, setUser] = useState({})
     
@@ -156,13 +164,13 @@ const SocialMedia = () => {
                                     </Links>
                                 </li>
                                 <li>
-                                    <Links onClick={handleLinkChange} theme={navBarStyleSetter[2] ? linkThemeActive : linkTheme} id="2">
+                                    <Links to="/app/favorites" onClick={handleLinkChange} theme={navBarStyleSetter[2] ? linkThemeActive : linkTheme} id="2">
                                         <i className="fa-solid fa-bookmark"></i>
                                         <span>FAVORITOS</span>
                                     </Links>
                                 </li>
                                 <li>
-                                    <Links onClick={handleLinkChange} theme={navBarStyleSetter[3] ? linkThemeActive : linkTheme} id="3">
+                                    <Links to="/app/read" onClick={handleLinkChange} theme={navBarStyleSetter[3] ? linkThemeActive : linkTheme} id="3">
                                         <i className="fa-solid fa-check-circle"></i>
                                         <span>LIDOS</span>
                                     </Links>
@@ -180,7 +188,7 @@ const SocialMedia = () => {
                                     </Links>
                                 </li>
                                 <li>
-                                    <Links onClick={handleLinkChange} theme={navBarStyleSetter[6] ? linkThemeActive : linkTheme} id="6">
+                                    <Links to="/app/cart" onClick={handleLinkChange} theme={navBarStyleSetter[6] ? linkThemeActive : linkTheme} id="6">
                                         <i className="fa-solid fa-shopping-cart"></i>
                                         <span>CARRINHO</span>
                                     </Links>

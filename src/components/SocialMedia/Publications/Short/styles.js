@@ -203,48 +203,20 @@ const SynopsisContainer = styled.div`
         font-weight: 300;
     }
 `
-const BuyBookCardContainer = styled.div`
+const ReadBookCardContainer = styled.div`
     flex-grow: 1;
     display: flex;
     align-items: flex-start;
     padding: .5rem 3rem;
     justify-content: center;
 `
-const BuyBookCard = styled.div`
-    width: 20vw;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
-    border-top: 3px solid var(--yellow-medium);
-    border-bottom: 3px solid var(--yellow-medium);
-    padding: 2rem 2rem;
-    border-radius: 12px;
-`
-const BookFormatsContainer = styled.div`
-    border-bottom: 1px solid var(--font-color);
-    font-family: 'League Spartan', sans-serif;
-    display: flex;
-    flex-direction: column;
-    gap: .7rem;
-    padding: 1rem 0;
-    span {
-        font-size: 1.2rem;
-        font-weight: 500
-    }
-    ul {
-        list-style: inside;
-        display: flex;
-        flex-direction: row;
-        gap: 1rem;
-        font-weight: 300;
-    }
-`
-const BuyButtonsContainer = styled.div`
+const ReadButtonsContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
     padding: 1rem;
+    width: 100%;
     h1 {
         font-family: 'Sen', sans-serif;
         font-size: 2.2rem;
@@ -257,11 +229,16 @@ const BuyButtonsContainer = styled.div`
         width: 100%;
         padding: .9rem 0;
         border-radius: 10px;
-        color: var(--yellow-medium);
-        border: 2px solid var(--yellow-medium);
+        border: 0;
+        background-color: #fff;
+        color: var(--font-color);
+        border-top: 2px solid var(--yellow-medium);
+        border-bottom: 2px solid var(--yellow-medium);
+        transition: border-radius 100ms;
         &:hover {
             background-color: var(--yellow-medium);
             color: #fff;
+            border-radius: 25px;
         }
     }
 `
@@ -283,8 +260,6 @@ export {
     BookAndUserInfo,
     BookAndUserInfoContainer,
     SynopsisContainer,
-    BuyBookCardContainer,
-    BuyBookCard,
-    BookFormatsContainer,
-    BuyButtonsContainer
+    ReadButtonsContainer,
+    ReadBookCardContainer
 }

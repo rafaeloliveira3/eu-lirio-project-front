@@ -10,6 +10,14 @@ import Modal from "react-modal"
 import { ModalContentContainer } from "../../Edit/styles"
 import { UserCard } from "../utils/UserCard"
 import { AvailableFormats } from "./AvailableFormats"
+import { kFormatter } from "../../../helpers/formatters"
+
+const buyButtonVisible = {
+    display : "block"
+}
+const buyButtonInisible = {
+    display : "none"
+}
 
 export const Book = () => {
     const { id } = useParams()
@@ -20,6 +28,7 @@ export const Book = () => {
     const [liked, setLiked] = useState(false)
     const [favorited, setFavorited] = useState(false)
     const [read, setRead] = useState(false)
+    const [cart, setCart] = useState(false)
 
     const [reportModal, setReportModal] = useState(false)
     const [isReportModalOpen, setIsReportModalOpen] = useState(false)
@@ -48,6 +57,9 @@ export const Book = () => {
             }
             if (data?.data[0].lido) {
                 setRead(true)
+            }
+            if (data?.data[0].carrinho) {
+                setCart(true)
             }
             if (data?.data[0].mobi === 'null') {
                 setBookFormats(["PDF", "EPUB", false])
@@ -107,9 +119,9 @@ export const Book = () => {
             })
         }
     }
-    const handleRead = async (e) => {
+    const handleRead = async () => {
         const status = !read
-        setLiked(!read)
+        setRead(!read)
         if (status) {
             await axios.post(`${defaultUrl}mark-announcement-as-read`, {
                 id_anuncio : id,
@@ -121,6 +133,19 @@ export const Book = () => {
                 id_anuncio : id,
                 id_usuario : userId
             })
+        }
+    }
+    const handleCart = async() => {
+        const status = !cart
+        setCart(!cart)
+        if (status) {
+            await axios.post(`${defaultUrl}put-in-cart`, {
+                id_anuncio : id,
+                id_usuario : userId
+            })
+        }
+        else {
+            await axios.delete(`${defaultUrl}delete-cart-item/?announcementId=${id}&userId=${userId}`)
         }
     }
 
@@ -169,11 +194,11 @@ export const Book = () => {
                                 <span className="rating rating-number">{rating}</span>
                             </RatingContainer>
                             <StatsContainer>
-                                <StatsCard clickable onClick={handleLike} icon={`fa-${liked ? "solid" : "regular" } fa-heart`} name="curtidas" number={book?.curtidas?.quantidade_curtidas || 0}/>
+                                <StatsCard clickable onClick={handleLike} icon={`fa-${liked ? "solid" : "regular" } fa-heart`} name="curtidas" number={kFormatter(book?.curtidas?.quantidade_curtidas || 0)}/>
                                 <div className="stats-separator"></div>
-                                <StatsCard clickable onClick={handleFavorite} icon={`fa-${favorited ? "solid" : "regular" } fa-bookmark`} name="favoritos" number={book?.favoritos?.quantidade_favoritos || 0}/>
+                                <StatsCard clickable onClick={handleFavorite} icon={`fa-${favorited ? "solid" : "regular" } fa-bookmark`} name="favoritos" number={kFormatter(book?.favoritos?.quantidade_favoritos || 0)}/>
                                 <div className="stats-separator"></div>
-                                <StatsCard clickable onClick={handleRead} icon={`fa-${read ? "solid" : "regular" } fa-check-circle`} name="lidos" number={"4.1K"}/>
+                                <StatsCard clickable onClick={handleRead} icon={`fa-${read ? "solid" : "regular" } fa-check-circle`} name="lidos" number={kFormatter(book?.lidos?.quantidade_lidos || 0)}/>
                             </StatsContainer>
                         </BottomSection>
                     </BookContainer>
@@ -211,10 +236,10 @@ export const Book = () => {
                                 {bookFormats.map(item => item ? <AvailableFormats name={item} key={item}/> : null)}
                             </ul>
                         </BookFormatsContainer>
-                        <BuyButtonsContainer>
+                        <BuyButtonsContainer theme={cart ? buyButtonInisible : buyButtonVisible} >
                             <h1>R$ {book?.preco}</h1>
-                            <button>ADICIONAR AO CARRINHO</button>
-                            <button>COMPRAR</button>
+                            <button onClick={handleCart}>{cart ? "REMOVER DO" : "ADICIONAR AO"} CARRINHO</button>
+                            <button className="direct-buy-button">COMPRAR</button>
                         </BuyButtonsContainer>
                     </BuyBookCard>
                 </BuyBookCardContainer>

@@ -4,6 +4,7 @@ import { defaultUrl } from "../../../helpers/url"
 import { Genres } from "./Genres"
 import { ContentContainer, GenreContainer, ItemContainer, ItemText, LikesContainer } from "./styles"
 import { useNavigate } from "react-router-dom"
+import { kFormatter } from "../../../helpers/formatters"
 
 export const Card = (props) => {
     const navigate = useNavigate()
@@ -51,14 +52,14 @@ export const Card = (props) => {
                     <LikesContainer>
                         <div className="icon-container">
                             <i className="fa-regular fa-heart"></i>
-                            <span>{anuncio?.curtidas?.quantidade_curtidas || 0}</span>
+                            <span>{kFormatter(anuncio?.curtidas?.quantidade_curtidas || 0)}</span>
                         </div>
                         <div className="separator">
 
                         </div>
                         <div className="icon-container">
                             <i className="fa-regular fa-circle-check"></i>
-                            <span>4,1K</span>
+                            <span>{kFormatter(anuncio?.lidos?.quantidade_lidos || 0)}</span>
                         </div>
                     </LikesContainer>
                     <p>

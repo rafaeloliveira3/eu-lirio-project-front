@@ -256,6 +256,9 @@ const BuyButtonsContainer = styled.div`
             color: #fff;
         }
     }
+    .direct-buy-button {
+        display: ${(props) => props.theme.display};
+    }
 `
 
 export {

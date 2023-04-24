@@ -2,13 +2,14 @@ import { useEffect, useState } from "react"
 import { useParams, useOutletContext } from "react-router-dom"
 import axios from "axios"
 import { defaultUrl } from "../../../helpers/url"
-import { BookAndUserInfo, BookAndUserInfoContainer, BookContainer, BookData, BookExtrasSection, BookFormatsContainer, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, BuyBookCardContainer, Container, ImageContainer, RatingContainer, ReportContainer, StatsContainer, SynopsisContainer, TopSection } from "./styles"
+import { BookAndUserInfo, BookAndUserInfoContainer, BookContainer, BookData, BookExtrasSection, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, Container, ImageContainer, RatingContainer, ReadBookCardContainer, ReadButtonsContainer, ReportContainer, StatsContainer, SynopsisContainer, TopSection } from "./styles"
 import { Tags } from "../../Tags"
 import { Rating } from "react-simple-star-rating"
 import { StatsCard } from "../utils/StatsCard"
 import Modal from "react-modal"
 import { ModalContentContainer } from "../../Edit/styles"
 import { UserCard } from "../utils/UserCard"
+import { kFormatter } from "../../../helpers/formatters"
 
 export const ShortByID = () => {
     const { id } = useParams()
@@ -103,9 +104,9 @@ export const ShortByID = () => {
     }
     const handleRead = async (e) => {
         const status = !read
-        setLiked(!read)
+        setRead(!read)
         if (status) {
-            await axios.post(`${defaultUrl}mark-short-storie-as-read`, {
+            await axios.post(`${defaultUrl}mark-storie-as-read`, {
                 id_historia_curta : id,
                 id_usuario : userId
             })
@@ -163,11 +164,11 @@ export const ShortByID = () => {
                                 <span className="rating rating-number">{rating}</span>
                             </RatingContainer>
                             <StatsContainer>
-                                <StatsCard clickable onClick={handleLike} icon={`fa-${liked ? "solid" : "regular" } fa-heart`} name="curtidas" number={book?.curtidas?.quantidade_curtidas || 0}/>
+                                <StatsCard clickable onClick={handleLike} icon={`fa-${liked ? "solid" : "regular" } fa-heart`} name="curtidas" number={kFormatter(book?.curtidas?.quantidade_curtidas || 0)}/>
                                 <div className="stats-separator"></div>
-                                <StatsCard clickable onClick={handleFavorite} icon={`fa-${favorited ? "solid" : "regular" } fa-bookmark`} name="favoritos" number={book?.favoritos?.quantidade_favoritos || 0}/>
+                                <StatsCard clickable onClick={handleFavorite} icon={`fa-${favorited ? "solid" : "regular" } fa-bookmark`} name="favoritos" number={kFormatter(book?.favoritos?.quantidade_favoritos || 0)}/>
                                 <div className="stats-separator"></div>
-                                <StatsCard clickable onClick={handleRead} icon={`fa-${read ? "solid" : "regular" } fa-check-circle`} name="lidos" number={"4.1K"}/>
+                                <StatsCard clickable onClick={handleRead} icon={`fa-${read ? "solid" : "regular" } fa-check-circle`} name="lidos" number={kFormatter(book?.lidos?.quantidade_lidos || 0)}/>
                             </StatsContainer>
                         </BottomSection>
                     </BookContainer>
@@ -190,9 +191,11 @@ export const ShortByID = () => {
                         <p>{book?.sinopse}</p>
                     </SynopsisContainer>
                 </BookInfoContainer>
-                <BuyBookCardContainer>
-                    SUS
-                </BuyBookCardContainer>
+                <ReadBookCardContainer>
+                    <ReadButtonsContainer>
+                        <button>LER</button>
+                    </ReadButtonsContainer>
+                </ReadBookCardContainer>
             </BookExtrasSection>
             <Modal
                 isOpen={isReportModalOpen}

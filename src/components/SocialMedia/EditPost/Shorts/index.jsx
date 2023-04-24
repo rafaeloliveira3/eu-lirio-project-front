@@ -336,7 +336,7 @@ export const EditShorts = () => {
                                     checked={desactivateSwitch}
                                     backgroundColorChecked={"var(--purple-dark)"}
                                 />
-                                <span>{desactivateSwitch ? "Desativar" : "Ativar"} Livro</span>
+                                <span>{desactivateSwitch ? "Desativar" : "Ativar"} Curta</span>
                             </ToggleContainer>
                             <ButtonsContainer>
                                 <ButtonCancel type="button" onClick={handleOpenModal}>Excluir</ButtonCancel>
