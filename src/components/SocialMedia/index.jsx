@@ -81,11 +81,8 @@ const SocialMedia = () => {
     }
 
     const navBarReseter = () => {
-        setNavBarStyleSetter(StyleBackup.map((item, index) => {
-            if (index === 0) {
-                return false
-            }
-            else return item
+        setNavBarStyleSetter(StyleBackup.map((item) => {
+            return false
         }))
     }
 
