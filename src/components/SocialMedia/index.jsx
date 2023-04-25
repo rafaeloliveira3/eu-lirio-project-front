@@ -84,6 +84,7 @@ const SocialMedia = () => {
         setNavBarStyleSetter(StyleBackup.map((item) => {
             return false
         }))
+        sessionStorage.setItem('index', -1)
     }
 
     const useEffectHandler = sessionStorage.getItem('index')
