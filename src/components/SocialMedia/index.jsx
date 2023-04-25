@@ -55,9 +55,11 @@ const SocialMedia = () => {
     const [tags, setTags] = useState([])
 
     const handleLinkChange = (e) => {
+        console.log(e);
         let id
 
         if (typeof(e) === "string") id = e
+        else if (e === null) id = "0"
         else id = +e.currentTarget.id 
 
         sessionStorage.setItem('index', id)
