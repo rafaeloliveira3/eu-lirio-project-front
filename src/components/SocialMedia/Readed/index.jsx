@@ -13,7 +13,7 @@ const indicatorDesactivated = {
 }
 
 
-export const Favorite = () => {
+export const Readed = () => {
     const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
 
     useEffect(() => {

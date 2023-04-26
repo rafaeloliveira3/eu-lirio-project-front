@@ -33,6 +33,7 @@ export const Card = (props) => {
             }
             
             setAnuncio(data?.data[0])
+            console.log(data.data[0]);
         }
         getAnuncio()
     }, [props.id, liked, favorited])

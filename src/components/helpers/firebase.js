@@ -63,6 +63,12 @@ export const getFilesName = async (fileUrl) => {
 
   return fileRef.name.split("-")[0]
 }
+export const getFileSize = async (fileUrl) => {
+  const storage = getStorage(app)
+  const fileRef = ref(storage, fileUrl)
+
+  return fileRef.size
+}
 
 
 /* FIREBASE AUTH */

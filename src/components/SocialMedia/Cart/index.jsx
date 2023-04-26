@@ -32,6 +32,16 @@ export const Cart = () => {
     const upRefreshCounter = () => {
         setRefreshCounter(refreshCounter + 1)
     }
+    const handleBuy = async () => {
+        const cart = {
+            id_usuario : userId,
+            id_carrinho : announcements?.map((item) => {
+                return {id : item?.id_carrinho}
+            })
+        }
+        await axios.post(`${defaultUrl}confirm-buy`, cart)
+        .catch(err => console.log(err))
+    }
 
     return (
         <Container>
@@ -44,7 +54,7 @@ export const Cart = () => {
                         <span className="total">Total</span>
                         <span className="total-value">R$50.00</span>
                     </div>
-                    <button>COMPRAR</button>
+                    <button onClick={handleBuy}>COMPRAR</button>
                 </BuyBookCard>
             </BuyItensCardContainer>
         </Container>

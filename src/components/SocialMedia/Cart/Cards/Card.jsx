@@ -4,17 +4,22 @@ import { defaultUrl } from "../../../helpers/url"
 import { Genres } from "./Genres"
 import { ContentContainer, GenreContainer, ItemContainer, ItemText } from "./styles"
 import { useNavigate } from "react-router-dom"
+import { AvailableFormats } from "../../Publications/Book/AvailableFormats"
 
 export const Card = (props) => {
     const navigate = useNavigate()
     const [anuncio, setAnuncio] = useState({})
     const user = localStorage.getItem('id')
+    const [formats, setFormats] = useState(["PDF", "EPUb", "MOBI"])
 
     useEffect(() => {
         const getAnuncio = async () => {
             const data = await axios.get(`${defaultUrl}announcement/id/?announcementId=${props.id}&userId=${user}`)
             .catch(err => console.log(err))
             
+            if (data?.data[0].mobi === 'null') {
+                setFormats(["PDF", "EPUb", false])
+            }
             setAnuncio(data?.data[0])
         }
         getAnuncio()
@@ -42,7 +47,7 @@ export const Card = (props) => {
                 </h2>
                 <GenreContainer>
                     {
-                        anuncio?.generos?.map((item) => <Genres key={item.id_genero} name={item.nome} />)
+                        formats.map((item) => item ? <Genres key={item} name={item} /> : null)
                     }
                 </GenreContainer>
                 <ContentContainer>

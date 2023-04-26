@@ -7,6 +7,7 @@ import logo from "../../assets/img/logo.svg"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { Tags } from "./Tags"
+import { Search } from "./Search"
 
 let linkTheme = {
     font: "var(--font-color)",
@@ -54,8 +55,10 @@ const SocialMedia = () => {
     const [feedWidth, setFeedWidth] = useState(false)
     const [tags, setTags] = useState([])
 
+    const [searchPrompt, setSearchPrompt] = useState("")
+    const [searched, setSearched] = useState([])
+
     const handleLinkChange = (e) => {
-        console.log(e);
         let id
 
         if (typeof(e) === "string") id = e
@@ -105,6 +108,17 @@ const SocialMedia = () => {
         fetchData()
     }, [userId])
 
+    useEffect(() => {
+        const searchByTitle = async () => {
+            console.log(searchPrompt)
+            const data = await axios.get(`${defaultUrl}announcements/announcement-title/?announcementTitle=${searchPrompt}&userId=${userId}`)
+            .catch(err => console.log(err))
+
+            setSearched(data?.data)
+        }
+        searchByTitle()
+    }, [searchPrompt])
+
     //if (userToken === null) {
     //    return <Navigate to="/login" />
     //}
@@ -124,10 +138,12 @@ const SocialMedia = () => {
                     <img src={logo} alt="" />
                 </div>
                 <SearchContainer onFocus={() => {setSearchModal(true)}} onBlur={() => {setSearchModal(false)}} className="search" theme={searchbarDisplay ? invisibleDisplay : visibleDisplay}>
-                    <input type="text" placeholder="Pesquisar" name="" id="" />
+                    <input type="text" placeholder="Pesquisar" value={searchPrompt} onChange={(e) => {setSearchPrompt(e.currentTarget.value)}}/>
                     <i className="fa-solid fa-magnifying-glass"></i>
                     <SearchModal display={searchModal ? "flex" : "none"}>
-
+                        {
+                            searched?.map(item => <Search key={item?.id} name={item?.nome} search={searchPrompt} />)
+                        }
                     </SearchModal>
                 </SearchContainer>
                 <div className="fixer">
