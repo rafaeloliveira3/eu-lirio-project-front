@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useParams, useOutletContext } from "react-router-dom"
+import { useParams, useOutletContext, Link } from "react-router-dom"
 import axios from "axios"
 import { defaultUrl } from "../../../helpers/url"
 import { BookAndUserInfo, BookAndUserInfoContainer, BookContainer, BookData, BookExtrasSection, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, Container, ImageContainer, RatingContainer, ReadBookCardContainer, ReadButtonsContainer, ReportContainer, StatsContainer, SynopsisContainer, TopSection } from "./styles"
@@ -193,7 +193,7 @@ export const ShortByID = () => {
                 </BookInfoContainer>
                 <ReadBookCardContainer>
                     <ReadButtonsContainer>
-                        <button>LER</button>
+                        <Link to={`/short/read/${id}`}><button>LER</button></Link>
                     </ReadButtonsContainer>
                 </ReadBookCardContainer>
             </BookExtrasSection>

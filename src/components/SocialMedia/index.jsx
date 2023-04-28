@@ -2,12 +2,13 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { Navigate, Outlet, useNavigate } from "react-router-dom"
 import { defaultUrl } from "../helpers/url"
-import { Container, ExitContainer, FeedContainer, Links, NamesContainer, NewPost, OptContainer, PromotionContainer, Sair, SearchContainer, SearchModal, TagsContainer, User, UserInfoContainer, UserOpt } from "./styles"
+import { Container, ExitContainer, FeedContainer, Links, NamesContainer, NewPost, OptContainer, PromotionContainer, Sair, SearchContainer, SearchContainerModal, SearchModal, TagsContainer, User, UserInfoContainer, UserOpt } from "./styles"
 import logo from "../../assets/img/logo.svg"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { Tags } from "./Tags"
 import { Search } from "./Search"
+import Modal from "react-modal"
 
 let linkTheme = {
     font: "var(--font-color)",
@@ -48,7 +49,7 @@ const SocialMedia = () => {
     StyleBackup[parseInt(sessionStorage.getItem('index') || '0')] = true
     const [navBarStyleSetter, setNavBarStyleSetter] = useState(StyleBackup)
 
-    const [searchModal, setSearchModal] = useState(false)
+    const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
 
     const [adsDisplay, setAdsDisplay] = useState(false)
     const [searchbarDisplay, setSearchbarDisplay] = useState(false)
@@ -90,6 +91,18 @@ const SocialMedia = () => {
         sessionStorage.setItem('index', -1)
     }
 
+    const handleEnterSearch = (e) => {
+        if (e.key === 'Enter') {
+            navBarReseter()
+            sessionStorage.setItem('search-index', '0')
+            setIsSearchModalOpen(false)
+            navigator(`/app/search/announcements/${searchPrompt}`)
+        }
+    }
+    const handleCloseModal = () => {
+        setIsSearchModalOpen(false)
+    } 
+
     const useEffectHandler = sessionStorage.getItem('index')
     useEffect(() => {
         const id = sessionStorage.getItem('index')
@@ -110,11 +123,12 @@ const SocialMedia = () => {
 
     useEffect(() => {
         const searchByTitle = async () => {
-            console.log(searchPrompt)
             const data = await axios.get(`${defaultUrl}announcements/announcement-title/?announcementTitle=${searchPrompt}&userId=${userId}`)
             .catch(err => console.log(err))
 
-            setSearched(data?.data)
+            setSearched(data?.data?.filter((item, index) => {
+                return index <= 3
+            }))
         }
         searchByTitle()
     }, [searchPrompt])
@@ -137,14 +151,22 @@ const SocialMedia = () => {
                 <div>
                     <img src={logo} alt="" />
                 </div>
-                <SearchContainer onFocus={() => {setSearchModal(true)}} onBlur={() => {setSearchModal(false)}} className="search" theme={searchbarDisplay ? invisibleDisplay : visibleDisplay}>
-                    <input type="text" placeholder="Pesquisar" value={searchPrompt} onChange={(e) => {setSearchPrompt(e.currentTarget.value)}}/>
+                <SearchContainer className="search" theme={searchbarDisplay ? invisibleDisplay : visibleDisplay}>
+                    <input type="text" onClick={() => setIsSearchModalOpen(true)} onKeyDown={handleEnterSearch} placeholder="Pesquisar" value={searchPrompt} onChange={(e) => {setSearchPrompt(e.currentTarget.value)}}/>
                     <i className="fa-solid fa-magnifying-glass"></i>
-                    <SearchModal display={searchModal ? "flex" : "none"}>
-                        {
-                            searched?.map(item => <Search key={item?.id} name={item?.nome} search={searchPrompt} />)
-                        }
-                    </SearchModal>
+                    <Modal
+                        isOpen={isSearchModalOpen}
+                        onRequestClose={() => setIsSearchModalOpen(false)}
+                        overlayClassName="search-modal-overlay"
+                        className="search-modal-content"
+                        shouldFocusAfterRender={true}
+                    >
+                        <SearchContainerModal>
+                            {
+                                searched?.map(item => <Search key={item?.id} id={item?.id} closeModal={handleCloseModal} name={item?.titulo} search={searchPrompt} />)
+                            }
+                        </SearchContainerModal>
+                    </Modal>
                 </SearchContainer>
                 <div className="fixer">
 

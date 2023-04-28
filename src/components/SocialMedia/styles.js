@@ -26,7 +26,7 @@ const Container = styled.div`
             border: 0;
         }
         .fixer {
-            width: 6%;
+            width: 9rem;
             height: 1rem;
         }
     }
@@ -229,6 +229,7 @@ const SearchContainer = styled.div`
     background-color: #fff;
     border-radius: 10px;
     align-items: center;
+    z-index: 99;
     gap: .5rem;
     padding-right: .5rem;
     input {
@@ -239,18 +240,22 @@ const SearchContainer = styled.div`
         color: var(--purple-dark);
     }
 `
-
-const SearchModal = styled.div`
-    display: ${(props) => props.display};
-    position: absolute;
+const SearchContainerModal = styled.ul`
+    display: flex;
+    height: 100%;
+    width: 100%;
+    font-family: 'League Spartan', sans-serif;
+    justify-content: space-between;
     background-color: #fff;
     flex-direction: column;
-    height: 15rem;
-    z-index: 999;
-    width: calc(15vw + 2.1rem);
-    top: 4rem;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
+    a {
+        text-decoration: none;
+        color: var(--font-color);
+        &:hover {
+            color: var(--purple-dark);
+        }
+    }
 `
 
 export {
@@ -268,5 +273,5 @@ export {
     SearchContainer,
     TagsContainer,
     NamesContainer,
-    SearchModal
+    SearchContainerModal
 }

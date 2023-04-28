@@ -1,8 +1,15 @@
+import { Interweave } from "interweave"
+import { Link } from "react-router-dom"
+
 export const Search = (props) => {
-    const spliced = "a"
-    console.log(props)
+    const reg = new RegExp(props.search, 'gi')
+    const spliced = props.name?.replace(reg, (str) => str.bold())
 
     return (
-        <li><span><strong>{props.search}</strong>{spliced}</span></li>
+        <li>
+            <Link onClick={props.closeModal} to={`/app/book/${props.id}`}>
+                <Interweave content={spliced}/> 
+            </Link>
+        </li>
     )
 }

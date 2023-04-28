@@ -26,6 +26,11 @@ import { ShortByID } from "./components/SocialMedia/Publications/Short";
 import { Cart } from "./components/SocialMedia/Cart";
 import { Favorite } from "./components/SocialMedia/Favorite";
 import { Readed } from "./components/SocialMedia/Readed";
+import { SearchScreen } from "./components/SocialMedia/SearchScreen";
+import { AnnouncementsSearch } from "./components/SocialMedia/SearchScreen/AnnouncementsSearch";
+import { ShortsSearch } from "./components/SocialMedia/SearchScreen/ShortsSearch";
+import { AuthorsSearch } from "./components/SocialMedia/SearchScreen/AuthorsSearch";
+import { ReadShort } from "./components/ReadShort";
  
 Modal.setAppElement('#root')
 
@@ -41,6 +46,7 @@ export function App() {
               <Route path="step2" element={<Step2 />}></Route>
               <Route path="" element={<Navigate to="/register/step1" />}/>
             </Route>
+            <Route path="short/read/:id" element={<ReadShort />} />
             <Route path="/app/" element={<SocialMedia />}>
               <Route path="feed/" element={<Feed />}>
                 <Route path="ebooks" element={<Ebooks />}/>
@@ -63,6 +69,11 @@ export function App() {
               <Route path="short/edit/:id" element={<EditShorts />}/>
               <Route path="cart" element={<Cart />} />
               <Route path="favorites" element={<Favorite />}/>
+              <Route path="search" element={<SearchScreen />}>
+                <Route path="announcements/:prompt" element={<AnnouncementsSearch />} />
+                <Route path="shorts/:prompt" element={<ShortsSearch />}/>
+                <Route path="authors/:prompt" element={<AuthorsSearch />}/>
+              </Route>
               <Route path="read" element={<Readed />}/>
               <Route path="" element={<Navigate to="/app/feed" />}/>
             </Route>

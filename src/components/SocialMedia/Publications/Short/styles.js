@@ -221,6 +221,9 @@ const ReadButtonsContainer = styled.div`
         font-family: 'Sen', sans-serif;
         font-size: 2.2rem;
     }
+    a {
+        width: 100%;
+    }
     button {
         background-color: var(--background);
         font-family: 'Montserrat', sans-serif;

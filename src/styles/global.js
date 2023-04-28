@@ -81,4 +81,29 @@ export const GlobalStyle = createGlobalStyle`
         border-radius: 10px;
     }
 
+    .search-modal-overlay {
+        background-color: #00000000;
+        padding: 0 10rem;
+
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        z-index: 98;
+        padding-top: 4rem;
+
+        display: flex;
+        justify-content: center;
+    }
+    .search-modal-content {
+        background-color: #fff;
+        z-index: 99;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
+        padding: 2rem;
+        height: 16rem;
+        width: calc(15vw + 2.1rem);
+        border-radius: 10px;
+    }
 `
