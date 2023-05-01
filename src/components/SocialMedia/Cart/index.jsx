@@ -34,12 +34,11 @@ export const Cart = () => {
     }
     const handleBuy = async () => {
         const cart = {
-            id_usuario : userId,
-            id_carrinho : announcements?.map((item) => {
-                return {id : item?.id_carrinho}
+            id_anuncio : announcements?.map((item) => {
+                return {id : item?.id_anuncio}
             })
         }
-        await axios.post(`${defaultUrl}confirm-buy`, cart)
+        await axios.post(`${defaultUrl}confirm-buy/user-id/${userId}`, cart)
         .catch(err => console.log(err))
     }
 

@@ -99,6 +99,12 @@ const SocialMedia = () => {
             navigator(`/app/search/announcements/${searchPrompt}`)
         }
     }
+    const handleClickSearch = () => {
+        navBarReseter()
+        sessionStorage.setItem('search-index', '0')
+        setIsSearchModalOpen(false)
+        navigator(`/app/search/announcements/${searchPrompt}`)
+    }
     const handleCloseModal = () => {
         setIsSearchModalOpen(false)
     } 
@@ -153,13 +159,13 @@ const SocialMedia = () => {
                 </div>
                 <SearchContainer className="search" theme={searchbarDisplay ? invisibleDisplay : visibleDisplay}>
                     <input type="text" onClick={() => setIsSearchModalOpen(true)} onKeyDown={handleEnterSearch} placeholder="Pesquisar" value={searchPrompt} onChange={(e) => {setSearchPrompt(e.currentTarget.value)}}/>
-                    <i className="fa-solid fa-magnifying-glass"></i>
+                    <i onClick={handleClickSearch} className="fa-solid fa-magnifying-glass"></i>
                     <Modal
                         isOpen={isSearchModalOpen}
                         onRequestClose={() => setIsSearchModalOpen(false)}
                         overlayClassName="search-modal-overlay"
                         className="search-modal-content"
-                        shouldFocusAfterRender={true}
+                        shouldFocusAfterRender={false}
                     >
                         <SearchContainerModal>
                             {

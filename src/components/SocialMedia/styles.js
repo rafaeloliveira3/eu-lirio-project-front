@@ -238,6 +238,7 @@ const SearchContainer = styled.div`
     i {
         font-size: 1.2rem;
         color: var(--purple-dark);
+        cursor: pointer;
     }
 `
 const SearchContainerModal = styled.ul`

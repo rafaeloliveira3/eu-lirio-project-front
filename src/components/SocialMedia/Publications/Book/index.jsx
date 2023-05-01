@@ -139,9 +139,10 @@ export const Book = () => {
         const status = !cart
         setCart(!cart)
         if (status) {
-            await axios.post(`${defaultUrl}put-in-cart`, {
-                id_anuncio : id,
-                id_usuario : userId
+            await axios.post(`${defaultUrl}new-cart-item/user-id/${userId}`, {
+                id_anuncio : [{
+                    id : id
+                }]
             })
         }
         else {
