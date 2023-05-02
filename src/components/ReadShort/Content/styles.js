@@ -5,10 +5,12 @@ const Container = styled.div`
     justify-content: space-between;
     height: 100%;
     max-width: 50%;
+    padding: 2rem;
 `
 const NavBar = styled.nav`
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 1rem;
     .author {
         display: flex;
@@ -26,6 +28,8 @@ const NavBar = styled.nav`
         }
         img {
             height: 7rem;
+            width: 7rem;
+            object-fit: cover;
             border-radius: 360px;
         }
         .author-name {
@@ -39,22 +43,79 @@ const NavBar = styled.nav`
     .nav-bar {
         border: 2px solid var(--yellow-medium);
         border-radius: 24px;
-        width: 100%;
+        padding: 1rem .5rem;
+        width: min-content;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
         a {
+            border-radius: 360px;
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.5rem;
             text-decoration: none;
+            padding: .8rem;
+            i {
+                -webkit-text-stroke: 1.5px var(--font-color);
+                color: #0000;
+            }
+            &:hover {
+                background-color: #F9C73E33;
+            }
         }
+    }
+`
+const StoryContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+` 
+const StoryDataContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    font-family: 'League Spartan', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    gap: 1rem;
+    div {
+        display: flex;
+        width: 30%;
+        justify-content: space-between;
+        button {
+            border: 0;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            background-color: #0000;
+            font-family: 'Montserrat', sans-serif;
+            i {
+                font-size: 1.2rem;
+            }
+        }
+    }
+`
+
+const ContentContainer = styled.div`
+    padding: 1rem 2rem;
+    display: flex;
+    font-family: 'Noto Serif', serif;
+    width: 100%;
+    overflow-y: auto;
+    span {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
 `
 
 export {
     Container,
-    NavBar
+    NavBar,
+    ContentContainer,
+    StoryContainer,
+    StoryDataContainer
 }

@@ -13,6 +13,7 @@ export const Card = (props) => {
     const user = localStorage.getItem('id')
     const [liked, setLiked] = useState(false)
     const [favorited, setFavorited] = useState(false)
+    const [readed, setReaded] = useState(false)
 
     useEffect(() => {
         const getAnuncio = async () => {
@@ -25,12 +26,12 @@ export const Card = (props) => {
             const data = await axios.get(`${defaultUrl}${url}/id/?${urlFix()}Id=${props.id}&userId=${user}`)
             .catch(err => console.log(err))
 
-            if (data?.data[0].curtido) {
+            if (data?.data[0].curtido)
                 setLiked(true)
-            }
-            if (data?.data[0].favorito) {
+            if (data?.data[0].favorito)
                 setFavorited(true)
-            }
+            if (data?.data[0].lido)
+                setReaded(true)
             
             setAnuncio(data?.data[0])
         }
@@ -143,7 +144,7 @@ export const Card = (props) => {
 
                         </div>
                         <button className="icon-container">
-                            <i className="fa-regular fa-circle-check"></i>
+                            <i className={readed ? "fa-solid fa-circle-check" : "fa-regular fa-circle-check"}></i>
                             <span>{kFormatter(anuncio?.lidos?.quantidade_lidos || 0)}</span>
                         </button>
                     </LikesContainer>

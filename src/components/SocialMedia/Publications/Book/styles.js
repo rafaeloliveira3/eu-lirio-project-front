@@ -226,8 +226,8 @@ const BookFormatsContainer = styled.div`
     ul {
         list-style: inside;
         display: flex;
-        flex-direction: row;
-        gap: 1rem;
+        flex-direction: column;
+        gap: .5rem;
         font-weight: 300;
     }
 `

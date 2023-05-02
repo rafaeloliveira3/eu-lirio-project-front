@@ -49,21 +49,16 @@ export const Book = () => {
             const data = await axios.get(`${defaultUrl}announcement/id/?announcementId=${id}&userId=${userId}`)
             .catch(err => console.log(err))
 
-            if (data?.data[0].curtido) {
+            if (data?.data[0].curtido)
                 setLiked(true)
-            }
-            if (data?.data[0].favorito) {
+            if (data?.data[0].favorito)
                 setFavorited(true)
-            }
-            if (data?.data[0].lido) {
+            if (data?.data[0].lido)
                 setRead(true)
-            }
-            if (data?.data[0].carrinho) {
+            if (data?.data[0].carrinho)
                 setCart(true)
-            }
-            if (data?.data[0].mobi === 'null') {
-                setBookFormats(["PDF", "EPUB", false])
-            }
+            if (data?.data[0].mobi === 'null')
+                setBookFormats(["PDF", "ePUB", false])
 
             setDate(() => {
                 const months = ["Jan.", "Fev.", "Mar.", "Abr.", "Mai.", "Jun.", "Jul.", "Ago.", "Set.", "Out.", "Nov.", "Dez."]
@@ -234,11 +229,11 @@ export const Book = () => {
                                 Disponível em:
                             </span>
                             <ul>
-                                {bookFormats.map(item => item ? <AvailableFormats name={item} key={item}/> : null)}
+                                {bookFormats.map(item => item ? <AvailableFormats name={item} book={book} key={item}/> : null)}
                             </ul>
                         </BookFormatsContainer>
                         <BuyButtonsContainer theme={cart ? buyButtonInisible : buyButtonVisible} >
-                            <h1>R$ {book?.preco}</h1>
+                            <h1>R$ {book?.preco?.toFixed(2)}</h1>
                             <button onClick={handleCart}>{cart ? "REMOVER DO" : "ADICIONAR AO"} CARRINHO</button>
                             <button className="direct-buy-button">COMPRAR</button>
                         </BuyButtonsContainer>

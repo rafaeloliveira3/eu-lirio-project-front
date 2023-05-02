@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject  } from "firebase/storage"
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, getMetadata  } from "firebase/storage"
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, deleteUser } from "firebase/auth"
 import { v4 } from "uuid";
+import { bytesFormatter } from "./formatters";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -64,10 +65,15 @@ export const getFilesName = async (fileUrl) => {
   return fileRef.name.split("-")[0]
 }
 export const getFileSize = async (fileUrl) => {
-  const storage = getStorage(app)
-  const fileRef = ref(storage, fileUrl)
-
-  return fileRef.size
+  if (fileUrl !== undefined) {
+    const storage = getStorage(app)
+    const fileRef = ref(storage, fileUrl)
+    
+    const metadata = await getMetadata(fileRef)
+    console.log(metadata.size);
+    return bytesFormatter(metadata.size)
+  }
+  return 0
 }
 
 

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { useOutletContext } from "react-router-dom"
 import { defaultUrl } from "../../helpers/url"
 import { Card } from "./Cards/Card"
+import { Error } from "./Error"
 import { BuyBookCard, BuyItensCardContainer, CartItemContainer, Container } from "./styles"
 
 export const Cart = () => {
@@ -10,6 +11,7 @@ export const Cart = () => {
     const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
 
     const [announcements, setAnnouncements] = useState([])
+    const [error, setError] = useState(false)
     const userId = localStorage.getItem('id')
     const [refreshCounter, setRefreshCounter] = useState(0)
 
@@ -22,8 +24,11 @@ export const Cart = () => {
     useEffect(() => {
         const getCartItems = async () => {
             const data = await axios.get(`${defaultUrl}list-cart-items/${userId}`)
-            .catch(err => console.log(err))
+            .catch(err => console.log(err), setError(true))
 
+            if (data?.data) {
+                setError(false)
+            }
             setAnnouncements(data?.data)
         }
         getCartItems()
@@ -33,25 +38,29 @@ export const Cart = () => {
         setRefreshCounter(refreshCounter + 1)
     }
     const handleBuy = async () => {
-        const cart = {
-            id_anuncio : announcements?.map((item) => {
-                return {id : item?.id_anuncio}
-            })
+        if (!error) {
+            const cart = {
+                id_anuncio : announcements?.map((item) => {
+                    return {id : item?.id_anuncio}
+                })
+            }
+            await axios.post(`${defaultUrl}confirm-buy/user-id/${userId}`, cart)
+            .catch(err => console.log(err))
         }
-        await axios.post(`${defaultUrl}confirm-buy/user-id/${userId}`, cart)
-        .catch(err => console.log(err))
     }
 
     return (
         <Container>
             <CartItemContainer>
-                {announcements?.map((item) => <Card id={item?.id_anuncio} key={item?.id_anuncio} refresh={upRefreshCounter} />)}
+                {
+                    error ? <Error /> : announcements?.items?.map((item) => <Card id={item?.id_anuncio} key={item?.id_anuncio} refresh={upRefreshCounter} />)
+                }
             </CartItemContainer>
             <BuyItensCardContainer>
                 <BuyBookCard>
                     <div>
                         <span className="total">Total</span>
-                        <span className="total-value">R$50.00</span>
+                        <span className="total-value">R$ {announcements?.total?.toFixed(2) || 0}</span>
                     </div>
                     <button onClick={handleBuy}>COMPRAR</button>
                 </BuyBookCard>

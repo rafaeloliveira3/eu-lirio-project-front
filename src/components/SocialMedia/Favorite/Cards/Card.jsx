@@ -60,26 +60,6 @@ export const Card = (props) => {
                             anuncio?.generos?.map((item) => <Genres key={item.id_genero} name={item.nome} />)
                         }
                     </GenreContainer>
-                    <LikesContainer >
-                        <button className="icon-container">
-                            <i className={liked ? "fa-solid fa-heart" : "fa-regular fa-heart"}></i>
-                            <span>{kFormatter(anuncio?.curtidas?.quantidade_curtidas || 0)}</span>
-                        </button>
-                        <div className="separator">
-
-                        </div>
-                        <button className="icon-container">
-                            <i className={favorited ? "fa-solid fa-bookmark" : "fa-regular fa-bookmark"}></i>
-                            <span>{kFormatter(anuncio?.favoritos?.quantidade_favoritos || 0)}</span>
-                        </button>
-                        <div className="separator">
-
-                        </div>
-                        <button className="icon-container">
-                            <i className="fa-regular fa-circle-check"></i>
-                            <span>{kFormatter(anuncio?.lidos?.quantidade_lidos || 0)}</span>
-                        </button>
-                    </LikesContainer>
                     <p>
                         {anuncio?.sinopse}
                     </p>

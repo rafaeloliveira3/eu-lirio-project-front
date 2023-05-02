@@ -64,9 +64,20 @@ const BuyBookCard = styled.div`
     }
 `
 
+const ErrorContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 6rem;
+    text-align: center;
+    width: 100%;
+    font-family: 'League Spartan', sans-serif;
+` 
+
 export {
     Container,
     CartItemContainer,
     BuyItensCardContainer,
-    BuyBookCard
+    BuyBookCard,
+    ErrorContainer
 }

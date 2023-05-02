@@ -52,7 +52,7 @@ export const Card = (props) => {
                 </GenreContainer>
                 <ContentContainer>
                     <div>
-                        <span>R$ {anuncio?.preco}</span>
+                        <span>R$ {anuncio?.preco?.toFixed(2)}</span>
                         <button title="Remover do Carrinho" onClick={handleRemovefromCart}><i className="fa-solid fa-trash"></i></button>
                     </div>
                 </ContentContainer>

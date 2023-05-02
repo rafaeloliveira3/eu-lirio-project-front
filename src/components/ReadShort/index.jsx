@@ -13,6 +13,7 @@ export const ReadShort = () => {
 
     const [short, setShort] = useState([])
     const [author, setAuthor] = useState([])
+    const [reload, setReload] = useState(0)
 
     useEffect(() => {
         const getShortStorie = async () => {
@@ -24,7 +25,10 @@ export const ReadShort = () => {
             console.log(data?.data[0])
         }
         getShortStorie()
-    }, [id])
+    }, [id, reload])
+    const reloadSetter = () => {
+        setReload(reload + 1)
+    }
 
     return (
         <Container>
@@ -49,7 +53,7 @@ export const ReadShort = () => {
                 </LikesData>
             </DataContainer>
             <ContentContainer>
-                <Content author={author} short={short}/>
+                <Content author={author} reload={reloadSetter} short={short}/>
             </ContentContainer>
         </Container>
     )

@@ -67,9 +67,6 @@ const LikesContainer = styled.div`
     button {
         border: 0;
         background-color: transparent;
-        &:hover {
-            
-        }
     }
     i {
         font-size: 1.5rem;
