@@ -87,43 +87,43 @@ export const Content = (props) => {
                 </Link>
                 <ul className="nav-bar">
                     <li>
-                        <Link to="/app/feed">
+                        <Link to="/app/feed" title="Home">
                             <i className="fa-solid fa-spa"></i>
                         </Link>
                     </li>
                     <li>
-                        <Link to="/app/me">
+                        <Link to="/app/me" title="Meu Perfil">
                             <i className="fa-solid fa-user"></i>
                         </Link>
                     </li>
                     <li>
-                        <Link to="/app/favorites">
+                        <Link to="/app/favorites" title="Favoritos">
                             <i className="fa-solid fa-bookmark"></i>
                         </Link>
                     </li>
                     <li>
-                        <Link to="/app/read">
+                        <Link to="/app/read" title="Lidos">
                             <i className="fa-solid fa-check-circle"></i>
 
                         </Link>
                     </li>
                     <li>   
-                        <Link>
+                        <Link title="Estante">
                             <i className="fa-solid fa-swatchbook"></i>
                         </Link>
                     </li>
                     <li>
-                        <Link to="/app/my-publications">
+                        <Link to="/app/my-publications" title="Minhas Obras">
                             <i className="fa-solid fa-pen"></i>
                         </Link>
                     </li>
                     <li>
-                        <Link to="/app/cart">
+                        <Link to="/app/cart" title="Carrinho">
                             <i className="fa-solid fa-shopping-cart"></i>
                         </Link>
                     </li>
                     <li>
-                        <Link>
+                        <Link title="Lirio Plus">
                             <i className="fa-solid fa-crown"></i>
                         </Link>
                     </li>
@@ -133,7 +133,7 @@ export const Content = (props) => {
                 <StoryDataContainer>
                     {props.short?.titulo}
                     <div>
-                        <button><i className="fa-regular fa-comment"></i> {console.log(props.short)}</button>
+                        <button><i className="fa-regular fa-comment"></i> 2</button>
                         <button onClick={handleLike}><i className={liked ? "fa-solid fa-heart" : "fa-regular fa-heart"}></i> {kFormatter(props.short?.curtidas?.quantidade_curtidas || 0)}</button>
                         <button onClick={handleFavorite}><i className={favorited ? "fa-solid fa-bookmark" : "fa-regular fa-bookmark"}></i> {kFormatter(props.short?.favoritos?.quantidade_favoritos || 0)}</button>
                         <button onClick={handleRead}><i className={read ? "fa-solid fa-circle-check" : "fa-regular fa-circle-check"}></i>  {kFormatter(props.short?.lidos?.quantidade_lidos || 0)}</button>

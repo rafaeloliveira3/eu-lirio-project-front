@@ -5,12 +5,10 @@ const Container = styled.div`
     justify-content: space-between;
     height: 100%;
     max-width: 50%;
-    padding: 2rem;
 `
 const NavBar = styled.nav`
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 1rem;
     .author {
         display: flex;
@@ -28,8 +26,6 @@ const NavBar = styled.nav`
         }
         img {
             height: 7rem;
-            width: 7rem;
-            object-fit: cover;
             border-radius: 360px;
         }
         .author-name {
@@ -43,26 +39,17 @@ const NavBar = styled.nav`
     .nav-bar {
         border: 2px solid var(--yellow-medium);
         border-radius: 24px;
-        padding: 1rem .5rem;
-        width: min-content;
+        width: 100%;
         display: flex;
         flex-direction: column;
+        gap: 1rem;
         a {
-            border-radius: 360px;
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 2rem;
             text-decoration: none;
-            padding: .8rem;
-            i {
-                -webkit-text-stroke: 1.5px var(--font-color);
-                color: #0000;
-            }
-            &:hover {
-                background-color: #F9C73E33;
-            }
         }
     }
 `
@@ -115,7 +102,7 @@ const ContentContainer = styled.div`
 export {
     Container,
     NavBar,
-    ContentContainer,
     StoryContainer,
-    StoryDataContainer
+    StoryDataContainer,
+    ContentContainer
 }

@@ -259,6 +259,11 @@ const SearchContainerModal = styled.ul`
     }
 `
 
+const Error = styled.div`
+    width: 100%;
+    text-align: center;
+`
+
 export {
     Container,
     UserInfoContainer,
@@ -274,5 +279,6 @@ export {
     SearchContainer,
     TagsContainer,
     NamesContainer,
-    SearchContainerModal
+    SearchContainerModal,
+    Error
 }

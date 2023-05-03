@@ -83,8 +83,6 @@ export const EditBook = () => {
             setBookStatus(data?.data[0].status)
             setDesactivateSwitch(data?.data[0].status)
 
-            console.log(data?.data[0].status)
-
             setPreviewUrl(data?.data[0].capa)
             setImageBackup(data?.data[0].capa)
             setSpanDisplay('none')

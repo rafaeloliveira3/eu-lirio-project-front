@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useParams, useOutletContext } from "react-router-dom"
+import { useParams, useOutletContext, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { defaultUrl } from "../../../helpers/url"
 import { BookAndUserInfo, BookAndUserInfoContainer, BookContainer, BookData, BookExtrasSection, BookFormatsContainer, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, BuyBookCard, BuyBookCardContainer, BuyButtonsContainer, Container, ImageContainer, RatingContainer, ReportContainer, StatsContainer, SynopsisContainer, TopSection } from "./styles"
@@ -20,6 +20,9 @@ const buyButtonInisible = {
 }
 
 export const Book = () => {
+
+    const navigate = useNavigate()
+
     const { id } = useParams()
     const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
     const [rating, setRating] = useState(3.5)
@@ -28,7 +31,7 @@ export const Book = () => {
     const [liked, setLiked] = useState(false)
     const [favorited, setFavorited] = useState(false)
     const [read, setRead] = useState(false)
-    const [cart, setCart] = useState(false)
+    const [status, setStatus] = useState(false)
 
     const [reportModal, setReportModal] = useState(false)
     const [isReportModalOpen, setIsReportModalOpen] = useState(false)
@@ -53,10 +56,12 @@ export const Book = () => {
                 setLiked(true)
             if (data?.data[0].favorito)
                 setFavorited(true)
-            if (data?.data[0].lido)
+                if (data?.data[0].lido)
                 setRead(true)
+            if (data?.data[0].comprado)
+                setStatus("ITEM JÁ NA ESTANTE")
             if (data?.data[0].carrinho)
-                setCart(true)
+                setStatus("VER NO CARRINHO")
             if (data?.data[0].mobi === 'null')
                 setBookFormats(["PDF", "ePUB", false])
 
@@ -69,7 +74,6 @@ export const Book = () => {
                 }
                 return ""
             })
-            
             setBook(data?.data[0])
         }
         getBookById()
@@ -83,9 +87,9 @@ export const Book = () => {
     }
 
     const handleLike = async (e) => {
-        const status = !liked
-        setLiked(!liked)
-        if (status) {
+        const clickStatus = !liked
+        setLiked(clickStatus)
+        if (clickStatus) {
             await axios.post(`${defaultUrl}like-announcement`, {
                 id_anuncio : id,
                 id_usuario : userId
@@ -99,9 +103,9 @@ export const Book = () => {
         }
     }
     const handleFavorite = async () => {
-        const status = !favorited
-        setFavorited(!favorited)
-        if (status) {
+        const clickStatus = !favorited
+        setFavorited(clickStatus)
+        if (clickStatus) {
             await axios.post(`${defaultUrl}favorite-announcement`, {
                 id_anuncio : id,
                 id_usuario : userId
@@ -115,9 +119,9 @@ export const Book = () => {
         }
     }
     const handleRead = async () => {
-        const status = !read
-        setRead(!read)
-        if (status) {
+        const clickStatus = !read
+        setRead(clickStatus)
+        if (clickStatus) {
             await axios.post(`${defaultUrl}mark-announcement-as-read`, {
                 id_anuncio : id,
                 id_usuario : userId
@@ -131,18 +135,29 @@ export const Book = () => {
         }
     }
     const handleCart = async() => {
-        const status = !cart
-        setCart(!cart)
-        if (status) {
-            await axios.post(`${defaultUrl}new-cart-item/user-id/${userId}`, {
-                id_anuncio : [{
-                    id : id
-                }]
-            })
+        if (status !== "ITEM JÁ NA ESTANTE") {
+            if (status !== "VER NO CARRINHO") {
+                setStatus("VER NO CARRINHO")
+                await axios.post(`${defaultUrl}new-cart-item/user-id/${userId}`, {
+                    id_anuncio : [{
+                        id : id
+                    }]
+                })
+            }
+            else {
+                navigate('/app/cart')
+            }
         }
         else {
-            await axios.delete(`${defaultUrl}delete-cart-item/?announcementId=${id}&userId=${userId}`)
+            window.open(book?.epub, '_blank').focus()
+            
         }
+    }
+    const handleDirectBuy = async () => {
+        await axios.post(`${defaultUrl}buy-announcement`, {
+            id_anuncio: id,
+            id_usuario : userId
+        })
     }
 
     return (
@@ -232,10 +247,10 @@ export const Book = () => {
                                 {bookFormats.map(item => item ? <AvailableFormats name={item} book={book} key={item}/> : null)}
                             </ul>
                         </BookFormatsContainer>
-                        <BuyButtonsContainer theme={cart ? buyButtonInisible : buyButtonVisible} >
+                        <BuyButtonsContainer theme={status ? buyButtonInisible : buyButtonVisible} >
                             <h1>R$ {book?.preco?.toFixed(2)}</h1>
-                            <button onClick={handleCart}>{cart ? "REMOVER DO" : "ADICIONAR AO"} CARRINHO</button>
-                            <button className="direct-buy-button">COMPRAR</button>
+                            <button onClick={handleCart}>{status ? status : "ADICIONAR AO CARRINHO"}</button>
+                            <button onClick={handleDirectBuy} className="direct-buy-button">COMPRAR</button>
                         </BuyButtonsContainer>
                     </BuyBookCard>
                 </BuyBookCardContainer>

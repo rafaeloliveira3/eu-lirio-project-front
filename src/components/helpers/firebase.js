@@ -23,7 +23,6 @@ const firebaseAuthErrors = {
   'auth/invalid-email' : 'Email Inválido!'
 }
 
-
 /* FIREBASE STORAGE */
 
 export const uploadImage = async (image, name) => {
@@ -46,7 +45,7 @@ export const deleteFile = async (downloadUrl) => {
 }
 export const uploadFile = async (file, name) => {
   const storage = getStorage(app)
-  const documentRef = ref(storage, `file/${name +"-"+v4()}`)
+  const documentRef = ref(storage, `file/${v4()+"||"+ name}`)
 
   await uploadBytes(documentRef, file)
   return await getDownloadURL(documentRef)
@@ -62,7 +61,7 @@ export const getFilesName = async (fileUrl) => {
   const storage = getStorage(app)
   const fileRef = ref(storage, fileUrl)
 
-  return fileRef.name.split("-")[0]
+  return fileRef.name.split("||")[1]
 }
 export const getFileSize = async (fileUrl) => {
   if (fileUrl !== undefined) {
@@ -70,7 +69,6 @@ export const getFileSize = async (fileUrl) => {
     const fileRef = ref(storage, fileUrl)
     
     const metadata = await getMetadata(fileRef)
-    console.log(metadata.size);
     return bytesFormatter(metadata.size)
   }
   return 0

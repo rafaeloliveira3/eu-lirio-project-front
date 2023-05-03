@@ -40,7 +40,7 @@ export const Cart = () => {
     const handleBuy = async () => {
         if (!error) {
             const cart = {
-                id_anuncio : announcements?.map((item) => {
+                id_anuncio : announcements?.items?.map((item) => {
                     return {id : item?.id_anuncio}
                 })
             }

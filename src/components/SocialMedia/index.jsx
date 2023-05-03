@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { Outlet, useNavigate } from "react-router-dom"
 import { defaultUrl } from "../helpers/url"
-import { Container, ExitContainer, FeedContainer, Links, NamesContainer, NewPost, OptContainer, PromotionContainer, Sair, SearchContainer, SearchContainerModal, TagsContainer, User, UserInfoContainer, UserOpt } from "./styles"
+import { Container, Error, ExitContainer, FeedContainer, Links, NamesContainer, NewPost, OptContainer, PromotionContainer, Sair, SearchContainer, SearchContainerModal, TagsContainer, User, UserInfoContainer, UserOpt } from "./styles"
 import logo from "../../assets/img/logo.svg"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
@@ -58,6 +58,7 @@ const SocialMedia = () => {
 
     const [searchPrompt, setSearchPrompt] = useState("")
     const [searched, setSearched] = useState([])
+    const [searchError, setSearchError] = useState("Experimente digitar algo na barra de pesquisa")
 
     const handleLinkChange = (e) => {
         let id
@@ -129,12 +130,21 @@ const SocialMedia = () => {
 
     useEffect(() => {
         const searchByTitle = async () => {
-            const data = await axios.get(`${defaultUrl}announcements/announcement-title/?announcementTitle=${searchPrompt}&userId=${userId}`)
-            .catch(err => console.log(err))
+            if (searchPrompt) {
+                const data = await axios.get(`${defaultUrl}announcements/announcement-title/?announcementTitle=${searchPrompt}&userId=${userId}`)
+                .catch(err => setSearchError("Nenhum item Encontrado"))
 
-            setSearched(data?.data?.filter((item, index) => {
-                return index <= 3
-            }))
+                if (data?.data) {
+                    setSearchError(false)
+                }
+    
+                setSearched(data?.data?.filter((item, index) => {
+                    return index <= 3
+                }))
+            }
+            else {
+                setSearchError("Experimente digitar algo na barra de pesquisa")
+            }
         }
         searchByTitle()
     }, [searchPrompt])
@@ -169,7 +179,7 @@ const SocialMedia = () => {
                     >
                         <SearchContainerModal>
                             {
-                                searched?.map(item => <Search key={item?.id} id={item?.id} closeModal={handleCloseModal} name={item?.titulo} search={searchPrompt} />)
+                                searchError ? <Error>{searchError}</Error> : searched?.map(item => <Search key={item?.id} id={item?.id} closeModal={handleCloseModal} name={item?.titulo} search={searchPrompt} />)
                             }
                         </SearchContainerModal>
                     </Modal>
