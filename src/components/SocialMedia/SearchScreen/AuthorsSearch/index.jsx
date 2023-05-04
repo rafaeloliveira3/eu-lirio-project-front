@@ -23,7 +23,7 @@ export const AuthorsSearch = () => {
     useEffect(() => {
         setPrompt(prompt.prompt)
         const getAuthorsbyName = async () => {
-            const data = await axios.get(`${defaultUrl}user/user-name/${prompt.prompt}`)
+            const data = await axios.get(`${defaultUrl}user/user-name/?username=${prompt.prompt}&userId=${userId}`)
             .catch(err => {
                 if (err.code === 'ERR_NETWORK') {
                     setError("Algo deu errado, tente novamente mais tarde")

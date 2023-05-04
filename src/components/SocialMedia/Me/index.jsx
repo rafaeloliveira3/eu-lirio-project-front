@@ -24,7 +24,7 @@ export const Me = () => {
     
     useEffect(() => {
         const fetchUser = async () => {
-            const data = await axios.get(`${defaultUrl}user/id/${userId}`)
+            const data = await axios.get(`${defaultUrl}user/id/?searchUser=${userId}&currentUser=${userId}`)
             .catch((err) => { console.log(err) })
     
             setUser(data?.data)

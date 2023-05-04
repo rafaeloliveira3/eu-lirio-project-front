@@ -9,13 +9,13 @@ export const Info = (props) => {
                 </span>
                 <p>OBRAS</p>
             </div>
-            <div>
+            <div onClick={() => {props.seguindoModal(true)}}>
                 <span>
                     {props.seguindo}
                 </span>
                 <p>SEGUINDO</p>
             </div>
-            <div>
+            <div onClick={() => {props.seguidoresModal(true)}}>
                 <span>
                     {props.seguidores}
                 </span>

@@ -1,12 +1,13 @@
 import { defaultUrl } from "../../helpers/url"
 import { useState, useEffect } from "react"
 import axios from "axios"
-import { Containers } from "../../utils/socialmedia"
-import { ProfileHeader, UserMain } from "./styles"
-import { Info } from "./Info"
+import { ProfileHeader, UserMain, Filters, FilterItems, MainContainer, TagsContainer, Spacer, ModalContainer, UserCardsContainer } from "../Me/styles"
+import { Bookmarks } from "../Me/Bookmarks"
+import { Info } from "../Me/Info"
 import { useParams, useOutletContext } from "react-router-dom"
-import { Error } from "./Error"
 import { Navigate } from 'react-router-dom'
+import Modal from "react-modal"
+import { UserCard } from "./UserCards/Card"
 
 export const Users = () => {
 
@@ -20,94 +21,163 @@ export const Users = () => {
 
     const { id } = useParams()
     const [user, setUser] = useState({})
-    const [userTags, setUserTags] = useState({})
+    const [userTags, setUserTags] = useState([])
+    const [userGenres, setUserGenres] = useState([])
+
+    const [follow, setFollow] = useState(false)
+
+    const [following, setFollowing] = useState([])
+    const [followers, setFollowers] = useState([])
+
+    const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false)
+    const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false)
+
     const userId = localStorage.getItem('id')
-    let image
-    let biografia
     
     useEffect(() => {
         const fetchUser = async () => {
-            const data = await axios.get(`${defaultUrl}user/id/${id}`)
-            .catch((err) => { return err })
-            if (data?.response?.status === 404) {
-                setUser( {
-                    error : true
-                })
-                return 
-            }
-    
-            setUser(data.data)
-        }
-        const fetchTags = async () => {
-            const data = await axios.get(`${defaultUrl}tags/id/${id}`)
-            .catch((err) => { return err })
-
-            if (data?.response?.status === 404) {
-                setUserTags( {
-                    error : true
-                })
-                return 
-            }
-
-            setUserTags(data.data.tags)
+            const data = await axios.get(`${defaultUrl}user/id/?searchUser=${id}&currentUser=${userId}`)
+            .catch((err) => { console.log(err) })
+            
+            if (data?.data?.seguindo)
+                setFollow(true)
+            setUser(data?.data)
+            setUserTags(data?.data.tags)
+            setUserGenres(data?.data.generos)
         }
         fetchUser()
-        fetchTags()
     }, [id])
+    useEffect(() => {
+        const fetchFollowing = async () => {
+            const data = await axios.get(`${defaultUrl}following/user-id/${id}`)
+            .catch((err) => { 
+                if (err?.request?.status === 404) {
+                    setFollowing(false)
+                }
+            })
+            if (data?.data)
+                setFollowing(data?.data)
+        }
+        const fetchFollowers = async () => {
+            const data = await axios.get(`${defaultUrl}followers/user-id/${id}`)
+            .catch((err) => { 
+                console.log(err);
+                if (err?.request?.status === 404) {
+                    setFollowers(false)
+                }
+            })
+            console.log(data?.data)
+            if (data?.data)
+                setFollowers(data?.data)
+        }
+        
+        if (isFollowingModalOpen) {
+            fetchFollowing()
+        }
+        if (isFollowersModalOpen) {
+            fetchFollowers()
+        }
+    }, [isFollowingModalOpen, isFollowersModalOpen])
 
-    if (user.foto === undefined || user.foto === null)
-        image = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-    else 
-        image = user.foto
-
-    if (user.biografia === 'undefined')
-        biografia = 'Nada Informado'
-    else 
-        biografia = user.biografia
+    const handleFollow = async () => {
+        const status = !follow
+        setFollow(status)
+        if (status) {
+            await axios.post(`${defaultUrl}follow-user`, {
+                id_segue : userId,
+                id_seguindo : id
+            })
+        }
+        else {
+            await axios.delete(`${defaultUrl}unfollow-user/?followerId=${userId}&followedId=${id}`)
+        }
+    }
 
     if (id === userId) {
         return (
             <Navigate to='/app/me' />
         )
     }
-
     return (
-        <Containers>
+        <MainContainer>
             <ProfileHeader>
                 <div className="user">
-                    <img src={image} alt="" />
-                    <button>SEGUIR</button>
+                    <img src={user?.foto} alt="" />
+                    <button onClick={handleFollow}>
+                        {
+                            follow ? "SEGUINDO" : "SEGUIR" 
+                        }
+                    </button>
                 </div>
                 <div className="edit">
                     <span>
-                        <h2>{user.nome}</h2>
-                        <h3>@{user.user_name}</h3>
+                        <h2>{user?.nome}</h2>
+                        <h3>@{user?.user_name}</h3>
                     </span>
-                    <Info obras={182} seguindo={570} seguidores={41 + ' K'}/>
+                    <Info obras={182} seguindo={570} seguindoModal={setIsFollowingModalOpen} seguidores={41 + ' K'} seguidoresModal={setIsFollowersModalOpen} />
                 </div>
             </ProfileHeader>
             <UserMain>
                 <div className="text">
                     <div className="biography">
-                        {biografia}
+                        {user?.biografia}
                     </div>
-                    <div className="tags">
-                        <div className="type">
-
-                        </div>
-                        <div className="genders">
-
-                        </div>
-                    </div>
-                    <div className="filters">
-
-                    </div>
+                    <TagsContainer>
+                        <Bookmarks tags={userTags} genres={userGenres}/>
+                    </TagsContainer>
+                    <Spacer></Spacer>
+                    <Filters>
+                        <FilterItems>
+                            <i className="fa-solid fa-book"></i>Livros
+                        </FilterItems>
+                        <FilterItems>
+                            <i className="fa-solid fa-align-center"></i>Pequenas Histórias
+                        </FilterItems>
+                        <FilterItems>
+                            <i className="fa-solid fa-book-open-reader"></i>Recomendações
+                        </FilterItems>
+                    </Filters>
                 </div>
                 <div className="posts">
 
                 </div>
             </UserMain>
-            <Error error={user?.error}/>
-        </Containers>
+            <Modal
+                isOpen={isFollowingModalOpen}
+                onRequestClose={() => {setIsFollowingModalOpen(false)}}
+                overlayClassName="following-modal-overlay"
+                className="following-modal-content"
+            >
+                <ModalContainer>
+                    <div className="info-container">
+                        <h2>Perfis que {user?.nome} segue:</h2>
+                        <button onClick={() => {setIsFollowingModalOpen(false)}}><i className="fa-solid fa-x"></i></button>
+                    </div>
+                    <UserCardsContainer>
+                        {
+                            following ? <h2>Foi</h2> : <h2>Parece que esse perfil não segue ninguém</h2>
+                        }
+                    </UserCardsContainer>
+                </ModalContainer>
+            </Modal>
+            <Modal
+                isOpen={isFollowersModalOpen}
+                onRequestClose={() => {setIsFollowersModalOpen(false)}}
+                overlayClassName="following-modal-overlay"
+                className="following-modal-content"
+            >
+                <ModalContainer>
+                    <div className="info-container">
+                        <h2>Perfis que seguem {user?.nome}:</h2>
+                        <button onClick={() => {setIsFollowersModalOpen(false)}}><i className="fa-solid fa-x"></i></button>
+                    </div>
+                    <UserCardsContainer>
+                        {
+                            followers ? followers?.map((item) => <UserCard key={item.id} id={item.id} />) : <h2>Parece que ninguém segue esse perfil</h2>
+                        }
+                    </UserCardsContainer>
+                </ModalContainer>
+            </Modal>
+        </MainContainer>
     )
 }

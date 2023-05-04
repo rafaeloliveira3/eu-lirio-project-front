@@ -35,6 +35,7 @@ const ProfileHeader = styled.header`
             border: 2px solid var(--font-color);
             color: var(--font-color);
             padding: .5rem 4rem;
+            width: 15rem;
             border-radius: 10px;
             transition: all 250ms;
             &:hover {
@@ -92,6 +93,7 @@ const InfoStyle = styled.div`
         display: flex;
         flex-direction: column;
         align-items: center;
+        cursor: pointer;
         span {
             font-size: 1.3rem;
             font-weight: 700;
@@ -135,6 +137,42 @@ const Spacer = styled.div`
     height: 1rem;
 `
 
+const ModalContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .info-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        h2 {
+            font-family: 'League Spartan', sans-serif;
+            font-weight: 500;
+            font-size: 1.5rem;
+        }
+        button {
+            background-color: transparent;
+            border: 0;
+            font-size: 1.5rem;
+        }
+    }
+`
+const UserCardsContainer = styled.div`
+    width: 100%;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+    font-family: 'League Spartan', sans-serif;
+    h2 {
+        padding-top: 2rem;
+    }
+`
+
 export {
     ProfileHeader,
     UserMain,
@@ -143,5 +181,7 @@ export {
     Filters,
     Spacer,
     FilterItems,
-    MainContainer
+    MainContainer,
+    ModalContainer,
+    UserCardsContainer
 }

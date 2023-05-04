@@ -106,4 +106,28 @@ export const GlobalStyle = createGlobalStyle`
         width: calc(15vw + 2.1rem);
         border-radius: 10px;
     }
+
+    .following-modal-overlay {
+        background-color: #00000002;
+
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        z-index: 99;
+
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+    }
+    .following-modal-content {
+        background-color: var(--background);
+        z-index: 99;
+        padding: 2rem;
+        height: calc(100% - 28rem);
+        width: 50%;
+        border-radius: 10px 10px 0 0;
+    }
 `

@@ -11,6 +11,7 @@ import { ModalContentContainer } from "../../Edit/styles"
 import { UserCard } from "../utils/UserCard"
 import { AvailableFormats } from "./AvailableFormats"
 import { kFormatter } from "../../../helpers/formatters"
+import { Comments } from "../Comments"
 
 const buyButtonVisible = {
     display : "block"
@@ -37,6 +38,7 @@ export const Book = () => {
     const [isReportModalOpen, setIsReportModalOpen] = useState(false)
 
     const [bookFormats, setBookFormats] = useState(["PDF", "ePUB", "MOBI"])
+    const [comment, setComment] = useState(false)
 
     const userId = localStorage.getItem('id')
 
@@ -51,6 +53,7 @@ export const Book = () => {
         const getBookById = async () => {
             const data = await axios.get(`${defaultUrl}announcement/id/?announcementId=${id}&userId=${userId}`)
             .catch(err => console.log(err))
+            console.log(data?.data[0]);
 
             if (data?.data[0].curtido)
                 setLiked(true)
@@ -64,6 +67,10 @@ export const Book = () => {
                 setStatus("VER NO CARRINHO")
             if (data?.data[0].mobi === 'null')
                 setBookFormats(["PDF", "ePUB", false])
+            if (data?.data[0]?.usuario[0]?.id_usuario === userId)
+                setComment(true)
+            if (!data?.data[0]?.comprado)
+                setComment(true)
 
             setDate(() => {
                 const months = ["Jan.", "Fev.", "Mar.", "Abr.", "Mai.", "Jun.", "Jul.", "Ago.", "Set.", "Out.", "Nov.", "Dez."]
@@ -255,6 +262,9 @@ export const Book = () => {
                     </BuyBookCard>
                 </BuyBookCardContainer>
             </BookExtrasSection>
+            {
+                comment ? <></> : <Comments />
+            }
             <Modal
                 isOpen={isReportModalOpen}
                 onRequestClose={handleCloseModal}
