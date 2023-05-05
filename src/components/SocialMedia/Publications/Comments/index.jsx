@@ -1,17 +1,59 @@
+import axios from "axios"
 import { useState } from "react"
 import { Rating } from "react-simple-star-rating"
 import Toggle from "react-styled-toggle"
+import { defaultUrl } from "../../../helpers/url"
 import { AvaliationContainer, Container, FormContainer } from "./styles"
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../../../helpers/toasts"
 
-export const Comments = () => {
+export const Comments = (props) => {
 
     const [rating, setRating] = useState(0)
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [spoilerStatus, setSpoilerStatus] = useState(false)
 
+    const userId = localStorage.getItem('id')
+
     const handleSubmit = async (e) => {
         e.preventDefault()
+        let data
+
+        const json = {
+            titulo : title,
+            resenha : description,
+            id_resposta : null,
+            spoiler : `${spoilerStatus}`,
+            avaliacao : rating,
+            id_usuario : userId
+        }
+        if (props.type === 1) {
+            json.id_anuncio = props.id
+
+            data = await axios.post(`${defaultUrl}announcement-comment`, json)
+            .catch((err) => {
+                MESSAGE_ERROR.default(err)
+            })
+        }
+        else if (props.type === 2) {
+            json.id_historia_curta = props.id
+
+            data = await axios.post(`${defaultUrl}short-storie-comment`, json)
+            .catch((err) => {
+                MESSAGE_ERROR.default(err)
+            })
+        }
+
+        console.log(json);
+        
+        if (data?.status === 200) {
+            MESSAGE_SUCCESS.register("Comentário")
+        }
+        else {
+            MESSAGE_ERROR.bdError()
+        }
     }
 
     return (
@@ -37,7 +79,6 @@ export const Comments = () => {
                     <div className="utils">
                         <Rating 
                             onClick={(rate) => {setRating(rate)}} 
-                            allowFraction 
                             fillColor="var(--purple-dark)"
                             emptyStyle={{color:"#0000"}}
                             SVGstrokeColor="var(--purple-dark)"
@@ -47,8 +88,8 @@ export const Comments = () => {
                         <div className="buttons-container">
                             <Toggle
                                 labelRight="Spoiler"
-                                onChange={() => setSpoilerStatus(!spoilerStatus)}
                                 checked={spoilerStatus}
+                                onChange={() => setSpoilerStatus(!spoilerStatus)}
                                 backgroundColorChecked={"var(--purple-dark)"}
                             ></Toggle>
                             <button title="Enviar"><i className="fa-solid fa-paper-plane"></i></button>
@@ -56,6 +97,7 @@ export const Comments = () => {
                     </div>
                 </FormContainer>
             </AvaliationContainer>
+            <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={4000} />
         </Container>
     )
 }

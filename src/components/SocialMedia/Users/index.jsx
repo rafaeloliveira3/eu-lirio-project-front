@@ -41,6 +41,8 @@ export const Users = () => {
             
             if (data?.data?.seguindo)
                 setFollow(true)
+            else
+                setFollow(false)
             setUser(data?.data)
             setUserTags(data?.data.tags)
             setUserGenres(data?.data.generos)
@@ -61,7 +63,6 @@ export const Users = () => {
         const fetchFollowers = async () => {
             const data = await axios.get(`${defaultUrl}followers/user-id/${id}`)
             .catch((err) => { 
-                console.log(err);
                 if (err?.request?.status === 404) {
                     setFollowers(false)
                 }
@@ -155,7 +156,7 @@ export const Users = () => {
                     </div>
                     <UserCardsContainer>
                         {
-                            following ? <h2>Foi</h2> : <h2>Parece que esse perfil não segue ninguém</h2>
+                            following ? following?.map((item) => <UserCard modalDisplay={setIsFollowingModalOpen} key={item.id} id={item.id} />) : <h2>Parece que esse perfil não segue ninguém</h2>
                         }
                     </UserCardsContainer>
                 </ModalContainer>
@@ -173,7 +174,7 @@ export const Users = () => {
                     </div>
                     <UserCardsContainer>
                         {
-                            followers ? followers?.map((item) => <UserCard key={item.id} id={item.id} />) : <h2>Parece que ninguém segue esse perfil</h2>
+                            followers ? followers?.map((item) => <UserCard modalDisplay={setIsFollowersModalOpen} key={item.id} id={item.id} />) : <h2>Parece que ninguém segue esse perfil</h2>
                         }
                     </UserCardsContainer>
                 </ModalContainer>

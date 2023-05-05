@@ -10,6 +10,7 @@ import Modal from "react-modal"
 import { ModalContentContainer } from "../../Edit/styles"
 import { UserCard } from "../utils/UserCard"
 import { kFormatter } from "../../../helpers/formatters"
+import { Comments } from "../Comments"
 
 export const ShortByID = () => {
     const { id } = useParams()
@@ -23,6 +24,8 @@ export const ShortByID = () => {
 
     const [reportModal, setReportModal] = useState(false)
     const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+
+    const [comment, setComment] = useState(false)
 
     const userId = localStorage.getItem('id')
 
@@ -47,6 +50,8 @@ export const ShortByID = () => {
             if (data?.data[0].lido) {
                 setRead(true)
             }
+            if (data?.data[0]?.usuario[0]?.id_usuario === userId)
+                setComment(true)
 
             setDate(() => {
                 const months = ["Jan.", "Fev.", "Mar.", "Abr.", "Mai.", "Jun.", "Jul.", "Ago.", "Set.", "Out.", "Nov.", "Dez."]
@@ -197,6 +202,9 @@ export const ShortByID = () => {
                     </ReadButtonsContainer>
                 </ReadBookCardContainer>
             </BookExtrasSection>
+            {
+                comment ? <></> : <Comments id={id} type={2} />
+            }
             <Modal
                 isOpen={isReportModalOpen}
                 onRequestClose={handleCloseModal}

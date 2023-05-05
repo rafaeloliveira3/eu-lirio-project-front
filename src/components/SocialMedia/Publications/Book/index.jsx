@@ -12,6 +12,7 @@ import { UserCard } from "../utils/UserCard"
 import { AvailableFormats } from "./AvailableFormats"
 import { kFormatter } from "../../../helpers/formatters"
 import { Comments } from "../Comments"
+import { Complaints } from "../utils/Complaints"
 
 const buyButtonVisible = {
     display : "block"
@@ -26,7 +27,7 @@ export const Book = () => {
 
     const { id } = useParams()
     const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
-    const [rating, setRating] = useState(3.5)
+    const [rating, setRating] = useState(0)
     const [date, setDate] = useState("")
 
     const [liked, setLiked] = useState(false)
@@ -34,11 +35,18 @@ export const Book = () => {
     const [read, setRead] = useState(false)
     const [status, setStatus] = useState(false)
 
+    const [complaintTypes, setComplaintTypes] = useState([])
+
     const [reportModal, setReportModal] = useState(false)
     const [isReportModalOpen, setIsReportModalOpen] = useState(false)
 
     const [bookFormats, setBookFormats] = useState(["PDF", "ePUB", "MOBI"])
     const [comment, setComment] = useState(false)
+
+    const [complaintReason, setComplaintReason] = useState(0)
+    const [complaintDescription, setComplaintDescription] = useState("")
+
+    const [refresh, setRefresh] = useState(false)
 
     const userId = localStorage.getItem('id')
 
@@ -53,25 +61,34 @@ export const Book = () => {
         const getBookById = async () => {
             const data = await axios.get(`${defaultUrl}announcement/id/?announcementId=${id}&userId=${userId}`)
             .catch(err => console.log(err))
-            console.log(data?.data[0]);
+
+            setRefresh(false)
+            console.log(userId);
+            console.log(data.data);
 
             if (data?.data[0].curtido)
                 setLiked(true)
             if (data?.data[0].favorito)
                 setFavorited(true)
-                if (data?.data[0].lido)
+            if (data?.data[0].lido)
                 setRead(true)
             if (data?.data[0].comprado)
                 setStatus("ITEM JÁ NA ESTANTE")
             if (data?.data[0].carrinho)
                 setStatus("VER NO CARRINHO")
-            if (data?.data[0].mobi === 'null')
+            if (data?.data[0].mobi === 'null' || data?.data[0].mobi === 'undefined')
                 setBookFormats(["PDF", "ePUB", false])
+
             if (data?.data[0]?.usuario[0]?.id_usuario === userId)
                 setComment(true)
+            else 
+                setComment(false)
             if (!data?.data[0]?.comprado)
                 setComment(true)
-
+            else 
+                setComment(false)
+            
+            setRating(data?.data[0]?.avaliacao?.toFixed(1) || 0)
             setDate(() => {
                 const months = ["Jan.", "Fev.", "Mar.", "Abr.", "Mai.", "Jun.", "Jul.", "Ago.", "Set.", "Out.", "Nov.", "Dez."]
                 const date = data?.data[0]?.data.split("T")[0].split("-") || false
@@ -84,7 +101,18 @@ export const Book = () => {
             setBook(data?.data[0])
         }
         getBookById()
-    }, [id, userId, liked, favorited, read])
+    }, [id, userId, liked, favorited, read, refresh])
+
+    useEffect(() => {
+        const getComplaints = async () => {
+            const data = await axios.get(`${defaultUrl}complaint-types`)
+
+            setComplaintTypes(data?.data)
+        }
+        getComplaints()
+    }, [id])
+
+    console.log(complaintTypes)
 
     const handleCloseModal = () => {
         setIsReportModalOpen(false)
@@ -157,13 +185,25 @@ export const Book = () => {
         }
         else {
             window.open(book?.epub, '_blank').focus()
-            
         }
     }
     const handleDirectBuy = async () => {
         await axios.post(`${defaultUrl}buy-announcement`, {
             id_anuncio: id,
             id_usuario : userId
+        })
+        setRefresh(true)
+    }
+    const handleComplaint = async (e) => {
+        e.preventDefault()
+        await axios.post(`${defaultUrl}report-announcement`, {
+            descricao : complaintDescription,
+            id_anuncio : id,
+            tipo : [
+                {
+                    id_tipo_denuncia : complaintReason
+                }
+            ]
         })
     }
 
@@ -263,7 +303,7 @@ export const Book = () => {
                 </BuyBookCardContainer>
             </BookExtrasSection>
             {
-                comment ? <></> : <Comments />
+                comment ? <></> : <Comments id={id} type={1} />
             }
             <Modal
                 isOpen={isReportModalOpen}
@@ -274,19 +314,20 @@ export const Book = () => {
                 <ModalContentContainer>
                     <i className="fa-solid fa-triangle-exclamation"></i>
                     <h2>Reportar Obra</h2>
-                    <form onSubmit={
-                        (e) => {
-                            e.preventDefault()
-                        }
-                    }>
-                        <input type="radio" name="reason" id="" required/>
-                        <input type="radio" name="reason" id="" />
-                        <input type="radio" name="reason" id="" />
-                        <input type="radio" name="reason" id="" />
-                        <input type="radio" name="reason" id="" />
-                        <input type="radio" name="reason" id="" />
-
-                        <input required type="text" placeholder="Motivo da Denúncia"/>
+                    <form onSubmit={handleComplaint}>
+                        <div>
+                            {
+                                complaintTypes?.map(item => <Complaints key={item.id} id={item.id} onChange={e => setComplaintReason(e.currentTarget.value)} name={item.tipo}/>)
+                            }
+                        </div>
+                        <input 
+                            value={complaintDescription} 
+                            onChange={e => setComplaintDescription(e.currentTarget.value)} 
+                            required 
+                            type="text" 
+                            placeholder="Motivo da Denúncia"
+                        />
+                        <button type="submit">Enviar</button>
                     </form> 
                 </ModalContentContainer>
             </Modal>

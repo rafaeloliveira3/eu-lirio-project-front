@@ -26,7 +26,7 @@ const FormContainer = styled.form`
         flex-direction: column;
         justify-content: space-between;
         gap: 1rem;
-        width: 27rem;
+        width: calc(80% - 23vw);
         input, textarea {
             padding: .7rem .7rem;
             background-color: transparent;

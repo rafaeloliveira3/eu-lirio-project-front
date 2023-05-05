@@ -28,6 +28,8 @@ export const UserCard = (props) => {
             
             if (String(props.id) === userId)
                 setBlockFollow(true)
+            if (data?.data?.seguindo)
+                setFollowStatus(true)
         
             setAuthor(data?.data)
         }
@@ -35,13 +37,14 @@ export const UserCard = (props) => {
     }, [props.id, followStatus])
     
     const handleClick = (e) => {
+        props.modalDisplay(false)
         const id = e.currentTarget.id
         navigate(`/app/profile/${id}`)
     }
 
     const handleFollow = async (e) => {
         e.stopPropagation()
-        const status = !follow
+        const status = !followStatus
         setFollowStatus(status)
 
         if (status) {
