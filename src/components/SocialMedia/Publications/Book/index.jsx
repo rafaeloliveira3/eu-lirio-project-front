@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams, useOutletContext, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { defaultUrl } from "../../../helpers/url"
-import { BookAndUserInfo, BookAndUserInfoContainer, BookContainer, BookData, BookExtrasSection, BookFormatsContainer, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, BuyBookCard, BuyBookCardContainer, BuyButtonsContainer, Container, ImageContainer, RatingContainer, ReportContainer, StatsContainer, SynopsisContainer, TopSection } from "./styles"
+import { BookAndUserInfo, BookAndUserInfoContainer, BookContainer, BookData, BookExtrasSection, BookFormatsContainer, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, BuyBookCard, BuyBookCardContainer, BuyButtonsContainer, CommentsContainer, CommentSection, Container, ImageContainer, RatingContainer, RecomendationModalContentContainer, RecomendationModalForm, RecomendationModalImageContainer, ReportContainer, StatsContainer, SynopsisContainer, TopSection } from "./styles"
 import { Tags } from "../../Tags"
 import { Rating } from "react-simple-star-rating"
 import { StatsCard } from "../utils/StatsCard"
@@ -10,14 +10,16 @@ import Modal from "react-modal"
 import { ModalContentContainer } from "../../Edit/styles"
 import { UserCard } from "../utils/UserCard"
 import { AvailableFormats } from "./AvailableFormats"
-import { kFormatter } from "../../../helpers/formatters"
+import { dateFormatter, kFormatter } from "../../../helpers/formatters"
 import { Comments } from "../Comments"
 import { Complaints } from "../utils/Complaints"
+import { RecomendationCard } from "../utils/RecomendationCard"
+import { CommentsCard } from "../CommentsCard"
 
 const buyButtonVisible = {
     display : "block"
 }
-const buyButtonInisible = {
+const buyButtonInvisible = {
     display : "none"
 }
 
@@ -30,15 +32,22 @@ export const Book = () => {
     const [rating, setRating] = useState(0)
     const [date, setDate] = useState("")
 
+    const [user, setUser] = useState({})
+
     const [liked, setLiked] = useState(false)
     const [favorited, setFavorited] = useState(false)
     const [read, setRead] = useState(false)
+
+    const [theme, setTheme] = useState(buyButtonVisible)
     const [status, setStatus] = useState(false)
 
     const [complaintTypes, setComplaintTypes] = useState([])
+    const [comments, setComments] = useState([])
 
     const [reportModal, setReportModal] = useState(false)
     const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+
+    const [isRecomendationModalOpen, setIsRecomendationModalOpen] = useState(false)
 
     const [bookFormats, setBookFormats] = useState(["PDF", "ePUB", "MOBI"])
     const [comment, setComment] = useState(false)
@@ -63,8 +72,7 @@ export const Book = () => {
             .catch(err => console.log(err))
 
             setRefresh(false)
-            console.log(userId);
-            console.log(data.data);
+            setTheme(buyButtonVisible)
 
             if (data?.data[0].curtido)
                 setLiked(true)
@@ -72,10 +80,14 @@ export const Book = () => {
                 setFavorited(true)
             if (data?.data[0].lido)
                 setRead(true)
-            if (data?.data[0].comprado)
-                setStatus("ITEM JÁ NA ESTANTE")
-            if (data?.data[0].carrinho)
+            if (data?.data[0].comprado) {
+                setStatus("DOWNLOAD EBOOK")
+                setTheme(buyButtonVisible)
+            }
+            if (data?.data[0].carrinho) {
                 setStatus("VER NO CARRINHO")
+                setTheme(buyButtonInvisible)
+            }
             if (data?.data[0].mobi === 'null' || data?.data[0].mobi === 'undefined')
                 setBookFormats(["PDF", "ePUB", false])
 
@@ -89,15 +101,7 @@ export const Book = () => {
                 setComment(false)
             
             setRating(data?.data[0]?.avaliacao?.toFixed(1) || 0)
-            setDate(() => {
-                const months = ["Jan.", "Fev.", "Mar.", "Abr.", "Mai.", "Jun.", "Jul.", "Ago.", "Set.", "Out.", "Nov.", "Dez."]
-                const date = data?.data[0]?.data.split("T")[0].split("-") || false
-                if (date) {
-                    const monthName = months[parseInt(date[1]) - 1]
-                    return `${date[2]} ${monthName} ${date[0]}`
-                }
-                return ""
-            })
+            setDate(dateFormatter(data?.data[0]?.data))
             setBook(data?.data[0])
         }
         getBookById()
@@ -109,13 +113,27 @@ export const Book = () => {
 
             setComplaintTypes(data?.data)
         }
+        const getComments = async () => {
+            const data = await axios.get(`${defaultUrl}announcement-comments/id/${id}`)
+
+            setComments(data?.data)
+        }
         getComplaints()
+        getComments()
     }, [id])
 
-    console.log(complaintTypes)
+    useEffect(() => {
+        const getUser = async () => {
+            const data = await axios.get(`${defaultUrl}user/id/?searchUser=${userId}&currentUser=${userId}`)
+
+            setUser(data?.data)
+        }
+        getUser()
+    }, [userId])
 
     const handleCloseModal = () => {
         setIsReportModalOpen(false)
+        setIsRecomendationModalOpen(false)
     }
     const handleOpenModal = () => {
         setIsReportModalOpen(true)
@@ -170,7 +188,7 @@ export const Book = () => {
         }
     }
     const handleCart = async() => {
-        if (status !== "ITEM JÁ NA ESTANTE") {
+        if (status !== "DOWNLOAD EBOOK") {
             if (status !== "VER NO CARRINHO") {
                 setStatus("VER NO CARRINHO")
                 await axios.post(`${defaultUrl}new-cart-item/user-id/${userId}`, {
@@ -188,11 +206,16 @@ export const Book = () => {
         }
     }
     const handleDirectBuy = async () => {
-        await axios.post(`${defaultUrl}buy-announcement`, {
-            id_anuncio: id,
-            id_usuario : userId
-        })
-        setRefresh(true)
+        if (status !== "DOWNLOAD EBOOK") {
+            await axios.post(`${defaultUrl}buy-announcement`, {
+                id_anuncio: id,
+                id_usuario : userId
+            })
+            setRefresh(true)
+        }
+        else {
+            setIsRecomendationModalOpen(true)
+        }
     }
     const handleComplaint = async (e) => {
         e.preventDefault()
@@ -294,10 +317,10 @@ export const Book = () => {
                                 {bookFormats.map(item => item ? <AvailableFormats name={item} book={book} key={item}/> : null)}
                             </ul>
                         </BookFormatsContainer>
-                        <BuyButtonsContainer theme={status ? buyButtonInisible : buyButtonVisible} >
+                        <BuyButtonsContainer theme={theme} >
                             <h1>R$ {book?.preco?.toFixed(2)}</h1>
                             <button onClick={handleCart}>{status ? status : "ADICIONAR AO CARRINHO"}</button>
-                            <button onClick={handleDirectBuy} className="direct-buy-button">COMPRAR</button>
+                            <button onClick={handleDirectBuy} className="direct-buy-button">{status ? "RECOMENDAR" : "COMPRAR"}</button>
                         </BuyButtonsContainer>
                     </BuyBookCard>
                 </BuyBookCardContainer>
@@ -305,6 +328,13 @@ export const Book = () => {
             {
                 comment ? <></> : <Comments id={id} type={1} />
             }
+            <CommentSection>
+                <CommentsContainer>
+                    {
+                        comments?.map(item => <CommentsCard key={item.id} comment={item} />)
+                    }
+                </CommentsContainer>
+            </CommentSection>
             <Modal
                 isOpen={isReportModalOpen}
                 onRequestClose={handleCloseModal}
@@ -330,6 +360,31 @@ export const Book = () => {
                         <button type="submit">Enviar</button>
                     </form> 
                 </ModalContentContainer>
+            </Modal>
+            <Modal
+                isOpen={isRecomendationModalOpen}
+                onRequestClose={handleCloseModal}
+                overlayClassName="recomendation-modal-overlay"
+                className="recomendation-modal-content"
+            >
+                <RecomendationModalContentContainer>
+                    <RecomendationModalImageContainer>
+                        <img src={user?.foto} alt="" />
+                    </RecomendationModalImageContainer>
+                    <RecomendationModalForm>
+                        <div className="content">
+                            <h2>RECOMENDAÇÃO</h2>
+                            <textarea placeholder="Recomende essa obra e ajude outras pessoas a descobrirem essa história" style={{width:"95%"}}></textarea>
+                        </div>
+                        <div className="book-info">
+                            <RecomendationCard book={book}/>
+                        </div>
+                        <div className="submit-button">
+                            <button>A</button>
+                            <button>A</button>
+                        </div>
+                    </RecomendationModalForm>
+                </RecomendationModalContentContainer>
             </Modal>
         </Container>
     )

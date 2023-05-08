@@ -51,7 +51,7 @@ export const Users = () => {
     }, [id])
     useEffect(() => {
         const fetchFollowing = async () => {
-            const data = await axios.get(`${defaultUrl}following/user-id/${id}`)
+            const data = await axios.get(`${defaultUrl}following/user-id/?userId=${id}&currentUser=${userId}`)
             .catch((err) => { 
                 if (err?.request?.status === 404) {
                     setFollowing(false)
@@ -61,7 +61,7 @@ export const Users = () => {
                 setFollowing(data?.data)
         }
         const fetchFollowers = async () => {
-            const data = await axios.get(`${defaultUrl}followers/user-id/${id}`)
+            const data = await axios.get(`${defaultUrl}followers/user-id/?userId=${id}&currentUser=${userId}`)
             .catch((err) => { 
                 if (err?.request?.status === 404) {
                     setFollowers(false)

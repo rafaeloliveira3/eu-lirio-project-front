@@ -9,7 +9,7 @@ import { StatsCard } from "../utils/StatsCard"
 import Modal from "react-modal"
 import { ModalContentContainer } from "../../Edit/styles"
 import { UserCard } from "../utils/UserCard"
-import { kFormatter } from "../../../helpers/formatters"
+import { dateFormatter, kFormatter } from "../../../helpers/formatters"
 import { Comments } from "../Comments"
 
 export const ShortByID = () => {
@@ -53,15 +53,7 @@ export const ShortByID = () => {
             if (data?.data[0]?.usuario[0]?.id_usuario === userId)
                 setComment(true)
 
-            setDate(() => {
-                const months = ["Jan.", "Fev.", "Mar.", "Abr.", "Mai.", "Jun.", "Jul.", "Ago.", "Set.", "Out.", "Nov.", "Dez."]
-                const date = data?.data[0]?.data.split("T")[0].split("-") || false
-                if (date) {
-                    const monthName = months[parseInt(date[1]) - 1]
-                    return `${date[2]} ${monthName} ${date[0]}`
-                }
-                return ""
-            })
+            setDate(dateFormatter(data?.data[0]?.data))
             
             setBook(data?.data[0])
         }

@@ -260,6 +260,62 @@ const BuyButtonsContainer = styled.div`
         display: ${(props) => props.theme.display};
     }
 `
+const RecomendationModalContentContainer = styled.div`
+    display: flex;
+    height: 100%;
+    width: 100%;
+    font-family: 'League Spartan', sans-serif;
+    gap: 1rem;
+    padding: 0 1rem;
+    
+`
+
+const RecomendationModalImageContainer = styled.div`
+    display: flex;
+    img {
+        height: 5rem;
+        width: 5rem;
+        object-fit: cover;
+        border-radius: 360px;
+    }
+`
+const RecomendationModalForm = styled.form`
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .content {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        textarea {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.2rem;
+            resize: none;
+            border: 0;
+            height: 12rem;
+        }
+    }
+`
+
+const CommentSection = styled.section`
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+`
+
+const CommentsContainer = styled.div`
+    width: calc(100% - 23vw);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+`
 
 export {
     Container,
@@ -281,5 +337,10 @@ export {
     BuyBookCardContainer,
     BuyBookCard,
     BookFormatsContainer,
-    BuyButtonsContainer
+    BuyButtonsContainer,
+    RecomendationModalImageContainer,
+    RecomendationModalContentContainer,
+    RecomendationModalForm,
+    CommentsContainer,
+    CommentSection
 }

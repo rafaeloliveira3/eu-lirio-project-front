@@ -130,4 +130,28 @@ export const GlobalStyle = createGlobalStyle`
         width: 50%;
         border-radius: 10px 10px 0 0;
     }
+
+    .recomendation-modal-overlay {
+        background-color: #00000055;
+
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        z-index: 98;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .recomendation-modal-content {
+        background-color: #fff;
+        z-index: 99;
+        padding: 2rem;
+        height: 30rem;
+        width: 50rem;
+        border-radius: 10px;
+    }
 `
