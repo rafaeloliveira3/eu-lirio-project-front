@@ -331,7 +331,7 @@ export const Book = () => {
             <CommentSection>
                 <CommentsContainer>
                     {
-                        comments?.map(item => <CommentsCard key={item.id} comment={item} />)
+                        comments?.map(item => <CommentsCard key={item.id} type={1} comment={item} />)
                     }
                 </CommentsContainer>
             </CommentSection>

@@ -11,6 +11,8 @@ import { ModalContentContainer } from "../../Edit/styles"
 import { UserCard } from "../utils/UserCard"
 import { dateFormatter, kFormatter } from "../../../helpers/formatters"
 import { Comments } from "../Comments"
+import { CommentsContainer, CommentSection } from "../Book/styles"
+import { CommentsCard } from "../CommentsCard"
 
 export const ShortByID = () => {
     const { id } = useParams()
@@ -26,6 +28,8 @@ export const ShortByID = () => {
     const [isReportModalOpen, setIsReportModalOpen] = useState(false)
 
     const [comment, setComment] = useState(false)
+
+    const [comments, setComments] = useState([])
 
     const userId = localStorage.getItem('id')
 
@@ -59,6 +63,15 @@ export const ShortByID = () => {
         }
         getBookById()
     }, [id, userId, liked, favorited, read])
+
+    useEffect(() => {
+        const getComments = async () => {
+            const data = await axios.get(`${defaultUrl}short-storie-comments/id/${id}`)
+
+            setComments(data?.data)
+        }
+        getComments()
+    }, [id])
 
     const handleCloseModal = () => {
         setIsReportModalOpen(false)
@@ -197,6 +210,13 @@ export const ShortByID = () => {
             {
                 comment ? <></> : <Comments id={id} type={2} />
             }
+            <CommentSection>
+                <CommentsContainer>
+                    {
+                        comments.map(item => <CommentsCard key={item.id} type={2} comment={item} />)
+                    }
+                </CommentsContainer>
+            </CommentSection>
             <Modal
                 isOpen={isReportModalOpen}
                 onRequestClose={handleCloseModal}

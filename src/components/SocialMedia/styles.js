@@ -46,6 +46,7 @@ const UserInfoContainer = styled.div`
     justify-content: space-evenly;
     height: 100%;
     max-width: 25%;
+    width: 100vw;
     flex-grow: 1;
     padding: 0 5vw;
 `
@@ -63,6 +64,7 @@ const PromotionContainer = styled.div`
     height: 100%;
     flex-grow: 1;
     max-width: 25%;
+    width: 100vw;
 `
 
 const User = styled.div`

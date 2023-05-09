@@ -31,6 +31,10 @@ const UserContainer = styled.div`
             flex-direction: column;
         }
     }
+    .fa-ellipsis-vertical {
+        cursor: pointer;
+        font-size: 1.1rem;
+    }
 `
 const ContentContainer = styled.div`
     display: flex;
@@ -53,9 +57,33 @@ const ContentContainer = styled.div`
         width: 100%;
         justify-content: space-between;
         display: flex;
+        gap: 1rem;
+        .buttons-container {
+            display: flex;
+            gap: 1rem;
+        }
         span {
             font-family: 'League Spartan', sans-serif;
             font-size: 1.1rem;
+        }
+    }
+`
+
+const ButtonExtras = styled.button`
+    padding: .2rem .6rem;
+    font-size: 1rem;
+    background-color: transparent;
+    border: 1px solid ${props => props.color};
+    border-radius: 20px;
+    width: 5rem;
+    i {
+        color: ${props => props.color}
+    }
+    &:hover {
+        background-color: ${props => props.color};
+        color: #fff;
+        i {
+            color: #fff;
         }
     }
 `
@@ -76,6 +104,31 @@ const Overlay = styled.div`
     gap: 1rem;
     font-family: 'League Spartan', sans-serif;
     font-size: 1.5rem;
+    cursor: pointer;
+`
+
+const DeleteContainer = styled.div`
+    display: ${(props) => props.display};
+    position: absolute;
+    right: 0;
+    top: 1.1rem;
+    span {
+        i {
+            color: #BD0020;
+        }
+        font-family: 'Quicksand', sans-serif;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        border-radius: 10px;
+        background-color: #fff;
+        padding: .6rem;
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.12);
+        &:hover {
+            background-color: #F5F5F5;
+        }
+    }
 `
 
 export {
@@ -83,5 +136,7 @@ export {
     Overlay,
     Card,
     UserContainer,
-    ContentContainer
+    ContentContainer,
+    ButtonExtras,
+    DeleteContainer
 }

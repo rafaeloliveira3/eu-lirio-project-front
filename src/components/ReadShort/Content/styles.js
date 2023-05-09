@@ -5,10 +5,12 @@ const Container = styled.div`
     justify-content: space-between;
     height: 100%;
     max-width: 50%;
+    padding-top: 2rem;
 `
 const NavBar = styled.nav`
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 1rem;
     .author {
         display: flex;
@@ -26,6 +28,8 @@ const NavBar = styled.nav`
         }
         img {
             height: 7rem;
+            width: 7rem;
+            object-fit: cover;
             border-radius: 360px;
         }
         .author-name {
@@ -39,10 +43,11 @@ const NavBar = styled.nav`
     .nav-bar {
         border: 2px solid var(--yellow-medium);
         border-radius: 24px;
-        width: 100%;
+        width: 5vw;
         display: flex;
         flex-direction: column;
         gap: 1rem;
+        padding: 1rem 0;
         a {
             width: 100%;
             display: flex;
@@ -91,6 +96,7 @@ const ContentContainer = styled.div`
     display: flex;
     font-family: 'Noto Serif', serif;
     width: 100%;
+    width: 50vw;
     overflow-y: auto;
     span {
         display: flex;

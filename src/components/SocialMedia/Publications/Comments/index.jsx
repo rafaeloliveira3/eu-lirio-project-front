@@ -36,6 +36,10 @@ export const Comments = (props) => {
             .catch((err) => {
                 MESSAGE_ERROR.default(err)
             })
+
+            if (data.status === 200) {
+                window.location.reload()
+            }
         }
         else if (props.type === 2) {
             json.id_historia_curta = props.id
@@ -45,8 +49,6 @@ export const Comments = (props) => {
                 MESSAGE_ERROR.default(err)
             })
         }
-
-        console.log(json);
         
         if (data?.status === 200) {
             MESSAGE_SUCCESS.register("Comentário")
