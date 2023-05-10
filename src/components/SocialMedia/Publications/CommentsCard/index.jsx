@@ -11,8 +11,6 @@ export const CommentsCard = (props) => {
     const comment = props.comment
     const userId = localStorage.getItem('id')
 
-    console.log(comment);
-
     const [spoiler, setSpoiler] = useState(false)
     const [user, setUser] = useState({})
     const [liked, setLiked] = useState(false)
@@ -31,7 +29,7 @@ export const CommentsCard = (props) => {
         const getUser = async () => {
             const data = await axios.get(`${defaultUrl}user/id/?searchUser=${comment?.id_usuario}&currentUser=${userId}`)
             setUser(data?.data)
-            if (toString(data?.data?.id) === toString(comment?.id_usuario))
+            if (parseInt(userId) === comment?.id_usuario)
                 setCanDelete(true)
         }
         getUser()
@@ -67,7 +65,7 @@ export const CommentsCard = (props) => {
         let url
 
         if (props.type === 1) url = `delete-announcement-comment/id/?commentId=${comment?.id}&announcementId=${comment?.id_anuncio}`
-        else url = `delete-announcement-comment/id/?commentId=${comment?.id}&announcementId=${comment?.id_anuncio}`
+        else url = `delete-short-storie-comment/id/?commentId=${comment?.id}&shortStorieId=${comment?.id_historia_curta}`
 
         await axios.delete(`${defaultUrl}${url}`)
 
@@ -99,9 +97,9 @@ export const CommentsCard = (props) => {
                     </div>
                     <div>
                         {canDelete ? <i onClick={() => setDeleteModalOpener(!deleteModalOpener)} className="fa-solid fa-ellipsis-vertical"></i> : <></>}
-                        <DeleteContainer display={deleteModalOpener ? "block" : "none"}>
+                        {canDelete ? <DeleteContainer display={deleteModalOpener ? "block" : "none"}>
                             <span onClick={() => setIsDeleteModalOpen(true)}><i className="fa-solid fa-trash"></i> Excluir Comentário</span>
-                        </DeleteContainer>
+                        </DeleteContainer> : <></>}
                     </div>
                 </UserContainer>
                 <ContentContainer>

@@ -71,6 +71,8 @@ export const Book = () => {
             const data = await axios.get(`${defaultUrl}announcement/id/?announcementId=${id}&userId=${userId}`)
             .catch(err => console.log(err))
 
+            console.log(data?.data)
+
             setRefresh(false)
             setTheme(buyButtonVisible)
 

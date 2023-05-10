@@ -17,7 +17,7 @@ import { CommentsCard } from "../CommentsCard"
 export const ShortByID = () => {
     const { id } = useParams()
     const { setAdsDisplay, setSearchbarDisplay, setFeedWidth } = useOutletContext()
-    const [rating, setRating] = useState(3.5)
+    const [rating, setRating] = useState(0)
     const [date, setDate] = useState("")
 
     const [liked, setLiked] = useState(false)
@@ -45,6 +45,7 @@ export const ShortByID = () => {
             const data = await axios.get(`${defaultUrl}short-storie/id/?shortStorieId=${id}&userId=${userId}`)
             .catch(err => console.log(err))
 
+            
             if (data?.data[0].curtido) {
                 setLiked(true)
             }
@@ -55,10 +56,10 @@ export const ShortByID = () => {
                 setRead(true)
             }
             if (data?.data[0]?.usuario[0]?.id_usuario === userId)
-                setComment(true)
-
-            setDate(dateFormatter(data?.data[0]?.data))
+            setComment(true)
             
+            setDate(dateFormatter(data?.data[0]?.data))
+            setRating(data?.data[0]?.avaliacao?.toFixed(1) || 0)
             setBook(data?.data[0])
         }
         getBookById()
