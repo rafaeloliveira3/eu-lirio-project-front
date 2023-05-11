@@ -22,6 +22,8 @@ const ItemContainer = styled.div`
         .image-container {
             img {
                 height: 5rem;
+                width: 5rem;
+                object-fit: cover;
                 border-radius: 360px;
             }
         }

@@ -3,7 +3,8 @@ import { useEffect, useState } from "react"
 import { useOutletContext, useParams } from "react-router-dom"
 import { defaultUrl } from "../../../helpers/url"
 import { Card } from "../../Feed/Cards/Card"
-import { CardsContainer, Loader, LoaderContainer } from "../styles"
+import { CardsContainer, FilterContainer, Loader, LoaderContainer } from "../styles"
+import Modal from "react-modal"
 
 export const AnnouncementsSearch = () => {
 
@@ -15,6 +16,8 @@ export const AnnouncementsSearch = () => {
     const [announcements, setAnnouncements] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
+
+    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
 
     useEffect(() => {
         setError(false)
@@ -57,9 +60,22 @@ export const AnnouncementsSearch = () => {
     }
     else {
         return (
-            <CardsContainer>
-                {announcements?.map((item) => <Card url="announcement" key={item.id} id={item.id} anuncio={item} type={1} />)}
-            </CardsContainer>
+            <>
+                <FilterContainer>
+                    <h2 onClick={() => setIsFilterModalOpen(true)}>Filtros <i className="fa-solid fa-angle-down"></i></h2>
+                </FilterContainer>
+                <CardsContainer>
+                    {announcements?.map((item) => <Card url="announcement" key={item.id} id={item.id} anuncio={item} type={1} />)}
+                </CardsContainer>
+                <Modal
+                isOpen={isFilterModalOpen}
+                onRequestClose={() => setIsFilterModalOpen(false)}
+                overlayClassName="filter-modal-overlay"
+                className="filter-modal-content"
+            >
+                <h2>AUIHDUAIHUIAD</h2>
+            </Modal>
+            </>
         )
     }
 }

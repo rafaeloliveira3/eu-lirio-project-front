@@ -8,7 +8,6 @@ import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../../../helpers/toasts"
 import { Options } from "../../NewPost/utils/Options"
 import { ButtonSave, ButtonCancel, ButtonsContainer } from "../../NewPost/styles"
 import { Editor } from "@tinymce/tinymce-react"
-import { toast, ToastContainer } from "react-toastify"
 import { Checkbox } from "../../NewPost/utils/Checkbox"
 import Modal from "react-modal"
 import { ModalContentContainer } from "../Book/styles"
@@ -361,7 +360,6 @@ export const EditShorts = () => {
                     </span>
                 </ModalContentContainer>
             </Modal>
-            <ToastContainer position={toast.POSITION.TOP_CENTER}/>
         </Container>
     )
 }

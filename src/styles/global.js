@@ -154,4 +154,30 @@ export const GlobalStyle = createGlobalStyle`
         width: 50rem;
         border-radius: 10px;
     }
+
+    .filter-modal-overlay {
+        background-color: #00000001;
+
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        z-index: 99;
+
+        padding-top: 13.4rem;
+
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+    .filter-modal-content {
+        background-color: #fff;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+        z-index: 99;
+        height: 20rem;
+        width: 50%;
+        border-radius: 10px;
+    }
 `

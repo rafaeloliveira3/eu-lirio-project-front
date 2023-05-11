@@ -60,7 +60,7 @@ const Indicator = styled.div`
 const CardsContainer = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 5rem 1rem 1rem 1rem;
+    padding: 1rem 1rem 1rem 1rem;
     overflow-y: auto;
     width: 100%;
     gap: .3rem;
@@ -99,6 +99,25 @@ const Loader = styled.i`
     animation: ${LoaderAnimation} 2s linear infinite;
 `
 
+const FilterContainer = styled.div`
+    width: 100%;
+    padding: 5rem 1rem 0 1rem;
+    h2 {
+        display: flex;
+        width: min-content;
+        padding: .5rem;
+        align-items: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 400;
+        gap: .5rem;
+        font-size: 1.1rem;
+        cursor: pointer;
+        i{
+            height: 1rem;
+        }
+    }
+`
+
 
 
 export {
@@ -108,5 +127,6 @@ export {
     Indicator,
     CardsContainer,
     LoaderContainer,
-    Loader
+    Loader,
+    FilterContainer
 }

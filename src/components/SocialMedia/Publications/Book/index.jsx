@@ -71,8 +71,6 @@ export const Book = () => {
             const data = await axios.get(`${defaultUrl}announcement/id/?announcementId=${id}&userId=${userId}`)
             .catch(err => console.log(err))
 
-            console.log(data?.data)
-
             setRefresh(false)
             setTheme(buyButtonVisible)
 
@@ -112,17 +110,19 @@ export const Book = () => {
     useEffect(() => {
         const getComplaints = async () => {
             const data = await axios.get(`${defaultUrl}complaint-types`)
+            setRefresh(false)
 
             setComplaintTypes(data?.data)
         }
         const getComments = async () => {
-            const data = await axios.get(`${defaultUrl}announcement-comments/id/${id}`)
+            const data = await axios.get(`${defaultUrl}announcement-comments/id/?announcementId=${id}&userId=${userId}`)
+            setRefresh(false)
 
             setComments(data?.data)
         }
         getComplaints()
         getComments()
-    }, [id])
+    }, [id, refresh, userId])
 
     useEffect(() => {
         const getUser = async () => {
@@ -297,7 +297,7 @@ export const Book = () => {
                             <div className="stats-separator"></div>
                             <StatsCard clickable={false} icon={`fa-solid fa-book`} name="volume" number={book?.volume} />
                             <div className="stats-separator"></div>
-                            <StatsCard clickable={false} icon={`fa-solid fa-shopping-bag`} name="vendas" number={0} />
+                            <StatsCard clickable={false} icon={`fa-solid fa-shopping-bag`} name="vendas" number={book?.compras?.quantidade_compras || 0} />
                             <div className="stats-separator"></div>
                             <StatsCard clickable={false} icon={`fa-solid fa-calendar-days`} name="publicação" number={date} />
                             <div className="stats-separator"></div>
@@ -328,12 +328,12 @@ export const Book = () => {
                 </BuyBookCardContainer>
             </BookExtrasSection>
             {
-                comment ? <></> : <Comments id={id} type={1} />
+                comment ? <></> : <Comments reload={setRefresh} id={id} comment={book?.comentarios?.quantidade_comentarios || 0} type={1} />
             }
             <CommentSection>
                 <CommentsContainer>
                     {
-                        comments?.map(item => <CommentsCard key={item.id} type={1} comment={item} />)
+                        comments?.map(item => <CommentsCard reload={setRefresh} key={item.id} type={1} comment={item} />)
                     }
                 </CommentsContainer>
             </CommentSection>

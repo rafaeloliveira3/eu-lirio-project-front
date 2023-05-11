@@ -6,7 +6,7 @@ import { defaultUrl } from "../../../helpers/url"
 import { TagsContainer } from "./styles"
 import { Checkbox } from "../../NewPost/utils/Checkbox"
 import { Options } from "../../NewPost/utils/Options"
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { deleteFile, getFilesName, uploadCover, uploadFile } from "../../../helpers/firebase"
 import { useParams, Navigate, useOutletContext, useNavigate } from "react-router-dom"
 import { ButtonCancel, ButtonSave, ButtonsContainer } from "../../NewPost/styles"
@@ -450,7 +450,6 @@ export const EditBook = () => {
                     </span>
                 </ModalContentContainer>
             </Modal>
-            <ToastContainer position={toast.POSITION.TOP_CENTER}/>
         </Container>
     )
 }

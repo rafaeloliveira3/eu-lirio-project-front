@@ -5,7 +5,6 @@ import axios from "axios"
 import { defaultUrl } from "../../helpers/url"
 import { Checkbox } from "./utils/Checkbox"
 import { deleteFile, uploadImage } from "../../helpers/firebase"
-import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate, useOutletContext } from "react-router-dom"
 import { MESSAGE_SUCCESS } from "../../helpers/toasts"
 
@@ -295,7 +294,6 @@ export const Edit = () => {
                     </span>
                 </ModalContentContainer>
             </Modal>
-            <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={false}/>
         </Container>
     )
 }

@@ -263,7 +263,6 @@ export const Books = () => {
                         </ButtonsContainer>
                 </FormInputContainer>
             </MainForm>
-            <ToastContainer position={toast.POSITION.TOP_CENTER}/>
         </Container>
     )
 }

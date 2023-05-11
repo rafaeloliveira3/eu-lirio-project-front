@@ -7,6 +7,7 @@ import { AvaliationContainer, Container, FormContainer } from "./styles"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../../../helpers/toasts"
+import { kFormatter } from "../../../helpers/formatters"
 
 export const Comments = (props) => {
 
@@ -36,10 +37,6 @@ export const Comments = (props) => {
             .catch((err) => {
                 MESSAGE_ERROR.default(err)
             })
-
-            if (data.status === 200) {
-                window.location.reload()
-            }
         }
         else if (props.type === 2) {
             json.id_historia_curta = props.id
@@ -51,7 +48,9 @@ export const Comments = (props) => {
         }
         
         if (data?.status === 200) {
+            console.log("teste");
             MESSAGE_SUCCESS.register("Comentário")
+            props.reload(true)
         }
         else {
             MESSAGE_ERROR.bdError()
@@ -61,7 +60,7 @@ export const Comments = (props) => {
     return (
         <Container>
             <AvaliationContainer>
-                <h2><i className="fa-regular fa-comment"></i> Avaliações do Livro (2)</h2>
+                <h2><i className="fa-regular fa-comment"></i> Avaliações do Livro ({kFormatter(props.comment)})</h2>
                 <FormContainer onSubmit={handleSubmit}>
                     <div className="inputs">
                         <input 
@@ -91,7 +90,7 @@ export const Comments = (props) => {
                             <Toggle
                                 labelRight="Spoiler"
                                 checked={spoilerStatus}
-                                onChange={() => setSpoilerStatus(!spoilerStatus)}
+                                onChange={() => {setSpoilerStatus(!spoilerStatus)}}
                                 backgroundColorChecked={"var(--purple-dark)"}
                             ></Toggle>
                             <button title="Enviar"><i className="fa-solid fa-paper-plane"></i></button>
@@ -99,7 +98,6 @@ export const Comments = (props) => {
                     </div>
                 </FormContainer>
             </AvaliationContainer>
-            <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={4000} />
         </Container>
     )
 }

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { dateFormatter } from "../../../helpers/formatters";
+import { dateFormatter, kFormatter } from "../../../helpers/formatters";
 import { ButtonExtras, Card, Container, ContentContainer, DeleteContainer, Overlay, UserContainer } from "./styles"
 import { defaultUrl } from "../../../helpers/url";
 import { Rating } from "react-simple-star-rating";
@@ -18,13 +18,22 @@ export const CommentsCard = (props) => {
     const [deleteModalOpener, setDeleteModalOpener] = useState(false)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
+    const [likesQuantity, setLikesQuantity] = useState(0)
+
     const [canDelete, setCanDelete] = useState(false)
 
     useEffect(() => {
+        if (comment?.curtido)
+            setLiked(true)
+        else 
+            setLiked(false)
+
         if (comment?.spoiler)
             setSpoiler(true)
         else 
             setSpoiler(false)
+
+        setLikesQuantity(comment?.curtidas?.quantidade_curtidas)
 
         const getUser = async () => {
             const data = await axios.get(`${defaultUrl}user/id/?searchUser=${comment?.id_usuario}&currentUser=${userId}`)
@@ -33,7 +42,7 @@ export const CommentsCard = (props) => {
                 setCanDelete(true)
         }
         getUser()
-    }, [comment.id, userId])
+    }, [comment.id, comment.curtido, comment.id_usuario, comment.spoiler, userId])
 
     const handleLike = async () => {
         const status = !liked
@@ -51,7 +60,15 @@ export const CommentsCard = (props) => {
             }
         }
         else {
-
+            if (status) {
+                await axios.post(`${defaultUrl}like-short-storie-comment`, {
+                    id_comentario : comment?.id,
+                    id_usuario : userId
+                })
+            }
+            else {
+                await axios.delete(`${defaultUrl}dislike-short-storie-comment/?commentId=${comment?.id}&userId=${userId}`)
+            }
         }
 
         props.reload(true)
@@ -69,7 +86,7 @@ export const CommentsCard = (props) => {
 
         await axios.delete(`${defaultUrl}${url}`)
 
-        window.location.reload()
+       props.reload(true)
     }
 
     return (
@@ -109,7 +126,7 @@ export const CommentsCard = (props) => {
                     </div>
                     <div className="extras-container">
                         <div className="buttons-container">
-                            <ButtonExtras onClick={handleLike} color="#F93E54"><i className={ liked ? "fa-solid fa-heart" : "fa-regular fa-heart"}></i> 182</ButtonExtras>
+                            <ButtonExtras onClick={handleLike} color="#F93E54"><i className={ liked ? "fa-solid fa-heart" : "fa-regular fa-heart"}></i> {kFormatter(likesQuantity)}</ButtonExtras>
                         </div>
                         <span>
                             {dateFormatter(comment?.data_publicado)}

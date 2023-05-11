@@ -275,7 +275,7 @@ const SocialMedia = () => {
 
                 </PromotionContainer>
             </div>
-            <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={false} />
+            <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={4000} />
         </Container>
     )
 }

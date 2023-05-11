@@ -31,6 +31,8 @@ export const ShortByID = () => {
 
     const [comments, setComments] = useState([])
 
+    const [refresh, setRefresh] = useState(false)
+
     const userId = localStorage.getItem('id')
 
     useEffect(() => {
@@ -44,6 +46,8 @@ export const ShortByID = () => {
         const getBookById = async () => {
             const data = await axios.get(`${defaultUrl}short-storie/id/?shortStorieId=${id}&userId=${userId}`)
             .catch(err => console.log(err))
+
+            setRefresh(false)
 
             
             if (data?.data[0].curtido) {
@@ -63,16 +67,17 @@ export const ShortByID = () => {
             setBook(data?.data[0])
         }
         getBookById()
-    }, [id, userId, liked, favorited, read])
+    }, [id, userId, liked, favorited, read, refresh])
 
     useEffect(() => {
         const getComments = async () => {
-            const data = await axios.get(`${defaultUrl}short-storie-comments/id/${id}`)
+            const data = await axios.get(`${defaultUrl}short-storie-comments/id/?shortStorieId=${id}&userId=${userId}`)
+            setRefresh(false)
 
             setComments(data?.data)
         }
         getComments()
-    }, [id])
+    }, [id, refresh])
 
     const handleCloseModal = () => {
         setIsReportModalOpen(false)
@@ -209,12 +214,12 @@ export const ShortByID = () => {
                 </ReadBookCardContainer>
             </BookExtrasSection>
             {
-                comment ? <></> : <Comments id={id} type={2} />
+                comment ? <></> : <Comments reload={setRefresh} id={id} comment={book?.comentarios?.quantidade_comentarios || 0} type={2} />
             }
             <CommentSection>
                 <CommentsContainer>
                     {
-                        comments.map(item => <CommentsCard key={item.id} type={2} comment={item} />)
+                        comments.map(item => <CommentsCard reload={setRefresh} key={item.id} type={2} comment={item} />)
                     }
                 </CommentsContainer>
             </CommentSection>

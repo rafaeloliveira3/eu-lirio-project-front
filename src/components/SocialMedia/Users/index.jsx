@@ -67,7 +67,6 @@ export const Users = () => {
                     setFollowers(false)
                 }
             })
-            console.log(data?.data)
             if (data?.data)
                 setFollowers(data?.data)
         }
