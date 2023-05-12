@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useOutletContext, useParams } from "react-router-dom"
 import { defaultUrl } from "../../../helpers/url"
-import { CardsContainer, Loader, LoaderContainer } from "../styles"
+import { CardsContainer, Loader, LoaderContainer, FilterContainer } from "../styles"
 import { AuthorCard } from "../AuthorCard/Card"
 
 export const AuthorsSearch = () => {
@@ -14,6 +14,9 @@ export const AuthorsSearch = () => {
     const [author, setAuthor] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
+
+
+    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)    
 
     useEffect(() => {
         setError(false)
@@ -55,9 +58,14 @@ export const AuthorsSearch = () => {
     }
     else {
         return (
+            <>
+            <FilterContainer>
+                <h2 onClick={() => setIsFilterModalOpen(true)}>Filtros <i className="fa-solid fa-angle-down"></i></h2>
+            </FilterContainer>
             <CardsContainer>
                 {author?.map((item) => <AuthorCard url="short-storie" key={item.id} id={item.id} author={item} />)}
             </CardsContainer>
+            </>
         )
     }
 }

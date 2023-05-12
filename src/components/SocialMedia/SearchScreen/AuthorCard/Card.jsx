@@ -18,13 +18,19 @@ export const AuthorCard = (props) => {
     const navigate = useNavigate()
     const [author, setAuthor] = useState({})
     const [followStatus, setFollowStatus] = useState(false)
+    const [canFollow, setCanFollow] = useState(true)
     const userId = localStorage.getItem('id')
 
     useEffect(() => {
         const getAuthor = async () => {
             const data = await axios.get(`${defaultUrl}user/id/?searchUser=${props.id}&currentUser=${userId}`)
             .catch(err => console.log(err))
-        
+
+            if (data?.data.id === userId)
+                setCanFollow(false)
+            if (data?.data?.seguindo)
+                setFollowStatus(true)
+
             setAuthor(data?.data)
         }
         getAuthor()
@@ -60,7 +66,12 @@ export const AuthorCard = (props) => {
                         author?.generos?.map(item => <Genres key={item.id_genero} name={item.nome_genero} />)
                     }
                 </div>
-                <button onClick={handleFollow} className="follow-button">{followStatus ? "SEGUINDO" : "SEGUIR"}</button>
+                <div className="follow">
+                    {
+                        author?.te_segue ? <p>Segue Você</p> : <></>
+                    }
+                    <button onClick={handleFollow} disabled={!canFollow} className="follow-button">{followStatus ? "SEGUINDO" : "SEGUIR"}</button>
+                </div>
             </div>
         </ItemContainer>
     )

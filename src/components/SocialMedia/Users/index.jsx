@@ -8,6 +8,7 @@ import { useParams, useOutletContext } from "react-router-dom"
 import { Navigate } from 'react-router-dom'
 import Modal from "react-modal"
 import { UserCard } from "./UserCards/Card"
+import { kFormatter } from "../../helpers/formatters"
 
 export const Users = () => {
 
@@ -43,12 +44,13 @@ export const Users = () => {
                 setFollow(true)
             else
                 setFollow(false)
+
             setUser(data?.data)
             setUserTags(data?.data.tags)
             setUserGenres(data?.data.generos)
         }
         fetchUser()
-    }, [id])
+    }, [id, follow])
     useEffect(() => {
         const fetchFollowing = async () => {
             const data = await axios.get(`${defaultUrl}following/user-id/?userId=${id}&currentUser=${userId}`)
@@ -103,18 +105,23 @@ export const Users = () => {
             <ProfileHeader>
                 <div className="user">
                     <img src={user?.foto} alt="" />
-                    <button onClick={handleFollow}>
+                    <div className="follow">
                         {
-                            follow ? "SEGUINDO" : "SEGUIR" 
+                            user?.te_segue ? <p>Segue Você</p> : <></> 
                         }
-                    </button>
+                        <button onClick={handleFollow}>
+                            {
+                                follow ? "SEGUINDO" : "SEGUIR" 
+                            }
+                        </button>
+                    </div>
                 </div>
                 <div className="edit">
                     <span>
                         <h2>{user?.nome}</h2>
                         <h3>@{user?.user_name}</h3>
                     </span>
-                    <Info obras={182} seguindo={570} seguindoModal={setIsFollowingModalOpen} seguidores={41 + ' K'} seguidoresModal={setIsFollowersModalOpen} />
+                    <Info obras={kFormatter(parseInt(user?.obras?.total_obras || 0))} seguindo={kFormatter(parseInt(user?.qtde_seguindo?.quantidade_seguindo || 0))} seguindoModal={setIsFollowingModalOpen} seguidores={kFormatter(parseInt(user?.seguidores?.quantidade_seguidores || 0))} seguidoresModal={setIsFollowersModalOpen} />
                 </div>
             </ProfileHeader>
             <UserMain>

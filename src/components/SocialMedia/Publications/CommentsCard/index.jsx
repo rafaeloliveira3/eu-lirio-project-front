@@ -83,7 +83,7 @@ export const CommentsCard = (props) => {
 
         if (props.type === 1) url = `delete-announcement-comment/id/?commentId=${comment?.id}&announcementId=${comment?.id_anuncio}`
         else url = `delete-short-storie-comment/id/?commentId=${comment?.id}&shortStorieId=${comment?.id_historia_curta}`
-
+        
         await axios.delete(`${defaultUrl}${url}`)
 
        props.reload(true)

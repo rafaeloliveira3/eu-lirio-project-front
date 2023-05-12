@@ -74,6 +74,7 @@ export const Book = () => {
             setRefresh(false)
             setTheme(buyButtonVisible)
 
+
             if (data?.data[0].curtido)
                 setLiked(true)
             if (data?.data[0].favorito)
@@ -90,15 +91,13 @@ export const Book = () => {
             }
             if (data?.data[0].mobi === 'null' || data?.data[0].mobi === 'undefined')
                 setBookFormats(["PDF", "ePUB", false])
-
-            if (data?.data[0]?.usuario[0]?.id_usuario === userId)
+            
+            if (data?.data[0]?.usuario[0]?.id_usuario === userId || !data?.data[0]?.comprado || data?.data[0]?.comentado) {
                 setComment(true)
+            }
             else 
                 setComment(false)
-            if (!data?.data[0]?.comprado)
-                setComment(true)
-            else 
-                setComment(false)
+                
             
             setRating(data?.data[0]?.avaliacao?.toFixed(1) || 0)
             setDate(dateFormatter(data?.data[0]?.data))
@@ -141,7 +140,7 @@ export const Book = () => {
         setIsReportModalOpen(true)
     }
 
-    const handleLike = async (e) => {
+    const handleLike = async () => {
         const clickStatus = !liked
         setLiked(clickStatus)
         if (clickStatus) {

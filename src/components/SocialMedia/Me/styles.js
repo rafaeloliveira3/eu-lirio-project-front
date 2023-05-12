@@ -23,6 +23,12 @@ const ProfileHeader = styled.header`
         justify-content: space-between;
         align-items: center;
         gap: 1rem;
+        .follow {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+        }
         img {
             height: 10rem;
             width: 10rem;

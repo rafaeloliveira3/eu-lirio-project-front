@@ -57,7 +57,7 @@ const SelectContainer = styled.div`
         font-family: 'League Spartan', sans-serif;
         font-size: 1rem;
         border: 1px solid var(--font-color);
-        width: 8rem;
+        width: 10rem;
         padding: .5rem .2rem;
         border-radius: 10px;
     }

@@ -56,7 +56,7 @@ export const SearchScreen = () => {
                     <li>
                         <Link onClick={handleLinkChange} id={1} to={`/app/search/shorts/${prompt}`} >
                             <i className="fa-solid fa-align-center"></i>
-                            Curtas
+                            Pequenas Histórias
                         </Link>
                         <Indicator theme={indicatorSetter[1] ? indicatorActive : indicatorDesactivated }></Indicator>
                     </li>

@@ -42,7 +42,7 @@ export const Readed = () => {
                     <li>
                         <div onClick={handleLinkChange} className="indicator" >
                             <i className="fa-solid fa-align-center"></i>
-                            Curtas
+                            Pequenas Histórias
                         </div>
                         <Indicator theme={indicatorSetter ? indicatorActive : indicatorDesactivated }></Indicator>
                     </li>

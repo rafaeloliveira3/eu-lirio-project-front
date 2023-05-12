@@ -71,6 +71,9 @@ export const UserCard = (props) => {
             </div>
             <div className="user-extras">
                 <button disabled={blockFollow} onClick={handleFollow} className="follow-button">{followStatus ? "SEGUINDO" : "SEGUIR"}</button>
+                {
+                    author?.te_segue ? <p>Segue Você</p> : <></> 
+                }
             </div>
         </ItemContainer>
     )

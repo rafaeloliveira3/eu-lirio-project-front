@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { useOutletContext, useParams } from "react-router-dom"
 import { defaultUrl } from "../../../helpers/url"
 import { Card } from "../../Feed/Cards/Card"
-import { CardsContainer, Loader, LoaderContainer } from "../styles"
+import { CardsContainer, Loader, LoaderContainer, FilterContainer  } from "../styles"
 
 export const ShortsSearch = () => {
 
@@ -15,6 +15,7 @@ export const ShortsSearch = () => {
     const [announcements, setAnnouncements] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
+    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
 
     useEffect(() => {
         setError(false)
@@ -57,9 +58,14 @@ export const ShortsSearch = () => {
     }
     else {
         return (
+            <>
+            <FilterContainer>
+                    <h2 onClick={() => setIsFilterModalOpen(true)}>Filtros <i className="fa-solid fa-angle-down"></i></h2>
+            </FilterContainer>
             <CardsContainer>
                 {announcements?.map((item) => <Card url="short-storie" key={item.id} id={item.id} anuncio={item} type={1} />)}
             </CardsContainer>
+            </>
         )
     }
 }

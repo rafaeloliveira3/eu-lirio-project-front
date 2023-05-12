@@ -21,6 +21,7 @@ const Container = styled.div`
 
 const TagContainer = styled.div`
     display: flex;
+    justify-content: center;
     gap: 1rem;
     flex-wrap: wrap;
     span {
@@ -32,6 +33,7 @@ const TagContainer = styled.div`
 `
 const GenreContainer = styled.div`
     display: flex;
+    justify-content: center;
     gap: 1rem;
     flex-wrap: wrap;
     span {

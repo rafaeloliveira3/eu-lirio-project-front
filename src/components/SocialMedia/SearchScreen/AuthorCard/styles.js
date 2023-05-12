@@ -58,6 +58,11 @@ const ItemContainer = styled.div`
                 border-radius: 20px;
             }
         }
+        .follow {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
         .follow-button {
             font-weight: 600;
             background-color: ${props => props.theme.bgColor};

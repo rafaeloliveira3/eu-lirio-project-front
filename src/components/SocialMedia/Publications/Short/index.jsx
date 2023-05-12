@@ -48,19 +48,21 @@ export const ShortByID = () => {
             .catch(err => console.log(err))
 
             setRefresh(false)
+            setComment(false)
 
-            
-            if (data?.data[0].curtido) {
+            if (data?.data[0].curtido)
                 setLiked(true)
-            }
-            if (data?.data[0].favorito) {
+            if (data?.data[0].favorito)
                 setFavorited(true)
-            }
-            if (data?.data[0].lido) {
+            if (data?.data[0].lido)
                 setRead(true)
+
+            if (data?.data[0]?.usuario[0]?.id_usuario === userId || data?.data[0]?.comentado) {
+                setComment(true)
             }
-            if (data?.data[0]?.usuario[0]?.id_usuario === userId)
-            setComment(true)
+            else 
+                setComment(false)
+                    
             
             setDate(dateFormatter(data?.data[0]?.data))
             setRating(data?.data[0]?.avaliacao?.toFixed(1) || 0)
@@ -86,7 +88,7 @@ export const ShortByID = () => {
         setIsReportModalOpen(true)
     }
 
-    const handleLike = async (e) => {
+    const handleLike = async () => {
         const status = !liked
         setLiked(!liked)
         if (status) {
@@ -118,7 +120,7 @@ export const ShortByID = () => {
             })
         }
     }
-    const handleRead = async (e) => {
+    const handleRead = async () => {
         const status = !read
         setRead(!read)
         if (status) {

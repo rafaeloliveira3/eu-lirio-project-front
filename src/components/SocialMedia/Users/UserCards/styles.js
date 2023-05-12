@@ -44,7 +44,8 @@ const ItemContainer = styled.div`
     }
     .user-extras {
         display: flex;
-        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
         font-family: 'Montserrat', sans-serif;
         .follow-button {
             font-weight: 600;

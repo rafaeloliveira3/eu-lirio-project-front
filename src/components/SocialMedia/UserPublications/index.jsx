@@ -64,7 +64,7 @@ export const UserPublications = () => {
             <SelectContainer>
                 <select defaultValue="1" onChange={handleSelectChange}>
                     <option value="1">Livros</option>
-                    <option value="2">Curtas</option>
+                    <option value="2">Pequenas Histórias</option>
                 </select>
             </SelectContainer>
             <CardsContainer>
