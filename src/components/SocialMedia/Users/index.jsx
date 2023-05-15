@@ -26,6 +26,7 @@ export const Users = () => {
     const [userGenres, setUserGenres] = useState([])
 
     const [follow, setFollow] = useState(false)
+    const [isFollowing, setIsFollowing] = useState(false)
 
     const [following, setFollowing] = useState([])
     const [followers, setFollowers] = useState([])
@@ -44,6 +45,11 @@ export const Users = () => {
                 setFollow(true)
             else
                 setFollow(false)
+
+            if (data?.data?.te_segue)
+                setIsFollowing(true)
+            else 
+                setIsFollowing(false)
 
             setUser(data?.data)
             setUserTags(data?.data.tags)

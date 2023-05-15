@@ -3,6 +3,7 @@ import { useParams, useOutletContext, Link } from "react-router-dom"
 import axios from "axios"
 import { defaultUrl } from "../../../helpers/url"
 import { BookAndUserInfo, BookAndUserInfoContainer, BookContainer, BookData, BookExtrasSection, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, Container, ImageContainer, RatingContainer, ReadBookCardContainer, ReadButtonsContainer, ReportContainer, StatsContainer, SynopsisContainer, TopSection } from "./styles"
+import { ReportForm } from "../Book/styles"
 import { Tags } from "../../Tags"
 import { Rating } from "react-simple-star-rating"
 import { StatsCard } from "../utils/StatsCard"
@@ -13,6 +14,8 @@ import { dateFormatter, kFormatter } from "../../../helpers/formatters"
 import { Comments } from "../Comments"
 import { CommentsContainer, CommentSection } from "../Book/styles"
 import { CommentsCard } from "../CommentsCard"
+import { Complaints } from "../utils/Complaints"
+import { MESSAGE_SUCCESS } from "../../../helpers/toasts"
 
 export const ShortByID = () => {
     const { id } = useParams()
@@ -24,8 +27,14 @@ export const ShortByID = () => {
     const [favorited, setFavorited] = useState(false)
     const [read, setRead] = useState(false)
 
+    const [complaintTypes, setComplaintTypes] = useState([])
+    const [complaintReason, setComplaintReason] = useState([])
+    const [complaintDescription, setComplaintDescription] = useState("")
+
     const [reportModal, setReportModal] = useState(false)
     const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+
+    const [editButtonStatus, setEditButtonStatus] = useState(false)
 
     const [comment, setComment] = useState(false)
 
@@ -57,6 +66,9 @@ export const ShortByID = () => {
             if (data?.data[0].lido)
                 setRead(true)
 
+            if (data?.data[0]?.usuario[0]?.id_usuario === userId)
+                setEditButtonStatus(true)
+
             if (data?.data[0]?.usuario[0]?.id_usuario === userId || data?.data[0]?.comentado) {
                 setComment(true)
             }
@@ -72,6 +84,12 @@ export const ShortByID = () => {
     }, [id, userId, liked, favorited, read, refresh])
 
     useEffect(() => {
+        const getComplaints = async () => {
+            const data = await axios.get(`${defaultUrl}complaint-types`)
+            setRefresh(false)
+
+            setComplaintTypes(data?.data)
+        }
         const getComments = async () => {
             const data = await axios.get(`${defaultUrl}short-storie-comments/id/?shortStorieId=${id}&userId=${userId}`)
             setRefresh(false)
@@ -79,7 +97,8 @@ export const ShortByID = () => {
             setComments(data?.data)
         }
         getComments()
-    }, [id, refresh])
+        getComplaints()
+    }, [id, refresh, userId])
 
     const handleCloseModal = () => {
         setIsReportModalOpen(false)
@@ -134,6 +153,37 @@ export const ShortByID = () => {
                 id_historia_curta : id,
                 id_usuario : userId
             })
+        }
+    }
+
+    const handleComplaint = async (e) => {
+        e.preventDefault()
+
+        const complaintType = complaintReason.map(item => {
+            return {
+                id_tipo_denuncia : item
+            }
+        })
+        await axios.post(`${defaultUrl}report-short-storie/${userId}`, {
+            descricao : complaintDescription,
+            id_historia_curta : id,
+            tipo : complaintType
+        })
+        setIsReportModalOpen(false)
+        MESSAGE_SUCCESS.register("Denúncia")
+    }
+    const handleComplaintId = (e) => {
+        const id = +e.currentTarget.id.split('-')[0]
+        if (e.currentTarget.checked) {
+            setComplaintReason([...complaintReason, id])
+        }
+        else {
+            let complaintIndex = complaintReason.indexOf(id)
+            if (complaintIndex !== -1) {
+                setComplaintReason(complaintReason.filter((item, index) => {
+                    return complaintIndex !== index
+                }))
+            }
         }
     }
 
@@ -212,6 +262,9 @@ export const ShortByID = () => {
                 <ReadBookCardContainer>
                     <ReadButtonsContainer>
                         <Link to={`/short/read/${id}`}><button>LER</button></Link>
+                        { 
+                            editButtonStatus ? <Link to={`/app/short/edit/${id}`}><button>EDITAR</button></Link> : <></>
+                        }
                     </ReadButtonsContainer>
                 </ReadBookCardContainer>
             </BookExtrasSection>
@@ -228,27 +281,30 @@ export const ShortByID = () => {
             <Modal
                 isOpen={isReportModalOpen}
                 onRequestClose={handleCloseModal}
-                overlayClassName="delete-modal-overlay"
-                className="delete-modal-content"
+                overlayClassName="report-modal-overlay"
+                className="report-modal-content"
             >
                 <ModalContentContainer>
                     <i className="fa-solid fa-triangle-exclamation"></i>
                     <h2>Reportar Obra</h2>
-                    <form onSubmit={
-                        (e) => {
-                            e.preventDefault()
-                        }
-                    }>
-                        <input type="radio" name="reason" id="" required/>
-                        <input type="radio" name="reason" id="" />
-                        <input type="radio" name="reason" id="" />
-                        <input type="radio" name="reason" id="" />
-                        <input type="radio" name="reason" id="" />
-                        <input type="radio" name="reason" id="" />
-
-                        <input required type="text" placeholder="Motivo da Denúncia"/>
-                    </form> 
-                </ModalContentContainer>
+                    <ReportForm onSubmit={handleComplaint}>
+                        <div>
+                            {
+                                complaintTypes?.map(item => <Complaints key={item.id} id={item.id} onChange={handleComplaintId} name={item.tipo}/>)
+                            }
+                        </div>
+                        <textarea 
+                            value={complaintDescription} 
+                            onChange={e => setComplaintDescription(e.currentTarget.value)} 
+                            required 
+                            placeholder="Motivo da Denúncia"
+                        />
+                        <div>
+                            <button onClick={handleCloseModal}>Cancelar</button>
+                            <button className="submit" type="submit">Enviar</button>
+                        </div>
+                    </ReportForm> 
+            </ModalContentContainer>
             </Modal>
         </Container>
     )

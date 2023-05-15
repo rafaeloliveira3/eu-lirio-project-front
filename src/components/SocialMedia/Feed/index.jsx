@@ -54,7 +54,7 @@ export const Feed = () => {
                         <Indicator theme={indicatorSetter[1] ? indicatorActive : indicatorDesactivated }></Indicator>
                     </li>
                     <li>
-                        <Link onClick={handleLinkChange} id={2}>
+                        <Link onClick={handleLinkChange} id={2} to="/app/feed/recomendations">
                             <i className="fa-solid fa-book-open-reader"></i>
                             Recomendações
                         </Link>

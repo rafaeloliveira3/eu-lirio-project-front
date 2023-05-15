@@ -31,6 +31,8 @@ import { AnnouncementsSearch } from "./components/SocialMedia/SearchScreen/Annou
 import { ShortsSearch } from "./components/SocialMedia/SearchScreen/ShortsSearch";
 import { AuthorsSearch } from "./components/SocialMedia/SearchScreen/AuthorsSearch";
 import { ReadShort } from "./components/ReadShort";
+import { Recomendations } from "./components/SocialMedia/Feed/Recomendations";
+import { Library } from "./components/SocialMedia/Library";
  
 Modal.setAppElement('#root')
 
@@ -51,12 +53,14 @@ export function App() {
               <Route path="feed/" element={<Feed />}>
                 <Route path="ebooks" element={<Ebooks />}/>
                 <Route path="shorts" element={<Shorts />}/>
+                <Route path="recomendations" element={<Recomendations />}/>
                 <Route path="" element={<Navigate to="/app/feed/ebooks" />}/>
               </Route>
               <Route path="me" element={<Me />}/>
               <Route path="edit" element={<Edit />} />
               <Route path="profile/:id" element={<Users />} />
               <Route path="my-publications" element={<UserPublications />} />
+              <Route path="library" element={<Library />}/>
               <Route path="new/" element={<NewPost />}> 
                 <Route path="choose" element={<Choose />}/>
                 <Route path="short" element={<Short />}/>

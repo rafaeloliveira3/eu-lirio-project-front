@@ -80,6 +80,30 @@ export const GlobalStyle = createGlobalStyle`
         width: 30rem;
         border-radius: 10px;
     }
+    
+    .report-modal-overlay {
+        background-color: #00000055;
+
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        z-index: 98;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .report-modal-content {
+        background-color: #fff;
+        z-index: 99;
+        padding: 2rem;
+        height: max-content;
+        width: 50rem;
+        border-radius: 10px;
+    }
 
     .search-modal-overlay {
         background-color: #00000000;
@@ -150,8 +174,8 @@ export const GlobalStyle = createGlobalStyle`
         background-color: #fff;
         z-index: 99;
         padding: 2rem;
-        height: 30rem;
-        width: 50rem;
+        height: 35rem;
+        width: 55rem;
         border-radius: 10px;
     }
 

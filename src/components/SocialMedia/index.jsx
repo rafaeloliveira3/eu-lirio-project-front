@@ -230,7 +230,7 @@ const SocialMedia = () => {
                                     </Links>
                                 </li>
                                 <li>   
-                                    <Links onClick={handleLinkChange} theme={navBarStyleSetter[4] ? linkThemeActive : linkTheme} id="4">
+                                    <Links to="/app/library" onClick={handleLinkChange} theme={navBarStyleSetter[4] ? linkThemeActive : linkTheme} id="4">
                                         <i className="fa-solid fa-swatchbook"></i>
                                         <span>ESTANTE</span>
                                     </Links>

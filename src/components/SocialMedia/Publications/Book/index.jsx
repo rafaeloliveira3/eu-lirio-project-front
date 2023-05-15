@@ -2,12 +2,11 @@ import { useEffect, useState } from "react"
 import { useParams, useOutletContext, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { defaultUrl } from "../../../helpers/url"
-import { BookAndUserInfo, BookAndUserInfoContainer, BookContainer, BookData, BookExtrasSection, BookFormatsContainer, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, BuyBookCard, BuyBookCardContainer, BuyButtonsContainer, CommentsContainer, CommentSection, Container, ImageContainer, RatingContainer, RecomendationModalContentContainer, RecomendationModalForm, RecomendationModalImageContainer, ReportContainer, StatsContainer, SynopsisContainer, TopSection } from "./styles"
+import { BookAndUserInfo, BookAndUserInfoContainer, BookContainer, BookData, BookExtrasSection, BookFormatsContainer, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, BuyBookCard, BuyBookCardContainer, BuyButtonsContainer, CommentsContainer, CommentSection, Container, ImageContainer, RatingContainer, RecomendationModalContentContainer, RecomendationModalForm, RecomendationModalImageContainer, ReportContainer, ReportForm, StatsContainer, SynopsisContainer, TopSection, ModalContentContainer } from "./styles"
 import { Tags } from "../../Tags"
 import { Rating } from "react-simple-star-rating"
 import { StatsCard } from "../utils/StatsCard"
 import Modal from "react-modal"
-import { ModalContentContainer } from "../../Edit/styles"
 import { UserCard } from "../utils/UserCard"
 import { AvailableFormats } from "./AvailableFormats"
 import { dateFormatter, kFormatter } from "../../../helpers/formatters"
@@ -15,13 +14,8 @@ import { Comments } from "../Comments"
 import { Complaints } from "../utils/Complaints"
 import { RecomendationCard } from "../utils/RecomendationCard"
 import { CommentsCard } from "../CommentsCard"
-
-const buyButtonVisible = {
-    display : "block"
-}
-const buyButtonInvisible = {
-    display : "none"
-}
+import { MESSAGE_SUCCESS } from "../../../helpers/toasts"
+import Toggle from "react-styled-toggle"
 
 export const Book = () => {
 
@@ -38,7 +32,10 @@ export const Book = () => {
     const [favorited, setFavorited] = useState(false)
     const [read, setRead] = useState(false)
 
-    const [theme, setTheme] = useState(buyButtonVisible)
+    const [recomendationText, setRecomendationText] = useState("")
+    const [recomendationSpoiler, setRecomendationSpoiler] = useState(false)
+
+    const [directBuyDisplay, setDirectBuyDisplay] = useState(true)
     const [status, setStatus] = useState(false)
 
     const [complaintTypes, setComplaintTypes] = useState([])
@@ -52,7 +49,7 @@ export const Book = () => {
     const [bookFormats, setBookFormats] = useState(["PDF", "ePUB", "MOBI"])
     const [comment, setComment] = useState(false)
 
-    const [complaintReason, setComplaintReason] = useState(0)
+    const [complaintReason, setComplaintReason] = useState([])
     const [complaintDescription, setComplaintDescription] = useState("")
 
     const [refresh, setRefresh] = useState(false)
@@ -70,9 +67,9 @@ export const Book = () => {
         const getBookById = async () => {
             const data = await axios.get(`${defaultUrl}announcement/id/?announcementId=${id}&userId=${userId}`)
             .catch(err => console.log(err))
-
+            
             setRefresh(false)
-            setTheme(buyButtonVisible)
+            setDirectBuyDisplay(true)
 
 
             if (data?.data[0].curtido)
@@ -83,21 +80,25 @@ export const Book = () => {
                 setRead(true)
             if (data?.data[0].comprado) {
                 setStatus("DOWNLOAD EBOOK")
-                setTheme(buyButtonVisible)
+                setDirectBuyDisplay(true)
             }
             if (data?.data[0].carrinho) {
                 setStatus("VER NO CARRINHO")
-                setTheme(buyButtonInvisible)
+                setDirectBuyDisplay(false)
+            }
+            if (data?.data[0]?.usuario[0]?.id_usuario === userId ) {
+                setStatus("EDITAR PUBLICAÇÃO")
+                setDirectBuyDisplay(false)
             }
             if (data?.data[0].mobi === 'null' || data?.data[0].mobi === 'undefined')
                 setBookFormats(["PDF", "ePUB", false])
-            
+
             if (data?.data[0]?.usuario[0]?.id_usuario === userId || !data?.data[0]?.comprado || data?.data[0]?.comentado) {
                 setComment(true)
             }
             else 
                 setComment(false)
-                
+            
             
             setRating(data?.data[0]?.avaliacao?.toFixed(1) || 0)
             setDate(dateFormatter(data?.data[0]?.data))
@@ -189,21 +190,27 @@ export const Book = () => {
         }
     }
     const handleCart = async() => {
-        if (status !== "DOWNLOAD EBOOK") {
-            if (status !== "VER NO CARRINHO") {
-                setStatus("VER NO CARRINHO")
-                await axios.post(`${defaultUrl}new-cart-item/user-id/${userId}`, {
-                    id_anuncio : [{
-                        id : id
-                    }]
-                })
+        if (status !== "EDITAR PUBLICAÇÃO") {
+            if (status !== "DOWNLOAD EBOOK") {
+                if (status !== "VER NO CARRINHO") {
+                    setStatus("VER NO CARRINHO")
+                    await axios.post(`${defaultUrl}new-cart-item/user-id/${userId}`, {
+                        id_anuncio : [{
+                            id : id
+                        }]
+                    })
+                    setDirectBuyDisplay(false)
+                }
+                else {
+                    navigate('/app/cart')
+                }
             }
             else {
-                navigate('/app/cart')
+                window.open(book?.epub, '_blank').focus()
             }
         }
         else {
-            window.open(book?.epub, '_blank').focus()
+            navigate(`/app/book/edit/${id}`)
         }
     }
     const handleDirectBuy = async () => {
@@ -220,16 +227,48 @@ export const Book = () => {
     }
     const handleComplaint = async (e) => {
         e.preventDefault()
-        await axios.post(`${defaultUrl}report-announcement`, {
+
+        const complaintType = complaintReason.map(item => {
+            return {
+                id_tipo_denuncia : item
+            }
+        })
+        await axios.post(`${defaultUrl}report-announcement/${userId}`, {
             descricao : complaintDescription,
             id_anuncio : id,
-            tipo : [
-                {
-                    id_tipo_denuncia : complaintReason
-                }
-            ]
+            tipo : complaintType
         })
+        setIsReportModalOpen(false)
+        MESSAGE_SUCCESS.register("Denúncia")
     }
+    const handleComplaintId = (e) => {
+        const id = +e.currentTarget.id.split('-')[0]
+        if (e.currentTarget.checked) {
+            setComplaintReason([...complaintReason, id])
+        }
+        else {
+            let complaintIndex = complaintReason.indexOf(id)
+            if (complaintIndex !== -1) {
+                setComplaintReason(complaintReason.filter((item, index) => {
+                    return complaintIndex !== index
+                }))
+            }
+        }
+    }
+    const handleRecomendation = async (e) => {
+        e.preventDefault()
+        await axios.post(`${defaultUrl}recommendation`, {
+            conteudo : recomendationText,
+            id_usuario : userId,
+            id_anuncio : id,
+            spoiler : `${recomendationSpoiler}`
+        })
+        setIsRecomendationModalOpen(false)
+        setRecomendationText("")
+        setRecomendationSpoiler(false)
+        MESSAGE_SUCCESS.register("Recomendação")
+    }
+
 
     return (
         <Container>
@@ -318,10 +357,12 @@ export const Book = () => {
                                 {bookFormats.map(item => item ? <AvailableFormats name={item} book={book} key={item}/> : null)}
                             </ul>
                         </BookFormatsContainer>
-                        <BuyButtonsContainer theme={theme} >
+                        <BuyButtonsContainer>
                             <h1>R$ {book?.preco?.toFixed(2)}</h1>
                             <button onClick={handleCart}>{status ? status : "ADICIONAR AO CARRINHO"}</button>
-                            <button onClick={handleDirectBuy} className="direct-buy-button">{status ? "RECOMENDAR" : "COMPRAR"}</button>
+                            {
+                                directBuyDisplay ? <button onClick={handleDirectBuy} className="direct-buy-button">{status ? "RECOMENDAR" : "COMPRAR"}</button> : <></>
+                            }
                         </BuyButtonsContainer>
                     </BuyBookCard>
                 </BuyBookCardContainer>
@@ -339,27 +380,29 @@ export const Book = () => {
             <Modal
                 isOpen={isReportModalOpen}
                 onRequestClose={handleCloseModal}
-                overlayClassName="delete-modal-overlay"
-                className="delete-modal-content"
+                overlayClassName="report-modal-overlay"
+                className="report-modal-content"
             >
                 <ModalContentContainer>
                     <i className="fa-solid fa-triangle-exclamation"></i>
                     <h2>Reportar Obra</h2>
-                    <form onSubmit={handleComplaint}>
+                    <ReportForm onSubmit={handleComplaint}>
                         <div>
                             {
-                                complaintTypes?.map(item => <Complaints key={item.id} id={item.id} onChange={e => setComplaintReason(e.currentTarget.value)} name={item.tipo}/>)
+                                complaintTypes?.map(item => <Complaints key={item.id} id={item.id} onChange={handleComplaintId} name={item.tipo}/>)
                             }
                         </div>
-                        <input 
+                        <textarea 
                             value={complaintDescription} 
                             onChange={e => setComplaintDescription(e.currentTarget.value)} 
                             required 
-                            type="text" 
                             placeholder="Motivo da Denúncia"
                         />
-                        <button type="submit">Enviar</button>
-                    </form> 
+                        <div>
+                            <button onClick={handleCloseModal}>Cancelar</button>
+                            <button className="submit" type="submit">Enviar</button>
+                        </div>
+                    </ReportForm> 
                 </ModalContentContainer>
             </Modal>
             <Modal
@@ -372,17 +415,25 @@ export const Book = () => {
                     <RecomendationModalImageContainer>
                         <img src={user?.foto} alt="" />
                     </RecomendationModalImageContainer>
-                    <RecomendationModalForm>
+                    <RecomendationModalForm onSubmit={handleRecomendation}>
                         <div className="content">
                             <h2>RECOMENDAÇÃO</h2>
-                            <textarea placeholder="Recomende essa obra e ajude outras pessoas a descobrirem essa história" style={{width:"95%"}}></textarea>
+                            <textarea value={recomendationText} onChange={e => setRecomendationText(e.currentTarget.value)} placeholder="Recomende essa obra e ajude outras pessoas a descobrirem essa história"></textarea>
                         </div>
                         <div className="book-info">
                             <RecomendationCard book={book}/>
                         </div>
-                        <div className="submit-button">
-                            <button>A</button>
-                            <button>A</button>
+                        <div className="buttons-container">
+                            <Toggle
+                                labelRight="Spoiler"
+                                checked={recomendationSpoiler}
+                                onChange={() => {setRecomendationSpoiler(!recomendationSpoiler)}}
+                                backgroundColorChecked={"var(--purple-dark)"}
+                            ></Toggle>
+                            <div>
+                                <button onClick={() => setIsRecomendationModalOpen(false)}>Cancelar</button>
+                                <button>Publicar</button>
+                            </div>
                         </div>
                     </RecomendationModalForm>
                 </RecomendationModalContentContainer>

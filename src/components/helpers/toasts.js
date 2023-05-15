@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
 export const MESSAGE_SUCCESS = {
-    register : (subject) =>  { toast.success(`${subject} cadastrado com Sucesso!`)},
+    register : (subject) =>  { toast.success(`${subject} cadastrado(a) com Sucesso!`)},
     delete : (subject) => { toast.success(`${subject} deletado com Sucesso!`)},
     update : (subject) => { toast.success(`${subject} editado com Sucesso!`)}
 }

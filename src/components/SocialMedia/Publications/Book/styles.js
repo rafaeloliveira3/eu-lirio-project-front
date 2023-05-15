@@ -78,6 +78,7 @@ const BottomSection = styled.section`
 const TopSection = styled.section`
     width: 100%;
     justify-content: space-between;
+    position: relative;
     display: flex;
     .icon-container {
         display: flex;
@@ -121,8 +122,8 @@ const StatsContainer = styled.div`
 const ReportContainer = styled.div`
     display: ${(props) => props.display};
     position: absolute;
-    right: 4.5rem;
-    top: 10.3rem;
+    right: 0;
+    top: 2rem;
     span {
         i {
             color: #BD0020;
@@ -256,9 +257,6 @@ const BuyButtonsContainer = styled.div`
             color: #fff;
         }
     }
-    .direct-buy-button {
-        display: ${(props) => props.theme.display};
-    }
 `
 const RecomendationModalContentContainer = styled.div`
     display: flex;
@@ -294,10 +292,37 @@ const RecomendationModalForm = styled.form`
         gap: 1rem;
         textarea {
             font-family: 'Quicksand', sans-serif;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             resize: none;
             border: 0;
             height: 12rem;
+            width: 100%;
+            padding: .5rem;
+        }
+    }
+    .buttons-container {
+        width: 100%;
+        justify-content: space-between;
+        display: flex;
+        gap: 1rem;
+        div {
+            display: flex;
+            gap: 1rem;
+        }
+        button {
+            padding: .5rem 1rem;
+            font-size: 1.1rem;
+            background-color: rgba(56, 24, 113, 0.05);
+            color: var(--purple-dark);
+            border: 0;
+            border-top: 2px solid #0000;
+            border-bottom: 2px solid #0000;
+            border-radius: 10px;
+            font-weight: 600;
+            &:hover {
+                border-top-color: var(--purple-dark);
+                border-bottom-color: var(--purple-dark);
+            }
         }
     }
 `
@@ -315,6 +340,66 @@ const CommentsContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1rem;
+`
+
+const ModalContentContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    font-family: 'League Spartan', sans-serif;
+    gap: 1rem;
+    padding: 0 1rem;
+    text-align: center;
+    i {
+        font-size: 2rem;
+        color: #BD0020;
+    }
+    p {
+        text-align: center;
+        font-size: 1.2rem;
+    }
+`
+
+const ReportForm = styled.form`
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 90%;
+    div {
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        gap: .5rem;
+        span {
+            display: flex;
+            gap: .5rem;
+            justify-content: start;
+            align-items: center;
+            height: min-content;
+        }
+        button {
+            background-color: transparent;
+            cursor: pointer;
+            border: 0;
+            font-size: 1rem;
+        }
+        .submit {
+            color: #BD0020;
+        }
+    }
+    textarea {
+        font-family: 'League Spartan', sans-serif;
+        font-size: 1rem;
+        padding: 1rem;
+        resize: none;
+        height: 10rem;
+        width: 100%;
+        border-color: #1E1E1E22;
+        border-radius: 10px;
+    }
 `
 
 export {
@@ -342,5 +427,7 @@ export {
     RecomendationModalContentContainer,
     RecomendationModalForm,
     CommentsContainer,
-    CommentSection
+    CommentSection,
+    ReportForm,
+    ModalContentContainer
 }

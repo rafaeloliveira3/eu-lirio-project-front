@@ -78,6 +78,7 @@ const BottomSection = styled.section`
 `
 const TopSection = styled.section`
     width: 100%;
+    position: relative;
     justify-content: space-between;
     display: flex;
     .icon-container {
@@ -122,8 +123,8 @@ const StatsContainer = styled.div`
 const ReportContainer = styled.div`
     display: ${(props) => props.display};
     position: absolute;
-    right: 4.5rem;
-    top: 10.3rem;
+    right: 0;
+    top: 2rem;
     span {
         i {
             color: #BD0020;
