@@ -185,5 +185,5 @@ export {
     StatsCardValue,
     UserCardStyled,
     CheckboxStyled,
-    RecomendationCardContainer
+    RecomendationCardContainer,
 }
