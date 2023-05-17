@@ -33,6 +33,10 @@ import { AuthorsSearch } from "./components/SocialMedia/SearchScreen/AuthorsSear
 import { ReadShort } from "./components/ReadShort";
 import { Recomendations } from "./components/SocialMedia/Feed/Recomendations";
 import { Library } from "./components/SocialMedia/Library";
+import { UserBooks } from "./components/SocialMedia/Users/Posts/UserBooks";
+import { UserShorts } from "./components/SocialMedia/Users/Posts/UserShorts";
+import { UserRecomendations } from "./components/SocialMedia/Users/Posts/UserRecomendations";
+import { Redirect } from "./components/SocialMedia/Users/Redirect";
  
 Modal.setAppElement('#root')
 
@@ -56,9 +60,19 @@ export function App() {
                 <Route path="recomendations" element={<Recomendations />}/>
                 <Route path="" element={<Navigate to="/app/feed/ebooks" />}/>
               </Route>
-              <Route path="me" element={<Me />}/>
+              <Route path="me/" element={<Me />}>
+                <Route path="ebooks" element={<UserBooks />}/>
+                <Route path="shorts" element={<UserShorts />}/>
+                <Route path="recomendations" element={<UserRecomendations />}/>
+                <Route path="" element={<Navigate to="/app/me/ebooks" />}/>
+              </Route>
               <Route path="edit" element={<Edit />} />
-              <Route path="profile/:id" element={<Users />} />
+              <Route path="profile/:id/" element={<Users />}>
+                <Route path="ebooks" element={<UserBooks />}/>
+                <Route path="shorts" element={<UserShorts />}/>
+                <Route path="recomendations" element={<UserRecomendations />}/>
+                <Route path="" element={<Redirect />}/>
+              </Route>
               <Route path="my-publications" element={<UserPublications />} />
               <Route path="library" element={<Library />}/>
               <Route path="new/" element={<NewPost />}> 

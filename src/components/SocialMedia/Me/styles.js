@@ -18,6 +18,24 @@ const ProfileHeader = styled.header`
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
     z-index: 2;
 
+    .extras-container {
+        height: 50%;
+        align-items: flex-end;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        i {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            height: 1.2rem;
+            width: 1.2rem;
+        }
+    }
+
     .user {
         display: flex;
         justify-content: space-between;
@@ -87,6 +105,37 @@ const UserMain = styled.main`
             padding: 3rem 3vw;
             background-color: #FEFCF1;
             min-height: 10vh;
+        }
+    }
+    .posts {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+`
+
+const ReportContainer = styled.div`
+    display: ${(props) => props.display};
+    position: absolute;
+    right: 0;
+    top: 1.5rem;
+    z-index: 50;
+    span {
+        i {
+            color: #BD0020;
+        }
+        font-family: 'Quicksand', sans-serif;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        border-radius: 10px;
+        background-color: #fff;
+        padding: .6rem;
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.12);
+        &:hover {
+            background-color: #F5F5F5;
         }
     }
 `
@@ -189,5 +238,6 @@ export {
     FilterItems,
     MainContainer,
     ModalContainer,
-    UserCardsContainer
+    UserCardsContainer,
+    ReportContainer
 }

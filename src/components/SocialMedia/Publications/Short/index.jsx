@@ -123,6 +123,7 @@ export const ShortByID = () => {
             })
         }
     }
+
     const handleFavorite = async () => {
         const status = !favorited
         setFavorited(!favorited)

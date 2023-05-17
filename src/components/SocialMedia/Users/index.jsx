@@ -1,14 +1,17 @@
 import { defaultUrl } from "../../helpers/url"
 import { useState, useEffect } from "react"
 import axios from "axios"
-import { ProfileHeader, UserMain, Filters, FilterItems, MainContainer, TagsContainer, Spacer, ModalContainer, UserCardsContainer } from "../Me/styles"
+import { ProfileHeader, UserMain, Filters, FilterItems, MainContainer, TagsContainer, Spacer, ModalContainer, UserCardsContainer, ReportContainer } from "../Me/styles"
 import { Bookmarks } from "../Me/Bookmarks"
 import { Info } from "../Me/Info"
-import { useParams, useOutletContext } from "react-router-dom"
+import { useParams, useOutletContext, Outlet } from "react-router-dom"
 import { Navigate } from 'react-router-dom'
 import Modal from "react-modal"
 import { UserCard } from "./UserCards/Card"
 import { kFormatter } from "../../helpers/formatters"
+import { ModalContentContainer, ReportForm } from "../Publications/Book/styles"
+import { MESSAGE_SUCCESS } from "../../helpers/toasts"
+import { Complaints } from "../Publications/utils/Complaints"
 
 export const Users = () => {
 
@@ -26,13 +29,20 @@ export const Users = () => {
     const [userGenres, setUserGenres] = useState([])
 
     const [follow, setFollow] = useState(false)
-    const [isFollowing, setIsFollowing] = useState(false)
 
     const [following, setFollowing] = useState([])
     const [followers, setFollowers] = useState([])
 
+    const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+    const [reportModalOpener, setReportModalOpener] = useState(false)
+
     const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false)
     const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false)
+
+    const [complaintTypes, setComplaintTypes] = useState([])
+    const [complaintReason, setComplaintReason] = useState([])
+    const [complaintDescription, setComplaintDescription] = useState("")
+
 
     const userId = localStorage.getItem('id')
     
@@ -46,16 +56,16 @@ export const Users = () => {
             else
                 setFollow(false)
 
-            if (data?.data?.te_segue)
-                setIsFollowing(true)
-            else 
-                setIsFollowing(false)
-
             setUser(data?.data)
             setUserTags(data?.data.tags)
             setUserGenres(data?.data.generos)
         }
+        const getComplaints = async () => {
+            const data = await axios.get(`${defaultUrl}complaint-types`)
+            setComplaintTypes(data?.data)
+        }
         fetchUser()
+        getComplaints()
     }, [id, follow])
     useEffect(() => {
         const fetchFollowing = async () => {
@@ -101,6 +111,40 @@ export const Users = () => {
         }
     }
 
+    const handleComplaint = async (e) => {
+        e.preventDefault()
+
+        const complaintType = complaintReason.map(item => {
+            return {
+                id_tipo_denuncia : item
+            }
+        })
+        await axios.post(`${defaultUrl}report-user/${userId}`, {
+            descricao : complaintDescription,
+            id_usuario : id,
+            tipo : complaintType
+        })
+        setIsReportModalOpen(false)
+        MESSAGE_SUCCESS.register("Denúncia")
+    }
+    const handleComplaintId = (e) => {
+        const id = +e.currentTarget.id.split('-')[0]
+        if (e.currentTarget.checked) {
+            setComplaintReason([...complaintReason, id])
+        }
+        else {
+            let complaintIndex = complaintReason.indexOf(id)
+            if (complaintIndex !== -1) {
+                setComplaintReason(complaintReason.filter((item, index) => {
+                    return complaintIndex !== index
+                }))
+            }
+        }
+    }
+    const handleCloseModal = () => {
+        setIsReportModalOpen(false)
+    }
+
     if (id === userId) {
         return (
             <Navigate to='/app/me' />
@@ -111,15 +155,21 @@ export const Users = () => {
             <ProfileHeader>
                 <div className="user">
                     <img src={user?.foto} alt="" />
-                    <div className="follow">
-                        {
-                            user?.te_segue ? <p>Segue Você</p> : <></> 
-                        }
-                        <button onClick={handleFollow}>
+                    <div className="extras-container">
+                        <i className="fa-solid fa-ellipsis-vertical" onClick={() => setReportModalOpener(!reportModalOpener)}></i>
+                        <ReportContainer display={reportModalOpener ? "block" : "none"}>
+                            <span onClick={() => setIsReportModalOpen(true)}><i className="fa-solid fa-circle-exclamation"></i>Denunciar Usuário</span>
+                        </ReportContainer>
+                        <div className="follow">
                             {
-                                follow ? "SEGUINDO" : "SEGUIR" 
+                                user?.te_segue ? <p>Segue Você</p> : <></> 
                             }
-                        </button>
+                            <button onClick={handleFollow}>
+                                {
+                                    follow ? "SEGUINDO" : "SEGUIR" 
+                                }
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div className="edit">
@@ -140,19 +190,19 @@ export const Users = () => {
                     </TagsContainer>
                     <Spacer></Spacer>
                     <Filters>
-                        <FilterItems>
+                        <FilterItems to={`/app/profile/${id}/ebooks`}>
                             <i className="fa-solid fa-book"></i>Livros
                         </FilterItems>
-                        <FilterItems>
+                        <FilterItems to={`/app/profile/${id}/shorts`}>
                             <i className="fa-solid fa-align-center"></i>Pequenas Histórias
                         </FilterItems>
-                        <FilterItems>
+                        <FilterItems to={`/app/profile/${id}/recomendations`}>
                             <i className="fa-solid fa-book-open-reader"></i>Recomendações
                         </FilterItems>
                     </Filters>
                 </div>
                 <div className="posts">
-
+                    <Outlet context={ {user} }/>
                 </div>
             </UserMain>
             <Modal
@@ -190,6 +240,34 @@ export const Users = () => {
                         }
                     </UserCardsContainer>
                 </ModalContainer>
+            </Modal>
+            <Modal
+                isOpen={isReportModalOpen}
+                onRequestClose={handleCloseModal}
+                overlayClassName="report-modal-overlay"
+                className="report-modal-content"
+            >
+                <ModalContentContainer>
+                    <i className="fa-solid fa-triangle-exclamation"></i>
+                    <h2>Reportar Usuário</h2>
+                    <ReportForm onSubmit={handleComplaint}>
+                        <div>
+                            {
+                                complaintTypes?.map(item => <Complaints key={item.id} id={item.id} onChange={handleComplaintId} name={item.tipo}/>)
+                            }
+                        </div>
+                        <textarea 
+                            value={complaintDescription} 
+                            onChange={e => setComplaintDescription(e.currentTarget.value)} 
+                            required 
+                            placeholder="Motivo da Denúncia"
+                        />
+                        <div>
+                            <button onClick={handleCloseModal}>Cancelar</button>
+                            <button className="submit" type="submit">Enviar</button>
+                        </div>
+                    </ReportForm> 
+                </ModalContentContainer>
             </Modal>
         </MainContainer>
     )

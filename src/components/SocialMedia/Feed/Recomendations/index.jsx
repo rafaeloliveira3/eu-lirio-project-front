@@ -8,10 +8,12 @@ import { Container, Loader, LoaderContainer } from "./styles"
 export const Recomendations = () => {
     const [recomendations, setRecomendations] = useState([])
     const [load, setLoad] = useState(true)
+    const [reload, setReload] = useState(false)
 
     const user = localStorage.getItem("id")
 
     useEffect(() => {
+        setReload(false)
         const getRecomendations = async () => {
             const data = await axios.get(`${defaultUrl}recommendations/user-id/${user}`)
             .catch(err => console.log(err))
@@ -22,7 +24,7 @@ export const Recomendations = () => {
             }
         }
         getRecomendations()
-    }, [1])
+    }, [reload, user])
 
     if (load) {
         return (
@@ -33,7 +35,7 @@ export const Recomendations = () => {
     }
     return (
         <Container>
-            {recomendations?.map((item) => <RecomendationFeedCard key={item.id} id={item.id} />)}
+            {recomendations?.map((item) => <RecomendationFeedCard reload={setReload} key={item.id} id={item.id} />)}
         </Container>
     )
 }

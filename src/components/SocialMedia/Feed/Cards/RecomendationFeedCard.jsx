@@ -1,12 +1,15 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { defaultUrl } from "../../../helpers/url"
-import { BookCard, RecomendationContainer, SmallGenreContainer, TextContainer, UserContainer, InteractionsContainer } from "./styles"
+import { BookCard, RecomendationContainer, SmallGenreContainer, TextContainer, UserContainer, InteractionsContainer, DeleteContainer } from "./styles"
 import { useNavigate } from "react-router-dom"
 import ShowMoreText from "react-show-more-text"
 import { Genres } from "./Genres"
 import { Rating } from "react-simple-star-rating"
 import { kFormatter } from "../../../helpers/formatters"
+import { Overlay } from "../../Publications/CommentsCard/styles"
+import { ModalContentContainer } from "../../Edit/styles"
+import Modal from "react-modal"
 
 export const RecomendationFeedCard = (props) => {
     const navigate = useNavigate()
@@ -18,7 +21,13 @@ export const RecomendationFeedCard = (props) => {
     const [liked, setLiked] = useState(false)
     const [favorited, setFavorited] = useState(false)
 
+    const [canDelete, setCanDelete] = useState(false)
+    const [deleteModalOpener, setDeleteModalOpener] = useState(false)
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
     const [refresh, setRefresh] = useState(false)
+
+    const [spoiler, setSpoiler] = useState(false)
 
     const [book, setBook] = useState({usuario:[]})
 
@@ -32,12 +41,17 @@ export const RecomendationFeedCard = (props) => {
                 setLiked(true)
             if (data?.data[0].favorito)
                 setFavorited(true)
+            if(data?.data[0].spoiler)
+                setSpoiler(true)
+            if (data?.data[0]?.id_usuario === parseInt(userId))
+                setCanDelete(true)
 
             setRecomendation(data?.data[0])
                 
             const getUser = async (id) => {
                 const data = await axios.get(`${defaultUrl}user/id/?searchUser=${id}&currentUser=${userId}`)
                 .catch(err => console.log(err))
+
 
                 setUser(data?.data)
             }
@@ -54,14 +68,6 @@ export const RecomendationFeedCard = (props) => {
         
         getRecomendation()
     }, [props.id, liked, favorited, refresh])
-    
-    const handleClick = (e) => {
-        const id = e.currentTarget.id
-        if(props.type === 1)
-            navigate(`/app/book/${id}`)
-        else 
-            navigate(`/app/short/${id}`)
-    }
 
     const handleLike = async (e) => {
         e.stopPropagation()
@@ -94,15 +100,33 @@ export const RecomendationFeedCard = (props) => {
         setRefresh(true)
     }
 
+    const handleCloseModal = () => {
+        setIsDeleteModalOpen(false)
+    }
+
+    const handleDeleteRecomendation = async () => {
+        await axios.delete(`${defaultUrl}recommendation/id/${recomendation?.id}`)
+
+       props.reload(true)
+    }
+
     return (
         <RecomendationContainer>
-            <UserContainer onClick={() => navigate(`/app/profile/${user?.id}`)}>
-                <div className="image-container">
-                    <img src={user?.foto} alt="" />
+            <UserContainer>
+                <div className="user-content-container" onClick={() => navigate(`/app/profile/${user?.id}`)}>
+                    <div className="image-container">
+                        <img src={user?.foto} alt="" />
+                    </div>
+                    <div className="name-container">
+                        <h3>{user?.nome}</h3>
+                        <span>@{user?.user_name}</span>
+                    </div>
                 </div>
-                <div className="name-container">
-                    <h3>{user?.nome}</h3>
-                    <span>@{user?.user_name}</span>
+                <div className="delete-container">
+                    {canDelete ? <i onClick={() => setDeleteModalOpener(!deleteModalOpener)} className="fa-solid fa-ellipsis-vertical"></i> : <></>}
+                    {canDelete ? <DeleteContainer display={deleteModalOpener ? "block" : "none"}>
+                            <span onClick={() => setIsDeleteModalOpen(true)}><i className="fa-solid fa-trash"></i>Excluir Resenha</span>
+                        </DeleteContainer> : <></>}
                 </div>
             </UserContainer>
             <TextContainer>
@@ -117,6 +141,10 @@ export const RecomendationFeedCard = (props) => {
                         {recomendation?.conteudo}
                     </ShowMoreText>
                 </p>
+                <Overlay theme={spoiler ? {display : 'flex'} : {display : 'none'}} onClick={() => setSpoiler(!spoiler)}>
+                    <i className="fa-solid fa-eye-slash"></i>
+                    <span>SPOILER</span>
+                </Overlay>
             </TextContainer>
             <BookCard onClick={() => navigate(`/app/book/${book?.id}`)}>
                 <div className="image-container">
@@ -157,6 +185,22 @@ export const RecomendationFeedCard = (props) => {
                 <div className="separator"></div>
                 <button onClick={handleFavorite}>{kFormatter(recomendation?.favoritos?.quantidade_favoritos)} <i className={favorited ? "fa-solid fa-bookmark" : "fa-regular fa-bookmark"}></i></button>
             </InteractionsContainer>
+            <Modal
+                isOpen={isDeleteModalOpen}
+                onRequestClose={handleCloseModal}
+                overlayClassName="delete-modal-overlay"
+                className="delete-modal-content"
+            >
+                <ModalContentContainer>
+                    <i className="fa-solid fa-trash"></i>
+                    <h2>Deseja mesmo excluir essa resenha?</h2>
+                    <p>Essa ação é irreversível e resultará na exclusão completa desta resenha.</p>
+                    <span>
+                        <button className="cancelar" onClick={handleCloseModal}>Cancelar</button>
+                        <button className="apagar" onClick={handleDeleteRecomendation}>Apagar</button>
+                    </span>
+                </ModalContentContainer>
+            </Modal>
         </RecomendationContainer>
     )
 }

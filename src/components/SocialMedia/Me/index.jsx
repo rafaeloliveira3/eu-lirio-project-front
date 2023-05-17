@@ -1,6 +1,6 @@
 import { defaultUrl } from "../../helpers/url"
 import { useState, useEffect } from "react"
-import { Link, useOutletContext } from "react-router-dom"
+import { Link, Outlet, useOutletContext } from "react-router-dom"
 import axios from "axios"
 import { FilterItems, Filters, MainContainer, ProfileHeader, Spacer, TagsContainer, UserMain } from "./styles"
 import { Info } from "./Info"
@@ -65,8 +65,6 @@ export const Me = () => {
         const fetchUser = async () => {
             const data = await axios.get(`${defaultUrl}user/id/?searchUser=${userId}&currentUser=${userId}`)
             .catch((err) => { console.log(err) })
-
-            console.log(data?.data);
     
             setUser(data?.data)
             setUserTags(data?.data.tags)
@@ -102,19 +100,19 @@ export const Me = () => {
                     </TagsContainer>
                     <Spacer></Spacer>
                     <Filters>
-                        <FilterItems>
+                        <FilterItems to="/app/me/ebooks">
                             <i className="fa-solid fa-book"></i>Livros
                         </FilterItems>
-                        <FilterItems>
+                        <FilterItems to="/app/me/shorts">
                             <i className="fa-solid fa-align-center"></i>Pequenas Histórias
                         </FilterItems>
-                        <FilterItems>
+                        <FilterItems to="/app/me/recomendations">
                             <i className="fa-solid fa-book-open-reader"></i>Recomendações
                         </FilterItems>
                     </Filters>
                 </div>
                 <div className="posts">
-
+                    <Outlet context={{user}}/>
                 </div>
             </UserMain>
             <Modal

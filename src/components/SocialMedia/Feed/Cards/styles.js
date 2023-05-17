@@ -111,9 +111,14 @@ const UserContainer = styled.div`
     display: flex;
     align-items: center;
     font-family: 'League Spartan', sans-serif;
-    gap: 1rem;
-    cursor: pointer;
-    
+    justify-content: space-between;
+    position: relative;
+    .user-content-container {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
     .image-container {
         img {
             height: 4rem;
@@ -135,11 +140,48 @@ const UserContainer = styled.div`
             font-size: 1rem;
         }
     }
+
+    .delete-container {
+        height: 100%;
+        width: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        i {
+            cursor: pointer;
+        }
+    }
 ` 
+const DeleteContainer = styled.div`
+    display: ${(props) => props.display};
+    position: absolute;
+    right: 1rem;
+    top: 3rem;
+    z-index: 50;
+    span {
+        i {
+            color: #BD0020;
+        }
+        font-family: 'Quicksand', sans-serif;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        border-radius: 10px;
+        background-color: #fff;
+        padding: .6rem;
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.12);
+        &:hover {
+            background-color: #F5F5F5;
+        }
+    }
+`
 
 const TextContainer = styled.div`
     height: max-content;
     width: 100%;
+    min-height: 5rem;
+    position: relative;
     font-family: 'Quicksand', sans-serif;
     .show-more-button {
         font-family: 'League Spartan', sans-serif;
@@ -271,5 +313,6 @@ export {
     TextContainer,
     BookCard,
     SmallGenreContainer,
-    InteractionsContainer
+    InteractionsContainer,
+    DeleteContainer
 }

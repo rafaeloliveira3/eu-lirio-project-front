@@ -156,6 +156,7 @@ const SocialMedia = () => {
     const exitApp = () => {
         exitSuccess()
         setTimeout(() => { 
+            sessionStorage.setItem('index', '0')
             localStorage.removeItem('id')
             localStorage.removeItem('token')
             navigator('/login') 
