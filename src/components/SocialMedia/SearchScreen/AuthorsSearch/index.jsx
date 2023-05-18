@@ -15,9 +15,6 @@ export const AuthorsSearch = () => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
 
-
-    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)    
-
     useEffect(() => {
         setError(false)
         setLoading(true)
@@ -60,7 +57,6 @@ export const AuthorsSearch = () => {
         return (
             <>
             <FilterContainer>
-                <h2 onClick={() => setIsFilterModalOpen(true)}>Filtros <i className="fa-solid fa-angle-down"></i></h2>
             </FilterContainer>
             <CardsContainer>
                 {author?.map((item) => <AuthorCard url="short-storie" key={item.id} id={item.id} author={item} />)}

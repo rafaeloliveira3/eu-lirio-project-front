@@ -118,6 +118,101 @@ const FilterContainer = styled.div`
     }
 `
 
+const FilterModalContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    height: 90%;
+    font-family: 'Montserrat', sans-serif;
+    .buttons-container {
+        display: flex;
+        font-weight: 300;
+        border-bottom: 2px solid var(--yellow-medium);
+        button {
+            font-size: 1.1rem;
+            padding: 1rem;
+            border: 0;
+        }
+        .genre {
+            background-color: ${props => props.buttonTheme.background.genre};
+            border-top-left-radius: 10px;
+        }
+        .order {
+            background-color: ${props => props.buttonTheme.background.order};
+        }
+        .price {
+            background-color: ${props => props.buttonTheme.background.price};
+        }
+    }
+`
+const FilterContentContainer = styled.div`
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    .content-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .checkbox-container {
+        flex-wrap: wrap;
+        input {
+            border: 2px solid var(--yellow-medium);
+            &::before {
+                box-shadow: inset 1em 1em #fff;
+            }
+            &:checked{
+                background-color: var(--yellow-medium)
+            }
+        }
+        display: flex;
+        gap: 2rem;
+    }
+    .radio-container {
+        display: flex;
+        flex-direction: column;
+        span {
+            display: flex;
+            gap: 1rem;
+            input {
+                accent-color: var(--yellow-medium);
+            }
+        }
+    }
+    .price-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        span {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+            input {
+                width: 20%;
+                padding: .3rem .5rem;
+                border: 2px solid var(--yellow-medium);
+                border-radius: 10px;
+                font-size: 1rem;
+                background-color: transparent;
+                font-weight: 400;
+            }
+        }
+
+    }
+    .save-container {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        button {
+            padding: .5rem;
+            background-color: var(--purple-dark);
+            color: #fff;
+            border: 0;
+        }
+    }
+`
 
 
 export {
@@ -128,5 +223,7 @@ export {
     CardsContainer,
     LoaderContainer,
     Loader,
-    FilterContainer
+    FilterContainer,
+    FilterModalContent,
+    FilterContentContainer
 }

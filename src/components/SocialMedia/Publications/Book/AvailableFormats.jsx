@@ -13,11 +13,11 @@ export const AvailableFormats = (props) => {
                 const bytes = await getFileSize(pdf)
                 setSize(bytes)
             }
-            else if (props.name == "ePUB") {
+            else if (props.name === "ePUB") {
                 const bytes = await getFileSize(epub)
                 setSize(bytes)
             }
-            else if (props.name == "MOBI") {
+            else if (props.name === "MOBI") {
                 const bytes = await getFileSize(mobi)
                 setSize(bytes)
             }

@@ -402,6 +402,20 @@ const ReportForm = styled.form`
     }
 `
 
+const FormatsDownloadContainer = styled.div`
+    display: flex;
+    gap: 2rem;
+    button {
+        padding: .5rem;
+        background-color: transparent;
+        border: 0;
+        font-size: 1.3rem;
+        &:hover {
+            color: var(--purple-dark);
+        }
+    }
+`
+
 export {
     Container,
     BookInfoSection,
@@ -429,5 +443,6 @@ export {
     CommentsContainer,
     CommentSection,
     ReportForm,
-    ModalContentContainer
+    ModalContentContainer,
+    FormatsDownloadContainer
 }

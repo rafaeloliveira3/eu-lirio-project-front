@@ -3,8 +3,9 @@ import { useEffect, useState } from "react"
 import { useOutletContext, useParams } from "react-router-dom"
 import { defaultUrl } from "../../../helpers/url"
 import { Card } from "../../Feed/Cards/Card"
-import { CardsContainer, FilterContainer, Loader, LoaderContainer } from "../styles"
+import { CardsContainer, FilterContainer, FilterModalContent, Loader, LoaderContainer } from "../styles"
 import Modal from "react-modal"
+import { FiltersModal } from "../FiltersModal"
 
 export const AnnouncementsSearch = () => {
 
@@ -16,6 +17,9 @@ export const AnnouncementsSearch = () => {
     const [announcements, setAnnouncements] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
+    const [filterContentSetter, setFilterContentSetter] = useState(1)
+
+    const [filterParams, setFilterParams] = useState({})
 
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
 
@@ -42,6 +46,47 @@ export const AnnouncementsSearch = () => {
         }
         getBooksbyName()
     }, [prompt.prompt, userId])
+
+    useEffect(() => {
+        setPrompt(prompt.prompt)
+        const getBooksbyFilters = async () => {
+            const data = await axios.post(`${defaultUrl}filter-announcements/?minValue=${filterParams?.minPrice}&maxValue=${filterParams?.maxPrice ? `${filterParams?.maxPrice}` : ""}&bestRated=${filterParams?.avaliation ? "true" : ""}`, {
+                nome_genero : filterParams?.genres
+            })
+            .catch(err => {
+                if (err.code === 'ERR_NETWORK') {
+                    setError("Algo deu errado, tente novamente mais tarde")
+                }
+                else {
+                    setError("Nenhum item corresponde com sua busca!")
+                }
+            })
+            
+            setLoading(false)
+            setAnnouncements(data?.data)
+        }
+        if (filterParams !== {}) {
+            getBooksbyFilters()
+        }
+    }, [prompt.prompt, userId, filterParams])
+
+    const buttonTheme = {
+        background: {
+            genre : "#fff",
+            order : "#fff",
+            price : "#fff"
+        }
+    }
+
+    if (filterContentSetter === 1) {
+        buttonTheme.background.genre = "var(--yellow-medium)"
+    }
+    else if (filterContentSetter === 2) {
+        buttonTheme.background.order = "var(--yellow-medium)"
+    }
+    else if (filterContentSetter === 3) {
+        buttonTheme.background.price = "var(--yellow-medium)"
+    }
 
 
     if (error) {
@@ -73,7 +118,14 @@ export const AnnouncementsSearch = () => {
                 overlayClassName="filter-modal-overlay"
                 className="filter-modal-content"
             >
-                <h2>AUIHDUAIHUIAD</h2>
+                <FilterModalContent buttonTheme={buttonTheme}>
+                    <div className="buttons-container">
+                        <button className="genre" onClick={() => setFilterContentSetter(1)}>GÊNERO</button>
+                        <button className="order" onClick={() => setFilterContentSetter(2)}>ORDEM</button>
+                        <button className="price" onClick={() => setFilterContentSetter(3)}>PREÇO</button>
+                    </div>
+                    <FiltersModal filter={setFilterParams} content={filterContentSetter} />
+                </FilterModalContent>
             </Modal>
             </>
         )

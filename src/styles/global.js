@@ -190,7 +190,7 @@ export const GlobalStyle = createGlobalStyle`
 
         z-index: 99;
 
-        padding-top: 13.4rem;
+        padding-top: 13.3rem;
 
         display: flex;
         align-items: flex-start;
@@ -198,6 +198,7 @@ export const GlobalStyle = createGlobalStyle`
     }
     .filter-modal-content {
         background-color: #fff;
+        border-radius: 10px;
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
         z-index: 99;
         height: 20rem;

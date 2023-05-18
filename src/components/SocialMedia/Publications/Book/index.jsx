@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams, useOutletContext, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { defaultUrl } from "../../../helpers/url"
-import { BookAndUserInfo, BookAndUserInfoContainer, BookContainer, BookData, BookExtrasSection, BookFormatsContainer, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, BuyBookCard, BuyBookCardContainer, BuyButtonsContainer, CommentsContainer, CommentSection, Container, ImageContainer, RatingContainer, RecomendationModalContentContainer, RecomendationModalForm, RecomendationModalImageContainer, ReportContainer, ReportForm, StatsContainer, SynopsisContainer, TopSection, ModalContentContainer } from "./styles"
+import { BookAndUserInfo, BookAndUserInfoContainer, BookContainer, BookData, BookExtrasSection, BookFormatsContainer, BookInfoContainer, BookInfoSection, BookTitleAndTagsContainer, BottomSection, BuyBookCard, BuyBookCardContainer, BuyButtonsContainer, CommentsContainer, CommentSection, Container, ImageContainer, RatingContainer, RecomendationModalContentContainer, RecomendationModalForm, RecomendationModalImageContainer, ReportContainer, ReportForm, StatsContainer, SynopsisContainer, TopSection, ModalContentContainer, FormatsDownloadContainer } from "./styles"
 import { Tags } from "../../Tags"
 import { Rating } from "react-simple-star-rating"
 import { StatsCard } from "../utils/StatsCard"
@@ -16,6 +16,7 @@ import { RecomendationCard } from "../utils/RecomendationCard"
 import { CommentsCard } from "../CommentsCard"
 import { MESSAGE_SUCCESS } from "../../../helpers/toasts"
 import Toggle from "react-styled-toggle"
+import { FormatsDownload } from "./FormatsDownload"
 
 export const Book = () => {
 
@@ -43,8 +44,9 @@ export const Book = () => {
 
     const [reportModal, setReportModal] = useState(false)
     const [isReportModalOpen, setIsReportModalOpen] = useState(false)
-
+    
     const [isRecomendationModalOpen, setIsRecomendationModalOpen] = useState(false)
+    const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false)
 
     const [bookFormats, setBookFormats] = useState(["PDF", "ePUB", "MOBI"])
     const [comment, setComment] = useState(false)
@@ -136,6 +138,7 @@ export const Book = () => {
     const handleCloseModal = () => {
         setIsReportModalOpen(false)
         setIsRecomendationModalOpen(false)
+        setIsDownloadModalOpen(false)
     }
     const handleOpenModal = () => {
         setIsReportModalOpen(true)
@@ -206,7 +209,7 @@ export const Book = () => {
                 }
             }
             else {
-                window.open(book?.epub, '_blank').focus()
+                setIsDownloadModalOpen(true)
             }
         }
         else {
@@ -437,6 +440,23 @@ export const Book = () => {
                         </div>
                     </RecomendationModalForm>
                 </RecomendationModalContentContainer>
+            </Modal>
+            <Modal
+                isOpen={isDownloadModalOpen}
+                onRequestClose={handleCloseModal}
+                overlayClassName="report-modal-overlay"
+                className="report-modal-content"
+            >
+                <ModalContentContainer>
+                    <h1>
+                        Escolha um formato a ser baixado            
+                    </h1>
+                    <FormatsDownloadContainer>
+                        {
+                            bookFormats?.map(item => item ? <FormatsDownload name={item} book={book} key={item}/> : null)
+                        }
+                    </FormatsDownloadContainer>
+                </ModalContentContainer>
             </Modal>
         </Container>
     )
