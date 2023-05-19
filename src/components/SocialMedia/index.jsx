@@ -131,9 +131,9 @@ const SocialMedia = () => {
     useEffect(() => {
         const searchByTitle = async () => {
             if (searchPrompt) {
-                const data = await axios.get(`${defaultUrl}announcements/announcement-title/?announcementTitle=${searchPrompt}&userId=${userId}`)
-                .catch(err => setSearchError("Nenhum item Encontrado"))
-
+                const data = await axios.post(`${defaultUrl}filter-announcements/?minValue=&maxValue=&userId=${userId}&bestRated=&announcementTitle=${searchPrompt}`, {
+                    nome_genero : null
+                })
                 if (data?.data) {
                     setSearchError(false)
                 }

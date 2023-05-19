@@ -146,7 +146,7 @@ const FilterModalContent = styled.div`
     }
 `
 const FilterContentContainer = styled.div`
-    height: 100%;
+    min-height: 17rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -206,9 +206,11 @@ const FilterContentContainer = styled.div`
         display: flex;
         justify-content: flex-end;
         button {
-            padding: .5rem;
+            border-radius: 15px;
+            padding: .5rem 1rem;
             background-color: var(--purple-dark);
             color: #fff;
+            font-size: 1.1rem;
             border: 0;
         }
     }

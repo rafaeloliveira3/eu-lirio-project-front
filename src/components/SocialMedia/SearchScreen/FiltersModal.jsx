@@ -110,7 +110,7 @@ export const FiltersModal = (props) => {
                 </div> : <></> 
             }
             {
-                displayPrice ? <div className="content-container">
+                props.priceFilter ? displayPrice ? <div className="content-container">
                     <h1>Preço</h1>
                     <div className="price-container">
                         <span>
@@ -142,7 +142,7 @@ export const FiltersModal = (props) => {
                             />
                         </span>
                     </div>
-                </div> : <></> 
+                </div> : <></> : <></>
             }
             <div className="save-container">
                 <button onClick={jsonBuilder}><i className="fa-solid fa-check"></i></button>

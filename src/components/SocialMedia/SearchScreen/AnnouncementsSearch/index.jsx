@@ -30,8 +30,33 @@ export const AnnouncementsSearch = () => {
 
     useEffect(() => {
         setPrompt(prompt.prompt)
+        const getBooksbyFilters = async () => {
+            if (JSON.stringify(filterParams) !== '{}') {
+                const data = await axios.post(`${defaultUrl}filter-announcements/?minValue=${filterParams?.minPrice}&maxValue=${filterParams?.maxPrice ? `${filterParams?.maxPrice}` : ""}&userId=${userId}&bestRated=${filterParams?.avaliation ? "true" : ""}&announcementTitle=${prompt.prompt}`, {
+                    nome_genero : filterParams.genres
+                })
+                .catch(err => {
+                    if (err.code === 'ERR_NETWORK') {
+                        setError("Algo deu errado, tente novamente mais tarde")
+                    }
+                else {
+                        setError("Nenhum item corresponde com sua busca!")
+                    }
+                })
+                
+                setLoading(false)
+                setAnnouncements(data?.data)
+            }
+        }
+        getBooksbyFilters()
+    }, [prompt.prompt ,userId, filterParams])
+
+    useEffect(() => {
+        setPrompt(prompt.prompt)
         const getBooksbyName = async () => {
-            const data = await axios.get(`${defaultUrl}announcements/announcement-title/?announcementTitle=${prompt.prompt}&userId=${userId}`)
+            const data = await axios.post(`${defaultUrl}filter-announcements/?minValue=&maxValue=&userId=${userId}&bestRated=&announcementTitle=${prompt.prompt}`, {
+                nome_genero : null
+            })
             .catch(err => {
                 if (err.code === 'ERR_NETWORK') {
                     setError("Algo deu errado, tente novamente mais tarde")
@@ -47,28 +72,6 @@ export const AnnouncementsSearch = () => {
         getBooksbyName()
     }, [prompt.prompt, userId])
 
-    useEffect(() => {
-        setPrompt(prompt.prompt)
-        const getBooksbyFilters = async () => {
-            const data = await axios.post(`${defaultUrl}filter-announcements/?minValue=${filterParams?.minPrice}&maxValue=${filterParams?.maxPrice ? `${filterParams?.maxPrice}` : ""}&bestRated=${filterParams?.avaliation ? "true" : ""}`, {
-                nome_genero : filterParams?.genres
-            })
-            .catch(err => {
-                if (err.code === 'ERR_NETWORK') {
-                    setError("Algo deu errado, tente novamente mais tarde")
-                }
-                else {
-                    setError("Nenhum item corresponde com sua busca!")
-                }
-            })
-            
-            setLoading(false)
-            setAnnouncements(data?.data)
-        }
-        if (filterParams !== {}) {
-            getBooksbyFilters()
-        }
-    }, [prompt.prompt, userId, filterParams])
 
     const buttonTheme = {
         background: {
@@ -113,20 +116,20 @@ export const AnnouncementsSearch = () => {
                     {announcements?.map((item) => <Card url="announcement" key={item.id} id={item.id} anuncio={item} type={1} />)}
                 </CardsContainer>
                 <Modal
-                isOpen={isFilterModalOpen}
-                onRequestClose={() => setIsFilterModalOpen(false)}
-                overlayClassName="filter-modal-overlay"
-                className="filter-modal-content"
-            >
-                <FilterModalContent buttonTheme={buttonTheme}>
-                    <div className="buttons-container">
-                        <button className="genre" onClick={() => setFilterContentSetter(1)}>GÊNERO</button>
-                        <button className="order" onClick={() => setFilterContentSetter(2)}>ORDEM</button>
-                        <button className="price" onClick={() => setFilterContentSetter(3)}>PREÇO</button>
-                    </div>
-                    <FiltersModal filter={setFilterParams} content={filterContentSetter} />
-                </FilterModalContent>
-            </Modal>
+                    isOpen={isFilterModalOpen}
+                    onRequestClose={() => setIsFilterModalOpen(false)}
+                    overlayClassName="filter-modal-overlay"
+                    className="filter-modal-content"
+                >
+                    <FilterModalContent buttonTheme={buttonTheme}>
+                        <div className="buttons-container">
+                            <button className="genre" onClick={() => setFilterContentSetter(1)}>GÊNERO</button>
+                            <button className="order" onClick={() => setFilterContentSetter(2)}>ORDEM</button>
+                            <button className="price" onClick={() => setFilterContentSetter(3)}>PREÇO</button>
+                        </div>
+                        <FiltersModal priceFilter={true} filter={setFilterParams} content={filterContentSetter} />
+                    </FilterModalContent>
+                </Modal>
             </>
         )
     }
