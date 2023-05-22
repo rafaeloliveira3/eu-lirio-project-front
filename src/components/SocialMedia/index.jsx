@@ -45,7 +45,7 @@ const SocialMedia = () => {
     const navigator = useNavigate()
     const exitSuccess = () => toast.success('Usuário deslogado com Sucesso!')
 
-    const StyleBackup = new Array(8).fill(false)
+    const StyleBackup = new Array(7).fill(false)
     StyleBackup[parseInt(sessionStorage.getItem('index') || '0')] = true
     const [navBarStyleSetter, setNavBarStyleSetter] = useState(StyleBackup)
 
@@ -78,9 +78,7 @@ const SocialMedia = () => {
                 }
                 return true
             }
-            else {
-                return false
-            }
+            return false
         })
         setNavBarStyleSetter(newArr)
     }
@@ -246,12 +244,6 @@ const SocialMedia = () => {
                                     <Links to="/app/cart" onClick={handleLinkChange} theme={navBarStyleSetter[6] ? linkThemeActive : linkTheme} id="6">
                                         <i className="fa-solid fa-shopping-cart"></i>
                                         <span>CARRINHO</span>
-                                    </Links>
-                                </li>
-                                <li>
-                                    <Links onClick={handleLinkChange} theme={navBarStyleSetter[7] ? linkThemeActive : linkTheme} id="7">
-                                        <i className="fa-solid fa-crown"></i>
-                                        <span>LÍRIO PLUS</span>
                                     </Links>
                                 </li>
                             </ul>

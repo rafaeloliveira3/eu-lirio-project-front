@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 const Container = styled.div`
-    width: 45%;
+    width: min-content;
+    display: flex;
 `
 
 const Label = styled.label`
@@ -15,20 +16,21 @@ const Label = styled.label`
     align-items: center;
     padding: .5rem;
     gap: .2rem;
+    width: 13rem;
+    position: relative;
     border-radius: 20px;
     background-color: #fff;
     div {
         display: none;
-        margin-top: -.6rem;
-        margin-bottom: -.6rem;
-        margin-right: -.6rem;
-        height: 5vh;
+        position: absolute;
+        height: 2.2rem;
+        right: 0;
         border-top-right-radius: 20px;
         border-bottom-right-radius: 20px;
-        width: 3vw;
+        width: 2rem;
         color: #fff;
-
         align-items: center;
+
         i{
             font-size: 1.5rem;
             margin: auto;
@@ -38,17 +40,17 @@ const Label = styled.label`
         background-color: rgba(120, 34, 190, 0.1);
     }
 ` 
-
 const CheckBox = styled.input`
     appearance: none;
+    display: none;
 
     &:checked + ${Label} div{
         display: flex;
         background-color: var(--purple-medium)
     }
     &:checked + ${Label} {
+        padding-left: 1.5rem;
         justify-content: space-between;
-        padding-left: 1rem;
     }
 ` 
 

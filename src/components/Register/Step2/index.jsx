@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react"
 import { Link, useLocation, useNavigate, Navigate, useOutletContext } from "react-router-dom"
-import { defaultUrl } from "../../helpers/url"
 import { Form } from "../../utils/register"
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { TosContainer, BDate, Label, CheckBox, CheckBoxContainer } from "./styles"
-import axios from "axios";
 import { currentUser, userDelete } from "../../helpers/firebase";
-import { MESSAGE_ERROR, MESSAGE_SUCCESS } from "../../helpers/toasts";
+import { MESSAGE_ERROR } from "../../helpers/toasts";
 
 export const Step2 = () => {
     const { setUrl } = useOutletContext()
@@ -27,9 +25,7 @@ export const Step2 = () => {
 
     const [accepted, setAccepted] = useState(false)
 
-    let step1Result
-    let username
-    let email
+    const step1result = location?.state?.user
 
     const canSubmit = () => {
         if (location.state != null) {
@@ -78,52 +74,26 @@ export const Step2 = () => {
         }
         else {
             const registered = {
-                user_name: username,
-                email: email,
+                user_name: step1result?.username,
+                email: step1result?.email,
                 uid: user.uid,
                 nome: fullName,
                 data_nascimento: birth,
                 foto: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                 biografia : 'Nada Informado',
                 tags : fixed,
-                generos : [
-                    {
-                        id_genero: 1
-                    }
-                ]
             }
 
-            const res = await axios.post(`${defaultUrl}user`, registered)
-            .catch(async (err) => { 
-                console.log(err);
-                await userDelete()
-                if (err.request.status === 400) {
-                    MESSAGE_ERROR.default(err)
+            navigate('/register/step3', {
+                state : {
+                    user : registered
                 }
-                else {
-                    MESSAGE_ERROR.bdError()
-                }
-                setTimeout(() => { navigate('/register/step1') }, 2500)
             })
-
-            if (res.status === 201) {
-                MESSAGE_SUCCESS.register("Usuário")
-                setTimeout(() => { navigate('/login') }, 2500)
-            }
         }
     }
 
-
-    if (location.state != null) {
-        step1Result = location.state.user
-        username = step1Result.username
-        email = step1Result.email
-    }
-    else {
+    if (location.state === null) 
         return <Navigate to='/register/step1' />
-    }
-
-
     return (
         <>
         <Form onSubmit={handleStep2}>

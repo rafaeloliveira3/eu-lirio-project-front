@@ -37,6 +37,7 @@ import { UserBooks } from "./components/SocialMedia/Users/Posts/UserBooks";
 import { UserShorts } from "./components/SocialMedia/Users/Posts/UserShorts";
 import { UserRecomendations } from "./components/SocialMedia/Users/Posts/UserRecomendations";
 import { Redirect } from "./components/SocialMedia/Users/Redirect";
+import { Step3 } from "./components/Register/Step3";
  
 Modal.setAppElement('#root')
 
@@ -49,7 +50,8 @@ export function App() {
             <Route path="/login" element={<Login />}></Route>
             <Route path="/register/" element={<Register />} >
               <Route path="step1" element={<Step1 />} />
-              <Route path="step2" element={<Step2 />}></Route>
+              <Route path="step2" element={<Step2 />} />
+              <Route path="step3" element={<Step3 />} />
               <Route path="" element={<Navigate to="/register/step1" />}/>
             </Route>
             <Route path="short/read/:id" element={<ReadShort />} />
