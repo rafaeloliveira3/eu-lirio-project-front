@@ -17,6 +17,13 @@ const LinksContainer = styled.ul`
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
     font-size: 1.2rem;
+    a {
+        color: var(--font-color);
+        text-decoration: none;
+        &:hover {
+            color: var(--purple-medium);
+        }
+    }
 `
 
 const Button = styled.button`

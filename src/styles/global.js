@@ -32,6 +32,7 @@ export const GlobalStyle = createGlobalStyle`
     body {
         background-color: var(--background);
         -webkit-font-smoothing: antialiased;
+        scroll-behavior: smooth;
     }
     body, html {
         height: 100%;

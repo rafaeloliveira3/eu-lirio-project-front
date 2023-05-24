@@ -7,9 +7,9 @@ export const Header = () => {
         <Headers>
             <Logo src={logo} alt="" />
             <LinksContainer>
-                <li>SUPORTE</li>
-                <li>TERMOS DE USO</li>
-                <li>SOBRE</li>
+                <li><a href="#shorts">CONFIRA</a></li>
+                <li><a href="#liked">MAIS CURTIDOS</a></li>
+                <li><a href="#solded">MAIS VENDIDOS</a></li>
             </LinksContainer>
             <Link to="/login">
                 <Button>

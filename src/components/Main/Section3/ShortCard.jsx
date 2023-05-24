@@ -1,10 +1,15 @@
 import { ShortCardStyle } from "./styles"
 
 export const ShortCard = (props) => {
-    
     return (
         <ShortCardStyle>
-            <h3>{props?.story?.id}</h3>
+            <span>
+                <h3>{props?.story?.titulo}</h3>
+                <span>Um conto por: @{props.story?.usuario[0]?.user_name}</span>
+            </span>
+            <div>
+                <img src={props.story?.capa} alt="" />
+            </div>
         </ShortCardStyle>
     )
 }

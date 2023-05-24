@@ -21,12 +21,12 @@ export const Section1 = () => {
                         <SpanButton border={focus ? border.borderDisabled : border.borderActive} onClick={() => {setTextSetter("Uma plataforma para você públicar e lucrar com suas obras de forma online e gratuita?"); setFocus(false)}}><i className="fa-sharp fa-solid fa-pen-nib"></i> Para Escrever</SpanButton>
                         <SpanButton border={focus ? border.borderActive : border.borderDisabled} onClick={() => {setTextSetter("Uma plataforma para você conhecer novas histórias, novos mundos e ainda apoiar a literatura nacional?"); setFocus(true)}}><i className="fa-solid fa-book"></i> Para Ler</SpanButton>
                     </div>
-                    <p className="text-container">
+                    <span className="text-container">
                         <h1>JÁ IMAGINOU...?</h1>
                         <span>
                             {textSetter}
                         </span>
-                    </p>
+                    </span>
                 </div>
                 <Link to="/login" className="button-container">
                     <button>COMECE AGORA!</button>
