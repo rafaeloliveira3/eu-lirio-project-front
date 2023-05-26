@@ -44,8 +44,16 @@ export const Cart = () => {
                     return {id : item?.id_anuncio}
                 })
             }
-            await axios.post(`${defaultUrl}confirm-buy/user-id/${userId}`, cart)
+            const data = await axios.post(`${defaultUrl}intent-buy/user-id/${userId}`, cart)
             .catch(err => console.log(err))
+
+            const url = data?.data?.url
+
+            localStorage.setItem('buy_intent_id', data?.data?.intent_id)
+            window.open(url, '_blank').focus()
+
+            setError(true)
+            setAnnouncements([])
         }
     }
 

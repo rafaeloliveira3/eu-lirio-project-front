@@ -1,4 +1,4 @@
-import { Form, Container, ModalContentContainer, TagsContainer, Tags } from "./styles"
+import { Form, Container, ModalContentContainer, TagsContainer, Tags, GenresContainer } from "./styles"
 import { useEffect, useState } from "react"
 import Modal from "react-modal"
 import axios from "axios"
@@ -116,6 +116,13 @@ export const Edit = () => {
         }
     }
     const handleImage = async () => {
+        if (photoBackup === 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png') {
+            let url = await uploadImage(imageUpload, imageUpload.name)
+            return {
+                exclude : true,
+                url : url
+            }
+        }
         if (imageUpload === null) {
             return {
                 exclude : false,
@@ -158,6 +165,7 @@ export const Edit = () => {
             id_tag_2: tagsArr[1],
             generos: genresJson
         }
+
         const res = await axios.put(`${defaultUrl}user/id/${userId}`, edited)
         .catch((err) => {
             console.log(err)
@@ -266,9 +274,9 @@ export const Edit = () => {
                     </Tags>
                     <Tags>
                         <span><i className="fa-solid fa-tag"></i></span>
-                        <TagsContainer>
+                        <GenresContainer>
                             {genres?.map(item => <Checkbox type="genres" id={item.id_genero} onChange={handleGenres} key={item.id_genero} name={item.nome_genero}/> )}
-                        </TagsContainer>
+                        </GenresContainer>
                     </Tags>
                 </div>
                 <div className="save">

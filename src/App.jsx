@@ -38,6 +38,7 @@ import { UserShorts } from "./components/SocialMedia/Users/Posts/UserShorts";
 import { UserRecomendations } from "./components/SocialMedia/Users/Posts/UserRecomendations";
 import { Redirect } from "./components/SocialMedia/Users/Redirect";
 import { Step3 } from "./components/Register/Step3";
+import { ConfirmBuy } from "./components/ConfirmBuy";
  
 Modal.setAppElement('#root')
 
@@ -48,6 +49,7 @@ export function App() {
           <Routes>
             <Route path="/" element={<Main />}></Route>
             <Route path="/login" element={<Login />}></Route>
+            <Route path="/confirm-buy" element={<ConfirmBuy />}></Route>
             <Route path="/register/" element={<Register />} >
               <Route path="step1" element={<Step1 />} />
               <Route path="step2" element={<Step2 />} />

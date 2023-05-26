@@ -179,6 +179,14 @@ const Tags = styled.div`
 
 const TagsContainer = styled.ul`
     display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+`
+
+const GenresContainer = styled.ul`
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
     gap: 1rem;
 `
 
@@ -187,5 +195,6 @@ export {
     Container,
     ModalContentContainer,
     TagsContainer,
-    Tags
+    Tags,
+    GenresContainer
 }

@@ -4,6 +4,7 @@ const LiStyled = styled.li`
     display: flex;
     gap: .5rem;
     align-items: center;
+    width: 13rem;
 `
 
 const CheckboxStyled = styled.input`

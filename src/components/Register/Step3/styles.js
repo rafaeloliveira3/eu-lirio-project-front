@@ -53,7 +53,7 @@ const Form = styled.form`
 const CheckBoxContainer = styled.div`
     display: flex;
     flex-direction: row;
-    max-height: 50%;
+    max-height: 20vh;
     flex-wrap: wrap;
     padding: 1rem 0;
     gap: .5rem;
