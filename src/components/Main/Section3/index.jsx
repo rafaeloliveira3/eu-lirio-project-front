@@ -13,23 +13,42 @@ export const Section3 = () => {
     const [mostLikedBooks, setMostLikedBooks] = useState([])
     const [mostSoldBooks, setMostSoldBooks] = useState([])
 
+    const [mostRatedShortsSlidesToShow, setMostRatedShortsSlidesToShow] = useState(1)
+    const [mostSoldBooksSlidesToShow, setMostSoldBooksSlidesToShow] = useState(1)
+    const [mostLikedBooksSlidesToShow, setMostLikedBooksSlidesToShow] = useState(1)
+
     useEffect(() => {
         const getMostRatedShorts = async () => {
             const data = await axios.post(`${defaultUrl}filter-short-stories/?userId=88&bestRated=true&shortStorieTitle=`)
             .catch(err => console.log(err))
 
+            setMostRatedShortsSlidesToShow(() => {
+                if (data?.data?.length >= 3)
+                    return 3
+                return data?.data?.length
+            })
             setMostRatedShorts(data?.data)
         }
         const getMostLikedBooks = async () => {
             const data = await axios.get(`${defaultUrl}most-liked-announcements/user-id/88`)
             .catch(err => console.log(err))
-
+            
+            setMostLikedBooksSlidesToShow(() => {
+                if (data?.data?.length >= 3)
+                    return 3
+                return data?.data?.length
+            })
             setMostLikedBooks(data?.data)
         }
         const getMostSoldBooks = async () => {
             const data = await axios.get(`${defaultUrl}most-purchased-announcements/user-id/88`)
             .catch(err => console.log(err))
 
+            setMostSoldBooksSlidesToShow(() => {
+                if (data?.data?.length >= 3)
+                    return 3
+                return data?.data?.length
+            })
             setMostSoldBooks(data?.data)
         }
         getMostRatedShorts()
@@ -46,7 +65,7 @@ export const Section3 = () => {
                     dots={true}
                     infinite={true}
                     speed={500}
-                    slidesToShow={3}
+                    slidesToShow={mostRatedShortsSlidesToShow}
                     slidesToScroll={1}
                     nextArrow={<Arrows side="right"/>}
                     prevArrow={<Arrows side="left"/>}
@@ -74,7 +93,7 @@ export const Section3 = () => {
                     dots={true}
                     infinite={true}
                     speed={500}
-                    slidesToShow={3}
+                    slidesToShow={mostLikedBooksSlidesToShow}
                     slidesToScroll={1}
                     nextArrow={<Arrows side="right"/>}
                     prevArrow={<Arrows side="left"/>}
@@ -98,11 +117,11 @@ export const Section3 = () => {
             <BooksSlideContainer id="solded">
                 <h3 className="title">Livros mais vendidos:</h3>
                 <CarrouselContainer>
-                    <Slider
+                <Slider
                     dots={true}
                     infinite={true}
                     speed={500}
-                    slidesToShow={3}
+                    slidesToShow={mostSoldBooksSlidesToShow}
                     slidesToScroll={1}
                     nextArrow={<Arrows side="right"/>}
                     prevArrow={<Arrows side="left"/>}

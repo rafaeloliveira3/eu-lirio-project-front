@@ -11,7 +11,7 @@ export const Container = styled.section`
 export const CarrouselContainer = styled.div`
     width: 100%;
     padding: 1rem 5rem;
-    .slick-slide {
+    .slick-list {
         div {
             display: flex;
             align-items: center;

@@ -11,17 +11,29 @@ export const ConfirmBuy = () => {
 
     useEffect(() => {
         const confirmBuy = async () => {
-            const data = await axios.post(`${defaultUrl}intent-payment-update`, {
-                data : {
-                    object : {
-                        id : localStorage.getItem('buy_intent_id')
+            let data
+            if (localStorage.getItem('buy_intent_type') === "direct") {
+                data = await axios.post(`${defaultUrl}intent-payment-update`, {
+                    id_usuario : localStorage.getItem('id'),
+                    id_anuncio : localStorage.getItem('buy_book_id'),
+                    id_stripe : localStorage.getItem('buy_intent_id')
+                })
+            }
+            else {
+                data = await axios.post(`${defaultUrl}intent-payment-update`, {
+                    data : {
+                        object : {
+                            id : localStorage.getItem('buy_intent_id')
+                        }
                     }
-                }
-            })
+                })
+            }
 
             if (data?.data?.received) {
                 setLoad(false)
                 localStorage.removeItem('buy_intent_id')
+                localStorage.removeItem('buy_intent_type')
+                localStorage.removeItem('buy_book_id')
             }
         }
         confirmBuy()

@@ -92,12 +92,12 @@ export const Book = () => {
                 setStatus("EDITAR PUBLICAÇÃO")
                 setDirectBuyDisplay(false)
             }
+
             if (data?.data[0].mobi === 'null' || data?.data[0].mobi === 'undefined')
                 setBookFormats(["PDF", "ePUB", false])
 
-            if (data?.data[0]?.usuario[0]?.id_usuario === userId || !data?.data[0]?.comprado || data?.data[0]?.comentado) {
+            if (data?.data[0]?.usuario[0]?.id_usuario === userId || !data?.data[0]?.comprado || data?.data[0]?.comentado)
                 setComment(true)
-            }
             else 
                 setComment(false)
             
@@ -218,10 +218,17 @@ export const Book = () => {
     }
     const handleDirectBuy = async () => {
         if (status !== "DOWNLOAD EBOOK") {
-            await axios.post(`${defaultUrl}buy-announcement`, {
-                id_anuncio: id,
-                id_usuario : userId
+            const data = await axios.post(`${defaultUrl}intent-buy-announcement/user-id/${userId}`, {
+                id_anuncio: id
             })
+            const url = data?.data?.url
+
+            localStorage.setItem('buy_intent_id', data?.data?.intent_id)
+            localStorage.setItem('buy_intent_type', 'direct')
+            localStorage.setItem('buy_book_id', `${id}`)
+            window.open(url, '_blank').focus()
+
+
             setRefresh(true)
         }
         else {

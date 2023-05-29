@@ -1,7 +1,6 @@
 import { BookCardStyle, PriceContainer, TitleContainer } from "./styles"
 
 export const BookCard = (props) => {
-    console.log(props.book)
     return (
         <BookCardStyle>
             <TitleContainer>
