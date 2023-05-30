@@ -13,7 +13,7 @@ export const ConfirmBuy = () => {
         const confirmBuy = async () => {
             let data
             if (localStorage.getItem('buy_intent_type') === "direct") {
-                data = await axios.post(`${defaultUrl}intent-payment-update`, {
+                data = await axios.post(`${defaultUrl}intent-directly-payment-update`, {
                     id_usuario : localStorage.getItem('id'),
                     id_anuncio : localStorage.getItem('buy_book_id'),
                     id_stripe : localStorage.getItem('buy_intent_id')

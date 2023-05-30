@@ -32,12 +32,13 @@ export const AuthorsSearch = () => {
                     setError("Nenhum item corresponde com sua busca!")
                 }
             })
+
+            console.log(data);
             setLoading(false)
             setAuthor(data?.data)
         }
         getAuthorsbyName()
     }, [prompt.prompt])
-
 
     if (error) {
         return(

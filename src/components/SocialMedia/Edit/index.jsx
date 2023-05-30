@@ -116,7 +116,7 @@ export const Edit = () => {
         }
     }
     const handleImage = async () => {
-        if (photoBackup === 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png') {
+        if (photoBackup === 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' && imageUpload !== null) {
             let url = await uploadImage(imageUpload, imageUpload.name)
             return {
                 exclude : true,
@@ -160,7 +160,7 @@ export const Edit = () => {
             foto: imageurl.url,
             biografia: userBio,
             email: userEmail,
-            premium: 0,
+            premium: "false",
             id_tag_1: tagsArr[0],
             id_tag_2: tagsArr[1],
             generos: genresJson

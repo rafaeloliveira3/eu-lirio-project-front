@@ -111,7 +111,7 @@ export const ShortsSearch = () => {
                     <h2 onClick={() => setIsFilterModalOpen(true)}>Filtros <i className="fa-solid fa-angle-down"></i></h2>
             </FilterContainer>
             <CardsContainer>
-                {announcements?.map((item) => <Card url="short-storie" key={item.id} id={item.id} anuncio={item} type={1} />)}
+                {announcements?.map((item) => <Card url="short-storie" key={item.id} id={item.id} anuncio={item} type={2} />)}
             </CardsContainer>
                 <Modal
                     isOpen={isFilterModalOpen}

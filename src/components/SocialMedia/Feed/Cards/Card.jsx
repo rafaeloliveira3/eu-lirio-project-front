@@ -15,8 +15,11 @@ export const Card = (props) => {
     const [favorited, setFavorited] = useState(false)
     const [readed, setReaded] = useState(false)
 
+    const [refresh, setRefresh] = useState(false)
+
     useEffect(() => {
         const getAnuncio = async () => {
+            setRefresh(false)
             const urlFix = () => {
                 if (url === "short-storie") {
                     return "shortStorie"
@@ -36,7 +39,7 @@ export const Card = (props) => {
             setAnuncio(data?.data[0])
         }
         getAnuncio()
-    }, [props.id, liked, favorited])
+    }, [props.id, refresh])
     
     const handleClick = (e) => {
         const id = e.currentTarget.id
@@ -78,6 +81,8 @@ export const Card = (props) => {
                 })
             }
         }
+
+        setRefresh(true)
     }
     const handleFavorite = async (e) => {
         const status = !favorited
@@ -111,6 +116,7 @@ export const Card = (props) => {
                 })
             }
         }
+        setRefresh(true)
     }
 
     return (

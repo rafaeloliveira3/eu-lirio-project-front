@@ -107,7 +107,7 @@ export const Book = () => {
             setBook(data?.data[0])
         }
         getBookById()
-    }, [id, userId, liked, favorited, read, refresh])
+    }, [id, userId, refresh])
 
     useEffect(() => {
         const getComplaints = async () => {
@@ -159,6 +159,7 @@ export const Book = () => {
                 id_usuario : userId
             })
         }
+        setRefresh(true)
     }
     const handleFavorite = async () => {
         const clickStatus = !favorited
@@ -175,6 +176,7 @@ export const Book = () => {
                 id_usuario : userId
             })
         }
+        setRefresh(true)
     }
     const handleRead = async () => {
         const clickStatus = !read
@@ -191,6 +193,7 @@ export const Book = () => {
                 id_usuario : userId
             })
         }
+        setRefresh(true)
     }
     const handleCart = async() => {
         if (status !== "EDITAR PUBLICAÇÃO") {
@@ -226,6 +229,7 @@ export const Book = () => {
             localStorage.setItem('buy_intent_id', data?.data?.intent_id)
             localStorage.setItem('buy_intent_type', 'direct')
             localStorage.setItem('buy_book_id', `${id}`)
+
             window.open(url, '_blank').focus()
 
 

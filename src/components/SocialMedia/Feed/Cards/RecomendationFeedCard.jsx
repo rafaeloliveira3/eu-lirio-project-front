@@ -67,7 +67,7 @@ export const RecomendationFeedCard = (props) => {
         }
         
         getRecomendation()
-    }, [props.id, liked, favorited, refresh])
+    }, [props.id, refresh])
 
     const handleLike = async (e) => {
         e.stopPropagation()
