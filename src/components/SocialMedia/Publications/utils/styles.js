@@ -66,13 +66,14 @@ const UserCardStyled = styled(Link)`
         display: flex;
         flex-direction: column;
         gap: .1rem;
+        width: 6vw;
         p {
             font-weight: 600;
-            font-size: 1.3rem;
         }
         span {
             font-size: 1rem;
             font-weight: 300;
+            width: max-content;
         }
     }
     @media(max-width:1280px) {

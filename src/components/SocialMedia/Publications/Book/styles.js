@@ -170,7 +170,7 @@ const BookAndUserInfoContainer = styled.div`
 const BookAndUserInfo = styled.div`
     display: flex;
     width: 100%;
-    justify-content: space-evenly;
+    justify-content: space-between;
     border-bottom: 1px solid var(--font-color);
     padding: .5rem 1rem;
     align-items: center;

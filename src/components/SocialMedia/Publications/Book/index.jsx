@@ -110,15 +110,14 @@ export const Book = () => {
     }, [id, userId, refresh])
 
     useEffect(() => {
+        setRefresh(false)
         const getComplaints = async () => {
             const data = await axios.get(`${defaultUrl}complaint-types`)
-            setRefresh(false)
 
             setComplaintTypes(data?.data)
         }
         const getComments = async () => {
             const data = await axios.get(`${defaultUrl}announcement-comments/id/?announcementId=${id}&userId=${userId}`)
-            setRefresh(false)
 
             setComments(data?.data)
         }

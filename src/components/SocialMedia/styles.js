@@ -48,7 +48,7 @@ const UserInfoContainer = styled.div`
     max-width: 25%;
     width: 100vw;
     flex-grow: 1;
-    padding: 0 5vw;
+    padding: 0 4vw;
 `
 const FeedContainer = styled.div`
     flex-grow: 1;
@@ -73,11 +73,15 @@ const User = styled.div`
     gap: 1rem;
     color: var(--font-color);
     img {
-        height: 5vw;
-        width: 5vw;
+        height: 7rem;
+        width: 7rem;
         object-fit: cover;
         border-radius: 360px;
         border: 2px solid var(--background);
+        @media (max-width: 1280px) {
+            height: 5rem;
+            width: 5rem;
+        }
     }
     .user-info {
         display: flex;
@@ -160,8 +164,8 @@ const UserOpt = styled.div`
             }
             i {
                 font-size: 1.3rem;
-                height: 1.7rem;
-                width: 1.7rem;
+                min-height: 1.7rem;
+                min-width: 1.7rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
