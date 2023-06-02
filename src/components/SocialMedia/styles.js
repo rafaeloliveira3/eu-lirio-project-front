@@ -73,14 +73,18 @@ const User = styled.div`
     gap: 1rem;
     color: var(--font-color);
     img {
-        height: 7rem;
-        width: 7rem;
+        min-height: 7rem;
+        min-width: 7rem;
+        max-width: 7rem;
+        max-height: 7rem;
         object-fit: cover;
         border-radius: 360px;
         border: 2px solid var(--background);
         @media (max-width: 1280px) {
-            height: 5rem;
-            width: 5rem;
+            min-height: 5rem;
+            min-width: 5rem;
+            max-width: 5rem;
+            max-height: 5rem;
         }
     }
     .user-info {
