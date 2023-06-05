@@ -73,7 +73,9 @@ const UserCardStyled = styled(Link)`
         span {
             font-size: 1rem;
             font-weight: 300;
-            width: max-content;
+            max-width: 100%;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
         }
     }
     @media(max-width:1280px) {

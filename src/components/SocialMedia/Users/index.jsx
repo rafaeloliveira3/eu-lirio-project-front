@@ -42,11 +42,13 @@ export const Users = () => {
     const [complaintTypes, setComplaintTypes] = useState([])
     const [complaintReason, setComplaintReason] = useState([])
     const [complaintDescription, setComplaintDescription] = useState("")
+    const [refresh, setRefresh] = useState(false)
 
 
     const userId = localStorage.getItem('id')
     
     useEffect(() => {
+        setRefresh(false)
         const fetchUser = async () => {
             const data = await axios.get(`${defaultUrl}user/id/?searchUser=${id}&currentUser=${userId}`)
             .catch((err) => { console.log(err) })
@@ -66,7 +68,7 @@ export const Users = () => {
         }
         fetchUser()
         getComplaints()
-    }, [id, follow])
+    }, [id, refresh])
     useEffect(() => {
         const fetchFollowing = async () => {
             const data = await axios.get(`${defaultUrl}following/user-id/?userId=${id}&currentUser=${userId}`)
@@ -109,6 +111,8 @@ export const Users = () => {
         else {
             await axios.delete(`${defaultUrl}unfollow-user/?followerId=${userId}&followedId=${id}`)
         }
+
+        setRefresh(true)
     }
 
     const handleComplaint = async (e) => {

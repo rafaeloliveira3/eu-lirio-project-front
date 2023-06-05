@@ -21,6 +21,8 @@ export const Content = (props) => {
             setFavorited(true)
         if (props.short?.lido) 
             setRead(true)
+        if (props.short?.comentado) 
+            setComented(true)
     }, [props.short])
 
     const userId = localStorage.getItem('id')
@@ -122,18 +124,13 @@ export const Content = (props) => {
                             <i className="fa-solid fa-shopping-cart"></i>
                         </Link>
                     </li>
-                    <li>
-                        <Link title="Lirio Plus">
-                            <i className="fa-solid fa-crown"></i>
-                        </Link>
-                    </li>
                 </ul>
             </NavBar>
             <StoryContainer>
                 <StoryDataContainer>
                     {props.short?.titulo}
                     <div>
-                        <button><i className="fa-regular fa-comment"></i> 2</button>
+                        <button><i className={comented ? "fa-solid fa-comment" : "fa-regular fa-comment"}></i> {kFormatter(props.short?.comentarios?.quantidade_comentarios || 0)}</button>
                         <button onClick={handleLike}><i className={liked ? "fa-solid fa-heart" : "fa-regular fa-heart"}></i> {kFormatter(props.short?.curtidas?.quantidade_curtidas || 0)}</button>
                         <button onClick={handleFavorite}><i className={favorited ? "fa-solid fa-bookmark" : "fa-regular fa-bookmark"}></i> {kFormatter(props.short?.favoritos?.quantidade_favoritos || 0)}</button>
                         <button onClick={handleRead}><i className={read ? "fa-solid fa-circle-check" : "fa-regular fa-circle-check"}></i>  {kFormatter(props.short?.lidos?.quantidade_lidos || 0)}</button>

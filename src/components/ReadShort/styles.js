@@ -26,6 +26,8 @@ const DataContainer = styled.div`
     padding: 0 5rem;
     background-color: var(--yellow-medium);
     justify-content: space-between;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
 `
 const AuthorData = styled.div`
     display: flex;
@@ -46,31 +48,7 @@ const AuthorData = styled.div`
         }
     }
 `
-const LikesData = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    font-family: 'Quicksand', sans-serif;
-    gap: 1rem;
-    height: 100%;
-    .separator {
-        height: 50%;
-        border-radius: 10px;
-        width: 1px;
-        background-color: #1E1E1E66;
-    }
-    span {
-        display: flex;
-        gap: .5rem;
-        align-items: center;
-        font-size: 1.2rem;
-        cursor: pointer;
-        i {
-            font-size: 1.5rem;
-            width: 1.5rem;
-        }
-    }
-`
+
 const ContentContainer = styled.div`
     width: 100%; 
     height: 100%;
@@ -85,6 +63,5 @@ export {
     Header,
     DataContainer,
     AuthorData,
-    LikesData,
     ContentContainer
 }

@@ -34,19 +34,26 @@ export const AuthorCard = (props) => {
             setAuthor(data?.data)
         }
         getAuthor()
-    }, [props.id])
-
-    console.log(author)
+    }, [props.id, userId])
     
     const handleClick = (e) => {
         const id = e.currentTarget.id
         navigate(`/app/profile/${id}`)
     }
-    const handleFollow = (e) => {
+    const handleFollow = async (e) => {
         e.stopPropagation()
-
         const status = !followStatus
         setFollowStatus(status)
+        if (status) {
+            await axios.post(`${defaultUrl}follow-user`, {
+                id_segue : userId,
+                id_seguindo : props.id
+            })
+        }
+        else {
+            await axios.delete(`${defaultUrl}unfollow-user/?followerId=${userId}&followedId=${props.id}`)
+        }
+
     }
 
     return (

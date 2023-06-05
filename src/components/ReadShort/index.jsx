@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { defaultUrl } from "../helpers/url"
-import { AuthorData, Container, ContentContainer, DataContainer, Header, LikesData } from "./styles"
+import { AuthorData, Container, ContentContainer, DataContainer, Header } from "./styles"
 import logo from "../../assets/img/logo.svg"
 import { Content } from "./Content"
 
@@ -40,17 +40,6 @@ export const ReadShort = () => {
                     <span className="book-name">{short?.titulo}</span>
                     <span className="author-name">Escrito por <span>@{author?.user_name}</span></span>
                 </AuthorData>
-                <LikesData>
-                    <span>
-                        <i className="fa-regular fa-heart"></i>
-                        Curta
-                    </span>
-                    <div className="separator"></div>
-                    <span>
-                        <i className="fa-regular fa-bookmark"></i>
-                        Favorite
-                    </span>
-                </LikesData>
             </DataContainer>
             <ContentContainer>
                 <Content author={author} reload={reloadSetter} short={short}/>

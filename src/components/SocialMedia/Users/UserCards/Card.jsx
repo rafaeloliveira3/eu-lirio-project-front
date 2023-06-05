@@ -34,7 +34,7 @@ export const UserCard = (props) => {
             setAuthor(data?.data)
         }
         getAuthor()
-    }, [props.id, followStatus])
+    }, [props.id])
     
     const handleClick = (e) => {
         props.modalDisplay(false)

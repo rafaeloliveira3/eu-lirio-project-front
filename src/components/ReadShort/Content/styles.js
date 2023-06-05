@@ -3,6 +3,7 @@ import styled from "styled-components";
 const Container = styled.div`
     display: flex;
     justify-content: space-between;
+    gap: 2rem;
     height: 100%;
     max-width: 50%;
     padding-top: 2rem;
@@ -27,8 +28,8 @@ const NavBar = styled.nav`
             color: var(--purple-dark);
         }
         img {
-            height: 7rem;
-            width: 7rem;
+            height: 5rem;
+            width: 5rem;
             object-fit: cover;
             border-radius: 360px;
         }
@@ -41,19 +42,29 @@ const NavBar = styled.nav`
         }
     }
     .nav-bar {
-        border: 2px solid var(--yellow-medium);
+        border: 1px solid var(--yellow-medium);
         border-radius: 24px;
-        width: 5vw;
+        width: 5rem;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
         padding: 1rem 0;
+        align-items: center;
+        li {
+            border-radius: 360px;
+            padding: .8rem;
+            width: 65%;
+            &:hover {
+                background-color: #F9C73E33;
+            }
+        }
         a {
             width: 100%;
+            -webkit-text-stroke: 1.5px var(--font-color);
+            color: #0000;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.6rem;
             text-decoration: none;
         }
     }
@@ -61,6 +72,7 @@ const NavBar = styled.nav`
 const StoryContainer = styled.div`
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 100%;
     gap: 1rem;
 ` 
@@ -68,14 +80,16 @@ const StoryDataContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    width: 70%;
+    padding: 2rem;
     font-family: 'League Spartan', sans-serif;
     font-weight: 700;
     font-size: 2rem;
     gap: 1rem;
+    border-bottom: 1px solid var(--font-color);
     div {
         display: flex;
-        width: 30%;
+        width: 50%;
         justify-content: space-between;
         button {
             border: 0;
@@ -98,7 +112,7 @@ const ContentContainer = styled.div`
     width: 100%;
     width: 50vw;
     overflow-y: auto;
-    span {
+    #lipsum {
         display: flex;
         flex-direction: column;
         gap: 1rem;
