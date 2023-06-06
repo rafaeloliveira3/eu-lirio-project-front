@@ -42,6 +42,7 @@ const ItemText = styled.div`
 const GenreContainer = styled.div`
     display: flex;
     gap: .2rem;
+    flex-wrap: wrap;
     span {
         font-family: 'Montserrat', sans-serif;
         font-size: .8rem;
